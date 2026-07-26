@@ -523,6 +523,12 @@
     renderApp();
   }
 
+  async function sairDaEmpresa(){
+    if(!confirm('Isso remove seu vínculo com essa empresa (histórico, saldo, tudo). Seu login continua existindo — na próxima vez você pode entrar numa empresa diferente. Confirma?')) return;
+    await sb.from('usuarios').delete().eq('id', meuUsuario.id);
+    await sair();
+  }
+
   function isoLocal(d){
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -970,7 +976,7 @@
       const isOpen = mes.key === aberto;
       const linhas = Object.keys(mes.porContratado).map(cid => `
         <div class="hist-item">
-          <div class="hist-left"><div class="hist-dot mustard"></div><div>${contratadoNome(parseInt(cid,10))}</div></div>
+          <div class="hist-left"><div class="hist-dot mustard"></div><div>${contratadoNome(cid)}</div></div>
           <div class="hist-val pos">${formatBRL(mes.porContratado[cid])}</div>
         </div>`).join('');
       return `
@@ -1208,37 +1214,41 @@
         </div>`;
     }).join('') || '<div class="empty">Nenhum contratado ainda.</div>';
 
+    const souResponsavel = meuUsuario && meuUsuario.papel === 'responsavel';
+
     return `
       <div class="page-header">
         <button class="icon-btn" onclick="irPara(paginaInicialDoRole())">←</button>
-        <div><h2>Configurações</h2></div>
+        <div><h2>${souResponsavel ? 'Configurações' : 'Minha conta'}</h2></div>
       </div>
 
       <div class="field-label">Nome da empresa</div>
-      <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" onchange="salvarConfig()">
+      <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" ${souResponsavel ? 'onchange="salvarConfig()"' : 'disabled'}>
 
       <div class="field-label">Nome do responsável</div>
-      <input class="field-input" id="inputResponsavelNome" value="${state.config.responsavel}" onchange="salvarConfig()">
+      <input class="field-input" id="inputResponsavelNome" value="${state.config.responsavel}" ${souResponsavel ? 'onchange="salvarConfig()"' : 'disabled'}>
 
-      ${meuUsuario && meuUsuario.papel === 'responsavel' ? `
+      ${souResponsavel ? `
         <div class="field-label">Código da empresa (pra convidar contratados)</div>
         <div class="field-input" style="word-break:break-all; user-select:all;">${meuUsuario.empresa_id}</div>
         <div style="font-size:11px; color:var(--ink-soft); margin-top:6px;">Manda esse código pro contratado. Ele usa em "Cadastrar → Sou prestador".</div>
+
+        <div class="section-title">Contratados</div>
+        ${listaContratados}
+
+        <div class="add-contratado-card">
+          <div class="field-label">Adicionar contratado</div>
+          <div class="row">
+            <input class="nome" id="novoContratadoNome" placeholder="Nome">
+            <input class="valor" id="novoContratadoValor" placeholder="R$/dia" inputmode="decimal">
+          </div>
+          <button onclick="adicionarContratado()">Ver como convidar</button>
+        </div>
       ` : ''}
 
-      <div class="section-title">Contratados</div>
-      ${listaContratados}
+      ${!souResponsavel ? `<button class="deposit-btn" style="width:100%; margin-top:20px; padding:14px; background:var(--mustard);" onclick="sairDaEmpresa()">Sair desta empresa (trocar de empresa)</button>` : ''}
 
-      <div class="add-contratado-card">
-        <div class="field-label">Adicionar contratado</div>
-        <div class="row">
-          <input class="nome" id="novoContratadoNome" placeholder="Nome">
-          <input class="valor" id="novoContratadoValor" placeholder="R$/dia" inputmode="decimal">
-        </div>
-        <button onclick="adicionarContratado()">Ver como convidar</button>
-      </div>
-
-      <button class="deposit-btn" style="width:100%; margin-top:20px; padding:14px; background:var(--stamp-red);" onclick="sair()">Sair da conta</button>
+      <button class="deposit-btn" style="width:100%; margin-top:12px; padding:14px; background:var(--stamp-red);" onclick="sair()">Sair da conta</button>
     `;
   }
 
