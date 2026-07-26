@@ -486,11 +486,13 @@
     authCarregando = true; authErro = ''; renderApp();
 
     const { data: { user } } = await sb.auth.getUser();
-    const { data: empresa, error: e1 } = await sb.from('empresas').insert({ nome: nomeEmpresa }).select().single();
+    const novaEmpresaId = crypto.randomUUID();
+
+    const { error: e1 } = await sb.from('empresas').insert({ id: novaEmpresaId, nome: nomeEmpresa });
     if(e1){ authCarregando = false; authErro = e1.message; renderApp(); return; }
 
     const { error: e2 } = await sb.from('usuarios').insert({
-      id: user.id, empresa_id: empresa.id, papel: 'responsavel', nome: meuNome
+      id: user.id, empresa_id: novaEmpresaId, papel: 'responsavel', nome: meuNome
     });
     authCarregando = false;
     if(e2){ authErro = e2.message; renderApp(); return; }
