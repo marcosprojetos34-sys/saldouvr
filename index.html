@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Saldou">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F6F1E4">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Saldou — Controle de VR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F6F1E4;
+    --paper-light: #FCFAF3;
+    --paper-dark: #EDE6D2;
+    --ink: #21261F;
+    --ink-soft: #565C4E;
+    --stamp-green: #1F6F4C;
+    --stamp-green-dark: #17553A;
+    --stamp-red: #A6362B;
+    --mustard: #C68A2C;
+    --line: #D9D0B8;
+    --shadow: 0 1px 0 rgba(33,38,31,0.06), 0 8px 20px -12px rgba(33,38,31,0.25);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ min-height:100%; }
+  body{
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 10% 5%, rgba(0,0,0,0.02) 0%, transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(0,0,0,0.02) 0%, transparent 40%);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  input, select{ font-size: 16px !important; min-width: 0; }
+  .app{ width:100%; max-width: 440px; padding: max(18px, env(safe-area-inset-top)) 16px 0; padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+  h1,h2,h3,.display{ font-family:'Space Grotesk', sans-serif; }
+  button{ font-family: inherit; }
+
+  /* TOPBAR */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
+  .hamburger-btn, .icon-btn{
+    width:34px; height:34px; border-radius:9px;
+    border:1px solid var(--line); background: var(--paper-light);
+    cursor:pointer; font-size:16px; color: var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .hamburger-btn:hover, .icon-btn:hover{ color: var(--ink); background: var(--paper-dark); }
+  .topbar-title{ font-size:20px; font-weight:700; letter-spacing:-0.01em; }
+  .topbar-title span{ color: var(--stamp-green); }
+  .role-pill{
+    border:1px solid var(--line); background: var(--paper-dark);
+    border-radius:999px; padding:7px 12px;
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:11px;
+    letter-spacing:0.04em; text-transform:uppercase; color: var(--ink-soft); cursor:pointer;
+  }
+  .role-pill:hover{ color: var(--ink); }
+  .empresa-tag{ font-size:11.5px; color: var(--ink-soft); margin: 8px 2px 18px; }
+  .empresa-tag b{ color: var(--ink); }
+
+  /* PAGE HEADER (sub-pages) */
+  .page-header{ display:flex; align-items:center; gap:10px; margin: 4px 0 18px; }
+  .page-header h2{ font-size:18px; font-weight:700; }
+  .page-header .sub{ font-size:11px; color: var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-weight:400; margin-top:2px; }
+
+  /* SECTION TITLES */
+  .section-title{
+    font-size:12.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em;
+    color: var(--ink-soft); margin: 22px 0 10px 2px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .section-title::after{ content:""; flex:1; border-top:1px dashed var(--line); }
+  .section-title:first-child{ margin-top:0; }
+
+  /* USER SELECT (prestador, modo teste) */
+  .user-select-wrap{ margin-bottom: 16px; }
+  .user-select-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color: var(--ink-soft); margin-bottom:6px; }
+  select.user-select{
+    width:100%; padding: 11px 14px; border-radius:10px; border:1px solid var(--line);
+    background: var(--paper-light); font-family:'Space Grotesk', sans-serif; font-weight:600;
+    font-size:14px; color: var(--ink);
+  }
+
+  /* CARNE CARD */
+  .carne{
+    background: var(--paper-light); border-radius: 14px; box-shadow: var(--shadow);
+    border: 1px solid var(--line); position:relative; overflow:hidden; margin-bottom: 18px;
+  }
+  .carne::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:6px;
+    background-image: radial-gradient(circle, var(--paper) 3px, transparent 3.2px);
+    background-size: 16px 100%; background-position: -4px 0;
+  }
+  .carne-top{ padding: 24px 22px 18px; text-align:center; }
+  .carne-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color: var(--ink-soft); margin-bottom:8px; }
+  .carne-value{ font-family:'IBM Plex Mono', monospace; font-weight:700; font-size: 42px; letter-spacing:-0.02em; line-height:1; }
+  .carne-value.low{ color: var(--mustard); }
+  .carne-value.deficit{ color: var(--stamp-red); }
+  .carne-sub{ margin-top:10px; font-size:13px; color: var(--ink-soft); }
+  .carne-divider{ border-top: 1px dashed var(--line); margin: 0 22px; }
+  .carne-bottom{ padding: 16px 22px 18px; display:flex; justify-content:space-between; gap:12px; }
+  .stat{ flex:1; text-align:center; }
+  .stat-num{ font-size:19px; font-weight:600; }
+  .stat-num.deficit{ color: var(--stamp-red); }
+  .stat-label{ font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color: var(--ink-soft); margin-top:2px; }
+
+  /* TODAY CARD */
+  .today-card{ background: var(--paper-light); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); margin-bottom: 6px; }
+  .today-date{ font-size:12px; color:var(--ink-soft); margin-bottom:12px; }
+  .today-actions{ display:flex; gap:10px; }
+  .stamp-btn{
+    flex:1; border-radius:10px; padding: 14px 8px; font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:14px; cursor:pointer; border:2px solid; background:transparent;
+    transition: transform 0.12s ease; position:relative;
+  }
+  .stamp-btn:active{ transform: scale(0.96); }
+  .stamp-btn.used{ border-color: var(--stamp-green); color: var(--stamp-green-dark); }
+  .stamp-btn.used:hover{ background: rgba(31,111,76,0.08); }
+  .stamp-btn.notused{ border-color: var(--stamp-red); color: var(--stamp-red); }
+  .stamp-btn.notused:hover{ background: rgba(166,54,43,0.06); }
+  .stamp-btn.selected.used{ background: var(--stamp-green); color:#fff; }
+  .stamp-btn.selected.notused{ background: var(--stamp-red); color:#fff; }
+  .today-hint{ text-align:center; font-size:11px; color: var(--ink-soft); margin-top:10px; }
+
+  .stamp-mark{
+    position:fixed; top:50%; left:50%; transform: translate(-50%,-50%) scale(2.2) rotate(-12deg);
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:38px; letter-spacing:0.05em;
+    padding: 14px 28px; border:5px solid; border-radius:10px; opacity:0; pointer-events:none; z-index:50;
+  }
+  .stamp-mark.show{ animation: stampDown 0.55s cubic-bezier(.2,1.4,.4,1) forwards; }
+  @keyframes stampDown{
+    0%{ opacity:0; transform: translate(-50%,-50%) scale(3) rotate(-18deg); }
+    55%{ opacity:1; transform: translate(-50%,-50%) scale(0.95) rotate(-8deg); }
+    70%{ transform: translate(-50%,-50%) scale(1.05) rotate(-8deg); }
+    100%{ opacity:1; transform: translate(-50%,-50%) scale(1) rotate(-8deg); }
+  }
+
+  /* ACCORDION MONTH CARDS */
+  .month-card{ background: var(--paper-light); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; overflow:hidden; }
+  .month-header-btn{
+    width:100%; border:none; background:transparent; cursor:pointer;
+    padding: 14px 16px; display:flex; justify-content:space-between; align-items:center; text-align:left;
+  }
+  .month-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13.5px; text-transform:capitalize; }
+  .month-header-right{ display:flex; align-items:center; gap:10px; }
+  .month-net{ font-size:13px; font-weight:700; }
+  .month-net.pos{ color: var(--stamp-green-dark); }
+  .month-net.neg{ color: var(--stamp-red); }
+  .chevron{ font-size:12px; color: var(--ink-soft); transition: transform 0.2s ease; display:inline-block; }
+  .chevron.open{ transform: rotate(180deg); }
+  .month-rows{ display:flex; gap:14px; padding: 0 16px 14px; flex-wrap:wrap; }
+  .month-row{ flex:1; min-width:70px; }
+  .month-row-label{ font-size:9.5px; text-transform:uppercase; letter-spacing:0.05em; color: var(--ink-soft); }
+  .month-row-val{ font-size:13.5px; font-weight:600; margin-top:2px; }
+  .month-detail-list{ border-top: 1px dashed var(--line); padding: 10px 12px 12px; }
+  .month-porcontratado{ padding: 0 16px 14px; }
+
+  /* MONTH NAV CAROUSEL */
+  .month-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom: 12px;
+  }
+  .month-nav-btn{
+    width:38px; height:38px; border-radius:10px;
+    border:1px solid var(--line); background: var(--paper-light);
+    font-size:18px; font-family:'Space Grotesk', sans-serif; font-weight:700;
+    color: var(--ink); cursor:pointer; flex-shrink:0;
+  }
+  .month-nav-btn:hover{ background: var(--paper-dark); }
+  .month-nav-label{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px;
+    text-transform:capitalize; text-align:center;
+  }
+  .month-net-line{
+    text-align:center; padding: 12px 16px; font-weight:700; font-size:14px;
+    border-top: 1px dashed var(--line);
+  }
+  .month-net-line.pos{ color: var(--stamp-green-dark); }
+  .month-net-line.neg{ color: var(--stamp-red); }
+  .month-back-link{
+    display:block; width:100%; text-align:center; border:none; background:transparent;
+    color: var(--stamp-green-dark); font-family:'Space Grotesk', sans-serif; font-weight:600;
+    font-size:12px; text-decoration:underline; cursor:pointer; margin-bottom:12px; padding:2px;
+  }
+
+  /* HISTORY ITEMS (dentro da sanfona / detalhe) */
+  .hist-item{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 11px 12px; background: var(--paper); border:1px solid var(--line);
+    border-radius:9px; margin-bottom:7px; font-size:12.5px;
+  }
+  .hist-item:last-child{ margin-bottom:0; }
+  .hist-left{ display:flex; align-items:center; gap:9px; }
+  .hist-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .hist-dot.green{ background:var(--stamp-green); }
+  .hist-dot.red{ background:var(--stamp-red); }
+  .hist-dot.mustard{ background:var(--mustard); }
+  .hist-date{ color:var(--ink-soft); font-size:10.5px; }
+  .hist-val{ font-weight:600; }
+  .hist-val.neg{ color: var(--stamp-red); }
+  .hist-val.pos{ color: var(--stamp-green-dark); }
+  .hist-right{ display:flex; align-items:center; gap:2px; }
+  .hist-del, .hist-edit{
+    border:none; background:transparent; color: var(--ink-soft); font-size:13px;
+    line-height:1; cursor:pointer; padding:5px 6px; border-radius:6px;
+  }
+  .hist-del:hover{ color: var(--stamp-red); background: rgba(166,54,43,0.08); }
+  .hist-edit:hover{ color: var(--stamp-green-dark); background: rgba(31,111,76,0.08); }
+  .hist-edit-form{ width:100%; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .hist-edit-form input, .hist-edit-form select{
+    border:1px solid var(--line); border-radius:8px; padding:8px 10px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background: var(--paper-light); color: var(--ink);
+  }
+  .hist-edit-form input.valor{ width:90px; }
+  .hist-edit-form input.data{ flex:1; min-width:120px; }
+  .hist-edit-form button{ border:none; border-radius:7px; padding: 8px 10px; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:12px; cursor:pointer; }
+  .btn-salvar{ background: var(--stamp-green); color:#fff; }
+  .btn-cancelar{ background: var(--paper-dark); color: var(--ink-soft); }
+
+  .empty{ text-align:center; padding: 22px 12px; color: var(--ink-soft); font-size:13px; }
+
+  /* COLABORADORES (lista compacta) */
+  .collab-card{
+    width:100%; display:flex; align-items:center; justify-content:space-between;
+    background: var(--paper-light); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 9px; cursor:pointer; text-align:left;
+  }
+  .collab-card.alert{ border-color: var(--mustard); background: linear-gradient(180deg, rgba(198,138,44,0.06), var(--paper-light) 45%); }
+  .collab-left{ display:flex; align-items:center; gap:11px; }
+  .collab-avatar{
+    width:36px; height:36px; border-radius:50%; background: var(--paper-dark);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:14px; color: var(--ink-soft); flex-shrink:0;
+  }
+  .collab-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14.5px; }
+  .collab-meta{ font-size:11px; color: var(--ink-soft); margin-top:1px; }
+  .collab-meta.deficit{ color: var(--stamp-red); font-weight:600; }
+  .collab-right{ display:flex; align-items:center; gap:10px; }
+  .collab-saldo{ font-weight:700; font-size:15px; }
+  .collab-saldo.deficit{ color: var(--stamp-red); }
+  .collab-chevron{ color: var(--ink-soft); font-size:16px; }
+
+  /* SITUACAO ATUAL (resumo) */
+  .situ-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 11px 14px; background: var(--paper-light); border:1px solid var(--line);
+    border-radius:10px; margin-bottom:7px; font-size:13px;
+  }
+  .situ-name{ font-weight:600; font-family:'Space Grotesk', sans-serif; font-size:13.5px; }
+  .situ-tag{ font-size:11px; color: var(--ink-soft); margin-top:1px; }
+  .situ-tag.deficit{ color: var(--stamp-red); font-weight:600; }
+  .situ-saldo{ font-weight:700; }
+  .situ-saldo.deficit{ color: var(--stamp-red); }
+
+  /* DEPOSIT FORM */
+  .deposit-form{ display:flex; gap:8px; }
+  .deposit-form input{
+    flex:1; border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:14px; background: var(--paper); color: var(--ink);
+  }
+  .deposit-form input:focus{ outline:2px solid var(--stamp-green); outline-offset:1px; }
+  .deposit-btn{
+    border:none; background: var(--ink); color: var(--paper-light); font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:13px; padding: 0 16px; border-radius:8px; cursor:pointer;
+  }
+  .deposit-btn:hover{ background: var(--stamp-green-dark); }
+
+  /* SETTINGS PAGE */
+  .field-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color: var(--ink-soft); margin-bottom:5px; margin-top:16px; }
+  .field-label:first-child{ margin-top:0; }
+  .field-input{
+    width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px;
+    font-family:'IBM Plex Mono', monospace; font-size:13.5px; background: var(--paper-light); color: var(--ink);
+  }
+  .field-input:focus{ outline:2px solid var(--stamp-green); outline-offset:1px; }
+
+  .contratado-card{
+    background: var(--paper-light); border:1px solid var(--line); border-radius:12px;
+    padding: 13px 15px; margin-bottom: 9px;
+  }
+  .contratado-card-view{ display:flex; align-items:center; justify-content:space-between; }
+  .contratado-card-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14px; }
+  .contratado-card-val{ font-size:11px; color: var(--ink-soft); margin-top:2px; }
+  .contratado-card-actions{ display:flex; gap:2px; }
+  .contratado-edit-form{ display:flex; flex-direction:column; gap:8px; }
+  .contratado-edit-form .row{ display:flex; gap:8px; }
+  .contratado-edit-form input{
+    border:1px solid var(--line); border-radius:8px; padding:9px 11px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background: var(--paper); color: var(--ink);
+  }
+  .contratado-edit-form input.nome{ flex:2; }
+  .contratado-edit-form input.valor{ flex:1; }
+  .contratado-edit-form .row.actions{ gap:8px; }
+  .contratado-edit-form .row.actions button{
+    flex:1; border:none; border-radius:8px; padding:9px; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:12px; cursor:pointer;
+  }
+
+  .add-contratado-card{
+    background: var(--paper-dark); border: 1px dashed var(--line); border-radius: 12px; padding: 14px 15px; margin-top: 6px;
+  }
+  .add-contratado-card .field-label{ margin-top:0; }
+  .add-contratado-card .row{ display:flex; gap:8px; margin-top:8px; }
+  .add-contratado-card input{
+    border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background: var(--paper-light); color: var(--ink);
+  }
+  .add-contratado-card input.nome{ flex:2; }
+  .add-contratado-card input.valor{ flex:1; }
+  .add-contratado-card button{
+    border:none; background: var(--ink); color: var(--paper-light); font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:13px; padding: 10px 14px; border-radius:8px; cursor:pointer; width:100%; margin-top:8px;
+  }
+
+  .footnote{ text-align:center; font-size:10.5px; color: var(--ink-soft); margin: 24px 0 8px; line-height:1.6; padding: 0 10px; }
+
+  /* BOTTOM NAV */
+  .bottom-nav{
+    position:fixed; bottom:0; left:0; right:0;
+    display:flex; justify-content:center;
+    background: var(--paper-light);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index:40;
+  }
+  .bottom-nav-inner{ width:100%; max-width:440px; display:flex; }
+  .nav-btn{
+    flex:1; border:none; background:transparent; cursor:pointer;
+    padding: 11px 4px 9px; display:flex; flex-direction:column; align-items:center; gap:3px;
+    color: var(--ink-soft); font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:10.5px;
+  }
+  .nav-btn .icon{ font-size:19px; line-height:1; }
+  .nav-btn.active{ color: var(--stamp-green-dark); }
+
+  @media (prefers-reduced-motion: reduce){
+    .stamp-mark.show{ animation: none; opacity:1; }
+    .stamp-btn:active{ transform:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <button class="hamburger-btn" onclick="irPara('settings')" title="Menu">☰</button>
+    <div class="topbar-title">Sald<span>ou</span>.</div>
+    <button class="role-pill" id="rolePill" style="cursor:default;"></button>
+  </div>
+  <div class="empresa-tag" id="empresaTag"></div>
+
+  <div id="pageContent"></div>
+</div>
+
+<div class="bottom-nav">
+  <div class="bottom-nav-inner" id="bottomNav"></div>
+</div>
+
+<div class="stamp-mark" id="stampMark"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = 'https://cefrtcvlfvqsrlshomqc.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_ZG9dmwrjxf4-qhSKBi6f0A__agTy2Rv';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
+<script>
+  const VALOR_PADRAO_DIA = 35;
+
+  let currentUserId = null;
+  let currentRole = 'prestador';
+  let currentPage = 'auth-carregando';
+  let selectedColaboradorId = null;
+  let editingDepositId = null;
+  let editingMarcacaoId = null;
+  let editingContratadoId = null;
+  let expandedMonths = {};
+  let viewingMonth = {};
+  let registroData = null;
+  let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
+  let authErro = '';
+  let authCarregando = false;
+
+  let state = {
+    config: { empresa: '', responsavel: '' },
+    contratados: [],
+    depositos: [],
+    marcacoes: []
+  };
+
+  // ---- AUTENTICAÇÃO ----
+  async function initApp(){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){
+      currentPage = 'auth-login';
+      renderApp();
+      return;
+    }
+    await carregarAposLogin();
+  }
+
+  async function carregarAposLogin(){
+    const { data: { user } } = await sb.auth.getUser();
+    if(!user){ currentPage = 'auth-login'; renderApp(); return; }
+
+    const { data: perfil, error } = await sb.from('usuarios').select('*').eq('id', user.id).maybeSingle();
+    if(error || !perfil){
+      // usuário autenticado mas ainda sem perfil (empresa/contratado) — manda pro cadastro
+      currentPage = 'auth-escolher-papel';
+      renderApp();
+      return;
+    }
+    meuUsuario = perfil;
+    currentRole = perfil.papel;
+    currentUserId = perfil.papel === 'prestador' ? perfil.id : null;
+    currentPage = paginaInicialDoRole();
+    await carregarDadosDaEmpresa();
+  }
+
+  async function carregarDadosDaEmpresa(){
+    if(!meuUsuario) return;
+
+    const { data: empresa } = await sb.from('empresas').select('*').eq('id', meuUsuario.empresa_id).maybeSingle();
+    const { data: usuarios } = await sb.from('usuarios').select('*').eq('empresa_id', meuUsuario.empresa_id);
+    const { data: depositos } = await sb.from('depositos').select('*').order('data', { ascending: true });
+    const { data: marcacoes } = await sb.from('marcacoes').select('*').order('data', { ascending: true });
+
+    const responsavelRow = (usuarios || []).find(u => u.papel === 'responsavel');
+
+    state.config.empresa = empresa ? empresa.nome : '';
+    state.config.responsavel = responsavelRow ? responsavelRow.nome : '';
+    state.contratados = (usuarios || []).filter(u => u.papel === 'prestador').map(u => ({
+      id: u.id, nome: u.nome, valorDiaPadrao: Number(u.valor_dia_padrao)
+    }));
+    state.depositos = (depositos || []).map(d => ({
+      id: d.id, contratadoId: d.contratado_id, valor: Number(d.valor), data: d.data
+    }));
+    state.marcacoes = (marcacoes || []).map(m => ({
+      id: m.id, contratadoId: m.contratado_id, data: m.data, usou: m.usou, valorDia: Number(m.valor_dia)
+    }));
+
+    renderApp();
+  }
+
+  async function fazerLogin(){
+    const email = document.getElementById('authEmail').value.trim();
+    const senha = document.getElementById('authSenha').value;
+    if(!email || !senha){ authErro = 'Preenche email e senha.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    currentPage = 'auth-carregando';
+    renderApp();
+    await carregarAposLogin();
+  }
+
+  async function fazerCadastro(){
+    const email = document.getElementById('authEmailCad').value.trim();
+    const senha = document.getElementById('authSenhaCad').value;
+    if(!email || !senha || senha.length < 6){ authErro = 'Email válido e senha com 6+ caracteres.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.signUp({ email, password: senha });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    authErro = '';
+    currentPage = 'auth-confirme-email';
+    renderApp();
+  }
+
+  async function criarEmpresaEEntrar(){
+    const nomeEmpresa = document.getElementById('novaEmpresaNome').value.trim();
+    const meuNome = document.getElementById('novoResponsavelNome').value.trim();
+    if(!nomeEmpresa || !meuNome){ authErro = 'Preenche os dois campos.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+
+    const { data: { user } } = await sb.auth.getUser();
+    const { data: empresa, error: e1 } = await sb.from('empresas').insert({ nome: nomeEmpresa }).select().single();
+    if(e1){ authCarregando = false; authErro = e1.message; renderApp(); return; }
+
+    const { error: e2 } = await sb.from('usuarios').insert({
+      id: user.id, empresa_id: empresa.id, papel: 'responsavel', nome: meuNome
+    });
+    authCarregando = false;
+    if(e2){ authErro = e2.message; renderApp(); return; }
+    await carregarAposLogin();
+  }
+
+  async function entrarComoContratado(){
+    const empresaId = document.getElementById('empresaIdInput').value.trim();
+    const meuNome = document.getElementById('novoPrestadorNome').value.trim();
+    const valorDia = parseFloat((document.getElementById('novoPrestadorValor').value || '35').replace(',', '.')) || 35;
+    if(!empresaId || !meuNome){ authErro = 'Preenche o código da empresa e seu nome.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('usuarios').insert({
+      id: user.id, empresa_id: empresaId, papel: 'prestador', nome: meuNome, valor_dia_padrao: valorDia
+    });
+    authCarregando = false;
+    if(error){ authErro = 'Código de empresa inválido ou erro: ' + error.message; renderApp(); return; }
+    await carregarAposLogin();
+  }
+
+  async function sair(){
+    await sb.auth.signOut();
+    meuUsuario = null;
+    state = { config:{empresa:'',responsavel:''}, contratados:[], depositos:[], marcacoes:[] };
+    currentPage = 'auth-login';
+    renderApp();
+  }
+
+  function isoLocal(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+  function isoDaysAgo(n){ const d = new Date(); d.setDate(d.getDate() - n); return isoLocal(d); }
+  function todayISO(){ return isoLocal(new Date()); }
+  function formatBRL(v){ return 'R$ ' + v.toFixed(2).replace('.', ','); }
+  function formatDateBR(iso){ const [y,m,d] = iso.split('-'); return `${d}/${m}`; }
+  function contratadoNome(id){ const c = state.contratados.find(x => x.id === id); return c ? c.nome : '—'; }
+  function iniciais(nome){ return nome.trim().split(/\s+/).slice(0,2).map(p=>p[0]).join('').toUpperCase(); }
+
+  // ---- CALCULOS ----
+  function totalDepositos(contratadoId){
+    return state.depositos.filter(d => d.contratadoId === contratadoId).reduce((s,d)=> s + d.valor, 0);
+  }
+  function totalUsado(contratadoId){
+    return state.marcacoes.filter(m => m.contratadoId === contratadoId && m.usou).reduce((s,m)=> s + m.valorDia, 0);
+  }
+  function saldoAtual(contratadoId){ return totalDepositos(contratadoId) - totalUsado(contratadoId); }
+  function valorDiaMedio(contratadoId){
+    const c = state.contratados.find(x => x.id === contratadoId);
+    const padrao = c ? c.valorDiaPadrao : VALOR_PADRAO_DIA;
+    const usados = state.marcacoes.filter(m => m.contratadoId === contratadoId && m.usou);
+    if(usados.length === 0) return padrao;
+    return usados.reduce((s,m)=> s + m.valorDia, 0) / usados.length;
+  }
+  function marcacaoDeHoje(contratadoId){
+    return state.marcacoes.find(m => m.contratadoId === contratadoId && m.data === todayISO());
+  }
+  function marcacaoDoDia(contratadoId, data){
+    return state.marcacoes.find(m => m.contratadoId === contratadoId && m.data === data);
+  }
+  function diasInfo(contratadoId){
+    const saldo = saldoAtual(contratadoId);
+    const media = valorDiaMedio(contratadoId);
+    if(media <= 0) return { saldo, media, deficit:false, dias:0 };
+    if(saldo < 0) return { saldo, media, deficit:true, dias: Math.floor(Math.abs(saldo)/media) };
+    return { saldo, media, deficit:false, dias: Math.floor(saldo/media) };
+  }
+
+  // ---- NAVEGAÇÃO ----
+  function irPara(page, params){
+    currentPage = page;
+    if(params && params.colaboradorId !== undefined) selectedColaboradorId = params.colaboradorId;
+    renderApp();
+    window.scrollTo(0,0);
+  }
+
+  function paginaInicialDoRole(){ return currentRole === 'prestador' ? 'prestador-hoje' : 'responsavel-colaboradores'; }
+
+  // ---- MARCAR DIA ----
+  async function marcarDia(usou){
+    if(!currentUserId) return;
+    const input = document.getElementById('dataRegistroInput');
+    const data = (input && input.value) ? input.value : todayISO();
+    registroData = data;
+    const existente = marcacaoDoDia(currentUserId, data);
+
+    if(existente && existente.usou === usou){
+      await sb.from('marcacoes').delete().eq('id', existente.id);
+      await carregarDadosDaEmpresa();
+      return;
+    }
+    if(existente){
+      await sb.from('marcacoes').update({ usou, valor_dia: usou ? valorDiaMedio(currentUserId) : 0 }).eq('id', existente.id);
+    } else {
+      await sb.from('marcacoes').insert({
+        empresa_id: meuUsuario.empresa_id, contratado_id: currentUserId, data,
+        usou, valor_dia: usou ? valorDiaMedio(currentUserId) : 0
+      });
+    }
+    showStamp(usou);
+    await carregarDadosDaEmpresa();
+  }
+
+  function mudarDataRegistro(valor){
+    registroData = valor;
+    renderApp();
+  }
+
+  function showStamp(usou){
+    const el = document.getElementById('stampMark');
+    el.textContent = usou ? 'USADO' : 'NÃO USADO';
+    el.style.color = usou ? 'var(--stamp-green)' : 'var(--stamp-red)';
+    el.style.borderColor = usou ? 'var(--stamp-green)' : 'var(--stamp-red)';
+    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+    setTimeout(()=> el.classList.remove('show'), 900);
+  }
+
+  // ---- DEPOSITOS ----
+  async function lancarDeposito(contratadoId){
+    const input = document.getElementById('novoDeposito_' + contratadoId);
+    const dataInput = document.getElementById('novoDepositoData_' + contratadoId);
+    const valor = parseFloat(input.value.replace(',', '.'));
+    const data = (dataInput && dataInput.value) ? dataInput.value : todayISO();
+    if(!valor || valor <= 0){ input.focus(); return; }
+    await sb.from('depositos').insert({
+      empresa_id: meuUsuario.empresa_id, contratado_id: contratadoId, valor, data, criado_por: meuUsuario.id
+    });
+    input.value = '';
+    await carregarDadosDaEmpresa();
+  }
+  async function excluirDeposito(id){
+    if(!confirm('Excluir esse depósito? Isso vai reduzir o saldo.')) return;
+    await sb.from('depositos').delete().eq('id', id);
+    await carregarDadosDaEmpresa();
+  }
+  function iniciarEdicaoDeposito(id){ editingDepositId = id; renderApp(); }
+  function cancelarEdicaoDeposito(){ editingDepositId = null; renderApp(); }
+  async function salvarEdicaoDeposito(id){
+    const valorInput = document.getElementById('editValor_' + id);
+    const dataInput = document.getElementById('editData_' + id);
+    const valor = parseFloat(valorInput.value.replace(',', '.'));
+    const data = dataInput.value;
+    if(!valor || valor <= 0 || !data) return;
+    await sb.from('depositos').update({ valor, data }).eq('id', id);
+    editingDepositId = null;
+    await carregarDadosDaEmpresa();
+  }
+  async function excluirMarcacao(id){
+    if(!confirm('Excluir essa marcação do histórico?')) return;
+    await sb.from('marcacoes').delete().eq('id', id);
+    await carregarDadosDaEmpresa();
+  }
+  function iniciarEdicaoMarcacao(id){ editingMarcacaoId = id; renderApp(); }
+  function cancelarEdicaoMarcacao(){ editingMarcacaoId = null; renderApp(); }
+  async function salvarEdicaoMarcacao(id){
+    const data = document.getElementById('editDataM_' + id).value;
+    const usou = document.getElementById('editUsouM_' + id).value === '1';
+    const valorInput = document.getElementById('editValorM_' + id).value;
+    const valor = parseFloat(valorInput.replace(',', '.'));
+    if(!data) return;
+    const m = state.marcacoes.find(x => x.id === id);
+    const valorFinal = usou ? (valor || valorDiaMedio(m.contratadoId)) : 0;
+    await sb.from('marcacoes').update({ data, usou, valor_dia: valorFinal }).eq('id', id);
+    editingMarcacaoId = null;
+    await carregarDadosDaEmpresa();
+  }
+
+  // ---- CONFIG / CONTRATADOS ----
+  async function salvarConfig(){
+    const empresa = document.getElementById('inputEmpresaNome').value.trim();
+    const responsavel = document.getElementById('inputResponsavelNome').value.trim();
+    if(empresa) await sb.from('empresas').update({ nome: empresa }).eq('id', meuUsuario.empresa_id);
+    if(responsavel && meuUsuario.papel === 'responsavel') await sb.from('usuarios').update({ nome: responsavel }).eq('id', meuUsuario.id);
+    await carregarDadosDaEmpresa();
+  }
+  async function adicionarContratado(){
+    const nomeInput = document.getElementById('novoContratadoNome');
+    const valorInput = document.getElementById('novoContratadoValor');
+    const nome = nomeInput.value.trim();
+    const valor = parseFloat((valorInput.value || '').replace(',', '.')) || VALOR_PADRAO_DIA;
+    if(!nome){ nomeInput.focus(); return; }
+    alert('Pra cadastrar um contratado, ele precisa criar a própria conta (Cadastrar → "Sou prestador") e usar este código da empresa:\n\n' + meuUsuario.empresa_id + '\n\nManda esse código pra ele por WhatsApp.');
+  }
+  async function removerContratado(id){
+    if(!confirm('Remover esse contratado? O histórico de depósitos e marcações dele também será apagado.')) return;
+    await sb.from('usuarios').delete().eq('id', id);
+    await carregarDadosDaEmpresa();
+  }
+  function iniciarEdicaoContratado(id){ editingContratadoId = id; renderApp(); }
+  function cancelarEdicaoContratado(){ editingContratadoId = null; renderApp(); }
+  async function salvarEdicaoContratado(id){
+    const nome = document.getElementById('editNomeContratado_'+id).value.trim();
+    const valor = parseFloat(document.getElementById('editValorContratado_'+id).value.replace(',', '.'));
+    if(!nome || !valor || valor <= 0) return;
+    await sb.from('usuarios').update({ nome, valor_dia_padrao: valor }).eq('id', id);
+    editingContratadoId = null;
+    await carregarDadosDaEmpresa();
+  }
+
+  // ---- RESUMO MENSAL / HISTORICO ----
+  const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  function monthKey(iso){ return iso.slice(0,7); }
+  function monthLabel(key){ const [y,m] = key.split('-'); return `${MESES[parseInt(m,10)-1]} de ${y}`; }
+
+  function resumoMensal(contratadoId){
+    const meses = {};
+    const deps = contratadoId ? state.depositos.filter(d => d.contratadoId === contratadoId) : state.depositos;
+    const marks = contratadoId ? state.marcacoes.filter(m => m.contratadoId === contratadoId) : state.marcacoes;
+    deps.forEach(d => {
+      const k = monthKey(d.data);
+      if(!meses[k]) meses[k] = { depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 };
+      meses[k].depositado += d.valor;
+    });
+    marks.forEach(m => {
+      const k = monthKey(m.data);
+      if(!meses[k]) meses[k] = { depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 };
+      if(m.usou){ meses[k].usado += m.valorDia; meses[k].diasUsados += 1; }
+      else { meses[k].diasNaoUsados += 1; }
+    });
+    return Object.keys(meses).sort((a,b)=> b.localeCompare(a)).map(k => ({ key:k, ...meses[k] }));
+  }
+
+  function acumuladoAteMes(contratadoId, mk){
+    const meses = resumoMensal(contratadoId).filter(m => m.key <= mk);
+    const depositado = meses.reduce((s,m)=> s + m.depositado, 0);
+    const usado = meses.reduce((s,m)=> s + m.usado, 0);
+    return { depositado, usado, saldo: depositado - usado };
+  }
+
+  function resumoPeriodoParaMes(contratadoId, mk){
+    const ano = mk.slice(0,4);
+    const meses = resumoMensal(contratadoId);
+    const doMes = meses.find(m => m.key === mk);
+    const recebidoMes = doMes ? doMes.depositado : 0;
+    const recebidoAno = meses.filter(m => m.key.startsWith(ano)).reduce((s,m)=> s + m.depositado, 0);
+    return { recebidoMes, recebidoAno };
+  }
+
+  function resumoPeriodoAtual(contratadoId){
+    const hoje = todayISO();
+    const mesAtual = hoje.slice(0,7);
+    const anoAtual = hoje.slice(0,4);
+    const meses = resumoMensal(contratadoId);
+    const doMes = meses.find(m => m.key === mesAtual);
+    const recebidoMes = doMes ? doMes.depositado : 0;
+    const usadoMes = doMes ? doMes.usado : 0;
+    const recebidoAno = meses.filter(m => m.key.startsWith(anoAtual)).reduce((s,m)=> s + m.depositado, 0);
+    const usadoAno = meses.filter(m => m.key.startsWith(anoAtual)).reduce((s,m)=> s + m.usado, 0);
+    return { recebidoMes, usadoMes, recebidoAno, usadoAno };
+  }
+
+  function renderPeriodoCard(p, perspectivaEmpresa){
+    const rotulo = perspectivaEmpresa ? 'Depositado' : 'Recebido';
+    return `
+      <div class="today-card" style="margin-bottom:18px;">
+        <div class="today-date">Resumo do período</div>
+        <div class="carne-bottom" style="padding:0;">
+          <div class="stat">
+            <div class="stat-num">${formatBRL(p.recebidoMes)}</div>
+            <div class="stat-label">${rotulo} no mês</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">${formatBRL(p.recebidoAno)}</div>
+            <div class="stat-label">${rotulo} no ano</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function resumoMensalPorContratado(){
+    const meses = {};
+    state.depositos.forEach(d => {
+      const k = monthKey(d.data);
+      if(!meses[k]) meses[k] = { total:0, porContratado:{} };
+      meses[k].total += d.valor;
+      meses[k].porContratado[d.contratadoId] = (meses[k].porContratado[d.contratadoId] || 0) + d.valor;
+    });
+    return Object.keys(meses).sort((a,b)=> b.localeCompare(a)).map(k => ({ key:k, ...meses[k] }));
+  }
+
+  function historicoAgrupado(contratadoId){
+    const deps = (contratadoId ? state.depositos.filter(d => d.contratadoId === contratadoId) : state.depositos)
+      .map(d => ({ tipo:'deposito', ...d }));
+    const marks = (contratadoId ? state.marcacoes.filter(m => m.contratadoId === contratadoId) : state.marcacoes)
+      .map(m => ({ tipo:'marcacao', ...m }));
+    const itens = [...deps, ...marks];
+    itens.sort((a,b) => {
+      if(a.data !== b.data) return a.data.localeCompare(b.data);
+      if(a.tipo !== b.tipo) return a.tipo === 'deposito' ? -1 : 1;
+      return a.id - b.id;
+    });
+    return itens;
+  }
+  function historicoDoMes(contratadoId, mk){
+    return historicoAgrupado(contratadoId).filter(item => monthKey(item.data) === mk);
+  }
+
+  function renderItemHistorico(item, mostrarNome, perspectivaEmpresa){
+    const nomeTag = mostrarNome ? ` · ${contratadoNome(item.contratadoId)}` : '';
+    if(item.tipo === 'deposito'){
+      if(editingDepositId === item.id){
+        return `
+          <div class="hist-item">
+            <div class="hist-edit-form">
+              <input class="valor" id="editValor_${item.id}" type="text" value="${item.valor.toFixed(2).replace('.',',')}" inputmode="decimal">
+              <input class="data" id="editData_${item.id}" type="date" value="${item.data}">
+              <button class="btn-salvar" onclick="salvarEdicaoDeposito('${item.id}')">Salvar</button>
+              <button class="btn-cancelar" onclick="cancelarEdicaoDeposito()">Cancelar</button>
+            </div>
+          </div>`;
+      }
+      return `
+        <div class="hist-item">
+          <div class="hist-left">
+            <div class="hist-dot mustard"></div>
+            <div><div>${(mostrarNome || perspectivaEmpresa) ? 'Depósito feito' : 'Depósito recebido'}${nomeTag}</div><div class="hist-date">${formatDateBR(item.data)}</div></div>
+          </div>
+          <div class="hist-right">
+            <div class="hist-val pos">+${formatBRL(item.valor)}</div>
+            <button class="hist-edit" onclick="iniciarEdicaoDeposito('${item.id}')" title="Editar">✎</button>
+            <button class="hist-del" onclick="excluirDeposito('${item.id}')" title="Excluir">✕</button>
+          </div>
+        </div>`;
+    }
+    if(item.tipo === 'marcacao' && editingMarcacaoId === item.id){
+      return `
+        <div class="hist-item">
+          <div class="hist-edit-form">
+            <select id="editUsouM_${item.id}" class="valor" style="width:112px;">
+              <option value="1" ${item.usou ? 'selected' : ''}>Usou VR</option>
+              <option value="0" ${!item.usou ? 'selected' : ''}>Não usou</option>
+            </select>
+            <input class="valor" id="editValorM_${item.id}" type="text" value="${(item.valorDia || 0).toFixed(2).replace('.',',')}" inputmode="decimal">
+            <input class="data" id="editDataM_${item.id}" type="date" value="${item.data}">
+            <button class="btn-salvar" onclick="salvarEdicaoMarcacao('${item.id}')">Salvar</button>
+            <button class="btn-cancelar" onclick="cancelarEdicaoMarcacao()">Cancelar</button>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="hist-item">
+        <div class="hist-left">
+          <div class="hist-dot ${item.usou ? 'red' : 'green'}"></div>
+          <div><div>${item.usou ? 'Usou VR' : 'Não usou'}${nomeTag}</div><div class="hist-date">${formatDateBR(item.data)}</div></div>
+        </div>
+        <div class="hist-right">
+          <div class="hist-val ${item.usou ? 'neg' : ''}">${item.usou ? '-' + formatBRL(item.valorDia) : 'saldo mantido'}</div>
+          <button class="hist-edit" onclick="iniciarEdicaoMarcacao('${item.id}')" title="Editar">✎</button>
+          <button class="hist-del" onclick="excluirMarcacao('${item.id}')" title="Excluir">✕</button>
+        </div>
+      </div>`;
+  }
+
+  function toggleMonth(scopeKey, mk){
+    expandedMonths[scopeKey] = (expandedMonths[scopeKey] === mk) ? null : mk;
+    renderApp();
+  }
+
+  function mesAdjacente(key, delta){
+    let [y,m] = key.split('-').map(Number);
+    m += delta;
+    if(m < 1){ m = 12; y -= 1; } else if(m > 12){ m = 1; y += 1; }
+    return `${y}-${String(m).padStart(2,'0')}`;
+  }
+
+  function navegarMes(scopeKey, delta){
+    const atual = viewingMonth[scopeKey] || todayISO().slice(0,7);
+    viewingMonth[scopeKey] = mesAdjacente(atual, delta);
+    registroData = null;
+    renderApp();
+  }
+
+  function statsDoMes(contratadoId, mk){
+    const encontrado = resumoMensal(contratadoId).find(m => m.key === mk);
+    return encontrado || { key:mk, depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 };
+  }
+
+  function voltarMesAtual(scopeKey){
+    viewingMonth[scopeKey] = todayISO().slice(0,7);
+    registroData = null;
+    renderApp();
+  }
+
+  function resumoAnual(contratadoId, ano){
+    const meses = resumoMensal(contratadoId).filter(m => m.key.startsWith(ano));
+    return meses.reduce((acc,m) => {
+      acc.depositado += m.depositado;
+      acc.usado += m.usado;
+      acc.diasUsados += m.diasUsados;
+      acc.diasNaoUsados += m.diasNaoUsados;
+      return acc;
+    }, { depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 });
+  }
+
+  function renderAcumuladoAno(contratadoId, mk, perspectivaEmpresa){
+    const ano = mk.slice(0,4);
+    const r = resumoAnual(contratadoId, ano);
+    const rotulo = perspectivaEmpresa ? 'Depositado' : 'Recebido';
+    return `
+      <div class="section-title">Acumulado ${ano}</div>
+      <div class="month-card">
+        <div class="month-rows" style="padding-top:14px;">
+          <div class="month-row"><div class="month-row-label">Dias usados</div><div class="month-row-val">${r.diasUsados}</div></div>
+          <div class="month-row"><div class="month-row-label">Sem uso</div><div class="month-row-val">${r.diasNaoUsados}</div></div>
+          <div class="month-row"><div class="month-row-label">Usado no ano</div><div class="month-row-val">${formatBRL(r.usado)}</div></div>
+        </div>
+        <div class="month-net-line pos" style="font-size:19px;">${rotulo} no ano: ${formatBRL(r.depositado)}</div>
+      </div>
+    `;
+  }
+
+  function renderMonthCarousel(contratadoId, scopeKey, perspectivaEmpresa){
+    const mk = viewingMonth[scopeKey] || todayISO().slice(0,7);
+    const mesAtual = todayISO().slice(0,7);
+    const stats = statsDoMes(contratadoId, mk);
+    const itens = historicoDoMes(contratadoId, mk);
+    const info = diasInfo(contratadoId);
+    const mostrarSaldoAtual = mk === mesAtual;
+    const futuro = mk > mesAtual;
+
+    if(futuro){
+      return `
+        <div class="month-nav">
+          <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',-1)">‹</button>
+          <div class="month-nav-label">${monthLabel(mk)}</div>
+          <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',1)">›</button>
+        </div>
+        <button class="month-back-link" onclick="voltarMesAtual('${scopeKey}')">↺ Voltar para ${monthLabel(mesAtual)}</button>
+        <div class="month-card">
+          ${!perspectivaEmpresa ? '<div class="empty">Esse mês ainda não chegou — nenhuma movimentação registrada.</div>' : ''}
+          <div class="month-net-line ${info.deficit ? 'neg' : (info.saldo === 0 ? 'neg' : 'pos')}">${
+            info.deficit ? `Sem saldo — déficit de ${formatBRL(Math.abs(info.saldo))}` :
+            info.saldo === 0 ? 'Sem saldo disponível' :
+            `Saldo disponível: ${formatBRL(info.saldo)}`
+          }</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="month-nav">
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',-1)">‹</button>
+        <div class="month-nav-label">${monthLabel(mk)}</div>
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',1)">›</button>
+      </div>
+      ${!mostrarSaldoAtual ? `<button class="month-back-link" onclick="voltarMesAtual('${scopeKey}')">↺ Voltar para ${monthLabel(mesAtual)}</button>` : ''}
+      <div class="month-card">
+        <div class="month-rows" style="padding-top:14px;">
+          <div class="month-row"><div class="month-row-label">${perspectivaEmpresa ? 'Depositado' : 'Recebido'}</div><div class="month-row-val">${formatBRL(stats.depositado)}</div></div>
+          <div class="month-row"><div class="month-row-label">Usado</div><div class="month-row-val">${formatBRL(stats.usado)}</div></div>
+          <div class="month-row"><div class="month-row-label">Dias usados</div><div class="month-row-val">${stats.diasUsados}</div></div>
+          <div class="month-row"><div class="month-row-label">Sem uso</div><div class="month-row-val">${stats.diasNaoUsados}</div></div>
+        </div>
+        <div class="month-detail-list">${itens.length ? itens.map(i=>renderItemHistorico(i,false,perspectivaEmpresa)).join('') : '<div class="empty">Nenhuma movimentação neste mês.</div>'}</div>
+        ${mostrarSaldoAtual ? `<div class="month-net-line ${info.deficit ? 'neg' : (info.saldo === 0 ? 'neg' : 'pos')}">${
+          info.deficit ? `Sem saldo — déficit de ${formatBRL(Math.abs(info.saldo))}` :
+          info.saldo === 0 ? 'Sem saldo disponível' :
+          `Saldo disponível: ${formatBRL(info.saldo)}`
+        }</div>` : ''}
+      </div>
+    `;
+  }
+
+  function renderMonthAccordionEmpresa(scopeKey){
+    const meses = resumoMensalPorContratado();
+    if(meses.length === 0) return '<div class="empty">Sem depósitos registrados ainda.</div>';
+    if(!(scopeKey in expandedMonths)) expandedMonths[scopeKey] = meses[0].key;
+    const aberto = expandedMonths[scopeKey];
+    return meses.map(mes => {
+      const isOpen = mes.key === aberto;
+      const linhas = Object.keys(mes.porContratado).map(cid => `
+        <div class="hist-item">
+          <div class="hist-left"><div class="hist-dot mustard"></div><div>${contratadoNome(parseInt(cid,10))}</div></div>
+          <div class="hist-val pos">${formatBRL(mes.porContratado[cid])}</div>
+        </div>`).join('');
+      return `
+        <div class="month-card">
+          <button class="month-header-btn" onclick="toggleMonth('${scopeKey}','${mes.key}')">
+            <div class="month-name">${monthLabel(mes.key)}</div>
+            <div class="month-header-right">
+              <div class="month-net pos">${formatBRL(mes.total)}</div>
+              <span class="chevron ${isOpen ? 'open' : ''}">⌄</span>
+            </div>
+          </button>
+          ${isOpen ? `<div class="month-porcontratado">${linhas}</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  // ================= PÁGINAS =================
+
+  function paginaPrestadorHoje(){
+    if(!currentUserId || state.contratados.length === 0){
+      return `<div class="empty">Nenhum contratado cadastrado ainda. Peça pro responsável cadastrar você no menu ☰ → Configurações.</div>`;
+    }
+    const scopeKey = 'prestador-' + currentUserId;
+    const mesAtual = todayISO().slice(0,7);
+    const mk = viewingMonth[scopeKey] || mesAtual;
+    const noMesAtual = mk === mesAtual;
+
+    let cardHtml;
+    if(mk >= mesAtual){
+      const info = diasInfo(currentUserId);
+      const futuro = mk > mesAtual;
+      cardHtml = `
+        <div class="carne">
+          <div class="carne-top">
+            <div class="carne-label">Saldo disponível</div>
+            <div class="carne-value ${info.deficit ? 'deficit' : (info.saldo < info.media ? 'low' : '')}">${formatBRL(info.saldo)}</div>
+            <div class="carne-sub">${
+              futuro ? 'esse mês ainda não chegou — saldo atual mantido' :
+              info.deficit ? 'Saldo negativo — avise o responsável' :
+              info.saldo === 0 ? 'Sem saldo — avise o responsável' :
+              info.saldo < info.media ? 'Saldo baixo, acaba logo' :
+              `cobre ${info.dias} dia${info.dias===1?'':'s'} no ritmo atual`
+            }</div>
+          </div>
+          <div class="carne-divider"></div>
+          <div class="carne-bottom">
+            <div class="stat"><div class="stat-num ${info.deficit?'deficit':''}">${futuro ? 0 : info.dias}</div><div class="stat-label">${info.deficit?'dias em déficit':'dias restantes'}</div></div>
+            <div class="stat"><div class="stat-num">R$${futuro ? 0 : info.media.toFixed(0)}</div><div class="stat-label">valor/dia médio</div></div>
+            <div class="stat"><div class="stat-num">R$${futuro ? 0 : totalUsado(currentUserId).toFixed(0)}</div><div class="stat-label">Total usado</div></div>
+          </div>
+        </div>`;
+    } else {
+      const media = valorDiaMedio(currentUserId);
+      const acumulado = acumuladoAteMes(currentUserId, mk);
+      const deficit = acumulado.saldo < 0;
+      const dias = media > 0 ? Math.floor(Math.abs(acumulado.saldo) / media) : 0;
+      cardHtml = `
+        <div class="carne">
+          <div class="carne-top">
+            <div class="carne-label">Saldo até ${monthLabel(mk)}</div>
+            <div class="carne-value ${deficit ? 'deficit' : ''}">${formatBRL(acumulado.saldo)}</div>
+            <div class="carne-sub">valores acumulados até o fim do mês selecionado</div>
+          </div>
+          <div class="carne-divider"></div>
+          <div class="carne-bottom">
+            <div class="stat"><div class="stat-num ${deficit?'deficit':''}">${dias}</div><div class="stat-label">${deficit?'dias em déficit':'dias restantes'}</div></div>
+            <div class="stat"><div class="stat-num">R$${media.toFixed(0)}</div><div class="stat-label">valor/dia médio</div></div>
+            <div class="stat"><div class="stat-num">R$${acumulado.usado.toFixed(0)}</div><div class="stat-label">Total usado</div></div>
+          </div>
+        </div>`;
+    }
+
+    const dataAtual = registroData || (noMesAtual ? todayISO() : mk + '-01');
+    const diaSelecionado = marcacaoDoDia(currentUserId, dataAtual);
+    const ehHoje = dataAtual === todayISO();
+    const labelData = new Date(dataAtual + 'T00:00:00').toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+
+    return `
+      <div class="month-nav">
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',-1)">‹</button>
+        <div class="month-nav-label">${monthLabel(mk)}</div>
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',1)">›</button>
+      </div>
+      ${!noMesAtual ? `<button class="month-back-link" onclick="voltarMesAtual('${scopeKey}')">↺ Voltar para ${monthLabel(mesAtual)}</button>` : ''}
+
+      ${cardHtml}
+
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Data do registro</div>
+        <input type="date" id="dataRegistroInput" class="field-input" value="${dataAtual}" onchange="mudarDataRegistro(this.value)" style="margin-bottom:12px;">
+        <div class="today-date">${labelData}</div>
+        <div class="today-actions">
+          <button class="stamp-btn used ${diaSelecionado && diaSelecionado.usou ? 'selected' : ''}" onclick="marcarDia(true)">✓ ${ehHoje ? 'Usei hoje' : 'Usou nesse dia'}</button>
+          <button class="stamp-btn notused ${diaSelecionado && !diaSelecionado.usou ? 'selected' : ''}" onclick="marcarDia(false)">✕ ${ehHoje ? 'Não usei' : 'Não usou'}</button>
+        </div>
+        <div class="today-hint">Toque de novo no botão marcado pra desfazer</div>
+      </div>
+    `;
+  }
+
+  function paginaPrestadorHistorico(){
+    if(!currentUserId) return `<div class="empty">Nenhum contratado selecionado.</div>`;
+    return `
+      <div class="page-header">
+        <div><h2>Histórico</h2><div class="sub">${contratadoNome(currentUserId)}</div></div>
+      </div>
+      ${renderMonthCarousel(currentUserId, 'prestador-' + currentUserId, false)}
+    `;
+  }
+
+  function paginaResponsavelColaboradores(){
+    if(state.contratados.length === 0){
+      return `<div class="empty">Nenhum contratado cadastrado. Abra o menu ☰ → Configurações pra adicionar.</div>`;
+    }
+    const cards = state.contratados.map(c => {
+      const info = diasInfo(c.id);
+      const alerta = info.deficit || info.saldo === 0 || info.saldo < info.media;
+      return `
+        <button class="collab-card ${alerta ? 'alert' : ''}" onclick="irPara('responsavel-detalhe',{colaboradorId:'${c.id}'})">
+          <div class="collab-left">
+            <div class="collab-avatar">${iniciais(c.nome)}</div>
+            <div>
+              <div class="collab-name">${c.nome}</div>
+              <div class="collab-meta ${info.deficit ? 'deficit' : ''}">${info.deficit ? `déficit de ${info.dias} dia${info.dias===1?'':'s'}` : `${info.dias} dia${info.dias===1?'':'s'} restantes`}</div>
+            </div>
+          </div>
+          <div class="collab-right">
+            <div class="collab-saldo ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
+            <span class="collab-chevron">›</span>
+          </div>
+        </button>`;
+    }).join('');
+    return `
+      <div class="page-header"><h2>Colaboradores</h2></div>
+      ${cards}
+    `;
+  }
+
+  function paginaResponsavelDetalhe(){
+    const c = state.contratados.find(x => x.id === selectedColaboradorId);
+    if(!c) return `<div class="empty">Colaborador não encontrado.</div>`;
+
+    const scopeKey = 'colab-' + c.id;
+    const info = diasInfo(c.id);
+
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara('responsavel-colaboradores')">←</button>
+        <div><h2>${c.nome}</h2><div class="sub">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div></div>
+      </div>
+
+      <div class="carne">
+        <div class="carne-top">
+          <div class="carne-label">Saldo disponível</div>
+          <div class="carne-value ${info.deficit ? 'deficit' : (info.saldo < info.media ? 'low' : '')}">${formatBRL(info.saldo)}</div>
+          <div class="carne-sub">${info.deficit ? 'Saldo negativo' : `cobre ~${info.dias} dia${info.dias===1?'':'s'} · média ${formatBRL(info.media)}/dia`}</div>
+        </div>
+        <div class="carne-divider"></div>
+        <div class="carne-bottom">
+          <div class="stat"><div class="stat-num ${info.deficit?'deficit':''}">${info.dias}</div><div class="stat-label">${info.deficit?'dias em déficit':'dias restantes'}</div></div>
+          <div class="stat"><div class="stat-num">R$${info.media.toFixed(0)}</div><div class="stat-label">valor/dia médio</div></div>
+          <div class="stat"><div class="stat-num">R$${totalUsado(c.id).toFixed(0)}</div><div class="stat-label">Total usado</div></div>
+        </div>
+      </div>
+
+      ${renderPeriodoCard(resumoPeriodoAtual(c.id), true)}
+
+      <div class="today-card" style="margin-bottom:18px; padding:24px;">
+        <div class="today-date" style="font-size:15px; font-weight:600; color:var(--ink); margin-bottom:16px;">💰 Lançar depósito</div>
+        <div class="deposit-form" style="flex-wrap:wrap; gap:12px;">
+          <input type="text" id="novoDeposito_${c.id}" placeholder="Valor em R$" inputmode="decimal" style="flex:1; min-width:130px; padding:16px 14px; font-size:18px; font-weight:600; border-radius:10px;">
+          <input type="date" id="novoDepositoData_${c.id}" value="${todayISO()}" style="flex:1; min-width:150px; border:1px solid var(--line); border-radius:10px; padding:16px 14px; font-family:'IBM Plex Mono', monospace; font-size:16px; background: var(--paper); color: var(--ink);">
+          <button class="deposit-btn" onclick="lancarDeposito('${c.id}')" style="width:100%; padding:16px; font-size:16px; border-radius:10px;">Depositar</button>
+        </div>
+      </div>
+
+      <div class="section-title">Histórico mensal</div>
+      ${renderMonthCarousel(c.id, scopeKey, true)}
+    `;
+  }
+
+  function paginaResponsavelResumo(){
+    const situ = state.contratados.map(c => {
+      const info = diasInfo(c.id);
+      return `
+        <div class="situ-row">
+          <div>
+            <div class="situ-name">${c.nome}</div>
+            <div class="situ-tag ${info.deficit ? 'deficit' : ''}">${info.deficit ? `déficit de ${info.dias} dia${info.dias===1?'':'s'}` : `${info.dias} dia${info.dias===1?'':'s'} restantes`}</div>
+          </div>
+          <div class="situ-saldo ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
+        </div>`;
+    }).join('') || '<div class="empty">Nenhum contratado cadastrado.</div>';
+
+    return `
+      <div class="page-header"><h2>Resumo</h2><div class="sub">Visão geral da empresa</div></div>
+
+      <div class="section-title">Situação atual</div>
+      ${situ}
+
+      <div class="section-title">Resumo mensal por contratado</div>
+      ${renderMonthAccordionEmpresa('empresa-resumo')}
+    `;
+  }
+
+  function paginaSettings(){
+    const listaContratados = state.contratados.map(c => {
+      if(editingContratadoId === c.id){
+        return `
+          <div class="contratado-card">
+            <div class="contratado-edit-form">
+              <div class="row">
+                <input class="nome" id="editNomeContratado_${c.id}" type="text" value="${c.nome}">
+                <input class="valor" id="editValorContratado_${c.id}" type="text" value="${c.valorDiaPadrao.toFixed(2).replace('.',',')}" inputmode="decimal">
+              </div>
+              <div class="row actions">
+                <button class="btn-salvar" onclick="salvarEdicaoContratado('${c.id}')">Salvar</button>
+                <button class="btn-cancelar" onclick="cancelarEdicaoContratado()">Cancelar</button>
+              </div>
+            </div>
+          </div>`;
+      }
+      return `
+        <div class="contratado-card">
+          <div class="contratado-card-view">
+            <div>
+              <div class="contratado-card-name">${c.nome}</div>
+              <div class="contratado-card-val">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div>
+            </div>
+            <div class="contratado-card-actions">
+              <button class="hist-edit" onclick="iniciarEdicaoContratado('${c.id}')" title="Editar">✎</button>
+              <button class="hist-del" onclick="removerContratado('${c.id}')" title="Remover">✕</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('') || '<div class="empty">Nenhum contratado ainda.</div>';
+
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara(paginaInicialDoRole())">←</button>
+        <div><h2>Configurações</h2></div>
+      </div>
+
+      <div class="field-label">Nome da empresa</div>
+      <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" onchange="salvarConfig()">
+
+      <div class="field-label">Nome do responsável</div>
+      <input class="field-input" id="inputResponsavelNome" value="${state.config.responsavel}" onchange="salvarConfig()">
+
+      ${meuUsuario && meuUsuario.papel === 'responsavel' ? `
+        <div class="field-label">Código da empresa (pra convidar contratados)</div>
+        <div class="field-input" style="word-break:break-all; user-select:all;">${meuUsuario.empresa_id}</div>
+        <div style="font-size:11px; color:var(--ink-soft); margin-top:6px;">Manda esse código pro contratado. Ele usa em "Cadastrar → Sou prestador".</div>
+      ` : ''}
+
+      <div class="section-title">Contratados</div>
+      ${listaContratados}
+
+      <div class="add-contratado-card">
+        <div class="field-label">Adicionar contratado</div>
+        <div class="row">
+          <input class="nome" id="novoContratadoNome" placeholder="Nome">
+          <input class="valor" id="novoContratadoValor" placeholder="R$/dia" inputmode="decimal">
+        </div>
+        <button onclick="adicionarContratado()">Ver como convidar</button>
+      </div>
+
+      <button class="deposit-btn" style="width:100%; margin-top:20px; padding:14px; background:var(--stamp-red);" onclick="sair()">Sair da conta</button>
+    `;
+  }
+
+  // ---- PÁGINAS DE AUTENTICAÇÃO ----
+  function irParaCadastro(){ authErro=''; currentPage = 'auth-cadastro'; renderApp(); }
+  function irParaLogin(){ authErro=''; currentPage = 'auth-login'; renderApp(); }
+
+  function paginaAuthCarregando(){
+    return `<div class="empty" style="margin-top:60px;">Carregando…</div>`;
+  }
+
+  function paginaAuthLogin(){
+    return `
+      <div class="page-header"><h2>Entrar</h2><div class="sub">Sald<span style="color:var(--stamp-green)">ou</span>.</div></div>
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Email</div>
+        <input class="field-input" id="authEmail" type="email" placeholder="seu@email.com">
+        <div class="field-label">Senha</div>
+        <input class="field-input" id="authSenha" type="password" placeholder="••••••••">
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerLogin()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Entrando…' : 'Entrar'}</button>
+      </div>
+      <div style="text-align:center; margin-top:16px; font-size:13px; color:var(--ink-soft);">
+        Não tem conta? <a href="#" onclick="irParaCadastro(); return false;" style="color:var(--stamp-green-dark); font-weight:600; text-decoration:underline;">Cadastrar</a>
+      </div>
+    `;
+  }
+
+  function paginaAuthCadastro(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irParaLogin()">←</button>
+        <div><h2>Criar conta</h2></div>
+      </div>
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Email</div>
+        <input class="field-input" id="authEmailCad" type="email" placeholder="seu@email.com">
+        <div class="field-label">Senha (mínimo 6 caracteres)</div>
+        <input class="field-input" id="authSenhaCad" type="password" placeholder="••••••••">
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerCadastro()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Criando…' : 'Criar conta'}</button>
+      </div>
+    `;
+  }
+
+  function paginaAuthConfirmeEmail(){
+    return `
+      <div class="page-header"><h2>Confirme seu email</h2></div>
+      <div class="today-card">
+        <div style="font-size:14px; line-height:1.6;">
+          Te mandamos um link de confirmação por email. Abre a caixa de entrada, clica no link, e depois volta aqui e faz login normalmente.
+        </div>
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="irParaLogin()">Já confirmei, ir pro login</button>
+      </div>
+    `;
+  }
+
+  function paginaAuthEscolherPapel(){
+    return `
+      <div class="page-header"><h2>Só mais um passo</h2><div class="sub">Como você vai usar o Saldou?</div></div>
+      <button class="collab-card" onclick="irPara('auth-cadastro-responsavel')" style="margin-bottom:12px;">
+        <div class="collab-left"><div><div class="collab-name">Sou responsável</div><div class="collab-meta">Vou criar a empresa e cadastrar contratados</div></div></div>
+        <span class="collab-chevron">›</span>
+      </button>
+      <button class="collab-card" onclick="irPara('auth-cadastro-prestador')">
+        <div class="collab-left"><div><div class="collab-name">Sou prestador</div><div class="collab-meta">Já tenho o código de uma empresa</div></div></div>
+        <span class="collab-chevron">›</span>
+      </button>
+    `;
+  }
+
+  function paginaAuthCadastroResponsavel(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara('auth-escolher-papel')">←</button>
+        <div><h2>Criar empresa</h2></div>
+      </div>
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Nome da empresa</div>
+        <input class="field-input" id="novaEmpresaNome" placeholder="Ex: Agasense">
+        <div class="field-label">Seu nome</div>
+        <input class="field-input" id="novoResponsavelNome" placeholder="Seu nome completo">
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="criarEmpresaEEntrar()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Criando…' : 'Criar empresa e entrar'}</button>
+      </div>
+    `;
+  }
+
+  function paginaAuthCadastroPrestador(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara('auth-escolher-papel')">←</button>
+        <div><h2>Entrar numa empresa</h2></div>
+      </div>
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Código da empresa</div>
+        <input class="field-input" id="empresaIdInput" placeholder="Cole o código que o responsável te mandou">
+        <div class="field-label">Seu nome</div>
+        <input class="field-input" id="novoPrestadorNome" placeholder="Seu nome completo">
+        <div class="field-label">Valor padrão do dia (R$)</div>
+        <input class="field-input" id="novoPrestadorValor" placeholder="35" inputmode="decimal">
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="entrarComoContratado()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Entrando…' : 'Entrar'}</button>
+      </div>
+    `;
+  }
+
+  // ---- BOTTOM NAV ----
+  function renderBottomNav(){
+    const el = document.getElementById('bottomNav');
+    if(currentPage === 'settings'){ el.innerHTML = ''; return; }
+    let itens;
+    if(currentRole === 'prestador'){
+      itens = [
+        { page:'prestador-hoje', icon:'🏠', label:'Meu VR' },
+        { page:'prestador-historico', icon:'📊', label:'Histórico' }
+      ];
+    } else {
+      itens = [
+        { page:'responsavel-colaboradores', icon:'👥', label:'Colaboradores' },
+        { page:'responsavel-resumo', icon:'📈', label:'Resumo' }
+      ];
+    }
+    const ativoBase = currentPage === 'responsavel-detalhe' ? 'responsavel-colaboradores' : currentPage;
+    el.innerHTML = itens.map(it => `
+      <button class="nav-btn ${it.page===ativoBase?'active':''}" onclick="irPara('${it.page}')">
+        <span class="icon">${it.icon}</span><span>${it.label}</span>
+      </button>`).join('');
+  }
+
+  // ---- RENDER GERAL ----
+  function renderApp(){
+    const telaDeAuth = currentPage.startsWith('auth-');
+    const topbarEl = document.querySelector('.topbar');
+    const empresaTagEl = document.getElementById('empresaTag');
+
+    topbarEl.style.display = telaDeAuth ? 'none' : 'flex';
+    empresaTagEl.style.display = telaDeAuth ? 'none' : 'block';
+
+    if(!telaDeAuth){
+      document.getElementById('rolePill').textContent = currentRole === 'prestador' ? 'Prestador' : 'Responsável';
+      empresaTagEl.innerHTML = `<b>${state.config.empresa}</b> · responsável: ${state.config.responsavel}`;
+    }
+
+    let html = '';
+    switch(currentPage){
+      case 'auth-carregando': html = paginaAuthCarregando(); break;
+      case 'auth-login': html = paginaAuthLogin(); break;
+      case 'auth-cadastro': html = paginaAuthCadastro(); break;
+      case 'auth-confirme-email': html = paginaAuthConfirmeEmail(); break;
+      case 'auth-escolher-papel': html = paginaAuthEscolherPapel(); break;
+      case 'auth-cadastro-responsavel': html = paginaAuthCadastroResponsavel(); break;
+      case 'auth-cadastro-prestador': html = paginaAuthCadastroPrestador(); break;
+      case 'prestador-hoje': html = paginaPrestadorHoje(); break;
+      case 'prestador-historico': html = paginaPrestadorHistorico(); break;
+      case 'responsavel-colaboradores': html = paginaResponsavelColaboradores(); break;
+      case 'responsavel-detalhe': html = paginaResponsavelDetalhe(); break;
+      case 'responsavel-resumo': html = paginaResponsavelResumo(); break;
+      case 'settings': html = paginaSettings(); break;
+      default: html = paginaPrestadorHoje();
+    }
+    document.getElementById('pageContent').innerHTML = html;
+    if(telaDeAuth){ document.getElementById('bottomNav').innerHTML = ''; }
+    else { renderBottomNav(); }
+  }
+
+  initApp();
+
+  // Registra o service worker (funciona offline + instalável como PWA de verdade)
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch((err) => {
+        console.warn('Saldou: falha ao registrar service worker', err);
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
