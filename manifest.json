@@ -1,6 +1,6 @@
 {
-  "name": "Saldou",
-  "short_name": "Saldou",
+  "name": "SaldouVR",
+  "short_name": "SaldouVR",
   "description": "Controle de saldo de VR entre prestador e responsável",
   "start_url": "/",
   "display": "standalone",
