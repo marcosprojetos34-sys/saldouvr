@@ -469,6 +469,8 @@
     const { error } = await sb.auth.signInWithPassword({ email, password: senha });
     authCarregando = false;
     if(error){ authErro = error.message; renderApp(); return; }
+    posthog.identify(email);
+    posthog.capture('login_realizado');
     currentPage = 'auth-carregando';
     renderApp();
     await carregarAposLogin();
@@ -482,6 +484,7 @@
     const { error } = await sb.auth.signUp({ email, password: senha });
     authCarregando = false;
     if(error){ authErro = error.message; renderApp(); return; }
+    posthog.capture('cadastro_realizado', { email: email });
     authErro = '';
     currentPage = 'auth-confirme-email';
     renderApp();
@@ -504,6 +507,7 @@
     });
     authCarregando = false;
     if(e2){ authErro = e2.message; renderApp(); return; }
+    posthog.capture('empresa_criada', { nome_empresa: nomeEmpresa });
     await carregarAposLogin();
   }
 
@@ -520,6 +524,7 @@
     });
     authCarregando = false;
     if(error){ authErro = 'Código de empresa inválido ou erro: ' + error.message; renderApp(); return; }
+    posthog.capture('prestador_entrou_empresa', { empresa_id: empresaId });
     await carregarAposLogin();
   }
 
@@ -610,6 +615,7 @@
         usou, valor_dia: usou ? valorDiaMedio(currentUserId) : 0
       });
     }
+    posthog.capture('dia_marcado', { usou: usou });
     showStamp(usou);
     await carregarDadosDaEmpresa();
   }
@@ -638,6 +644,7 @@
     await sb.from('depositos').insert({
       empresa_id: meuUsuario.empresa_id, contratado_id: contratadoId, valor, data, criado_por: meuUsuario.id
     });
+    posthog.capture('deposito_criado', { valor: valor });
     input.value = '';
     await carregarDadosDaEmpresa();
   }
