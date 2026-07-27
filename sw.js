@@ -1,10 +1,10 @@
 // Saldou — Service Worker
 // Cache básico do "app shell" pra funcionar offline e ser instalável de verdade como PWA.
 
-const CACHE_NAME = 'saldou-v1';
+const CACHE_NAME = 'saldou-v2';
 const ARQUIVOS_PARA_CACHE = [
   './',
-  './saldou.html',
+  './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
