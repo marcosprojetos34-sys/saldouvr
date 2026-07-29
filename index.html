@@ -295,6 +295,66 @@
   }
   .field-input:focus{ outline:2px solid var(--stamp-green); outline-offset:1px; }
 
+  /* MODAL DE CONFIRMAÇÃO CUSTOMIZADO */
+  .confirm-overlay{
+    position:fixed; inset:0; background:rgba(33,38,31,0.55);
+    display:flex; align-items:center; justify-content:center;
+    z-index:9999; padding:22px; backdrop-filter: blur(2px);
+    animation: fadeIn 0.15s ease-out;
+  }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  .confirm-card{
+    background: var(--paper-light); border:1px solid var(--line);
+    border-radius:16px; padding:24px; max-width:380px; width:100%;
+    box-shadow: var(--shadow);
+    animation: popIn 0.18s ease-out;
+  }
+  @keyframes popIn{ from{ opacity:0; transform: translateY(6px) scale(0.98); } to{ opacity:1; transform: translateY(0) scale(1); } }
+  .confirm-title{ font-family:'Space Grotesk', sans-serif; font-size:18px; font-weight:700; margin-bottom:10px; color: var(--ink); }
+  .confirm-text{ font-size:13.5px; color: var(--ink-soft); line-height:1.55; margin-bottom:22px; }
+  .confirm-actions{ display:flex; gap:10px; }
+  .confirm-btn{
+    flex:1; padding:12px 16px; border-radius:10px; border:1px solid var(--line);
+    background: var(--paper); color: var(--ink); font-family:'Space Grotesk', sans-serif; font-size:13.5px;
+    cursor:pointer; font-weight:600; transition: filter 0.15s;
+  }
+  .confirm-btn:active{ filter: brightness(0.95); }
+  .confirm-btn.confirm-ok.danger{ background: var(--stamp-red); border-color: var(--stamp-red); color:#fff; }
+  .confirm-btn.confirm-ok.safe{ background: var(--stamp-green); border-color: var(--stamp-green); color:#fff; }
+
+  /* OLHO MÁGICO DA SENHA */
+  .pwd-wrap{ position:relative; }
+  .pwd-wrap .field-input{ padding-right:42px; }
+  .pwd-toggle{
+    position:absolute; right:4px; top:50%; transform: translateY(-50%);
+    width:32px; height:32px; border:none; background:transparent; cursor:pointer;
+    color: var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .pwd-toggle:hover{ color: var(--ink); }
+
+  /* CARDS DE ESCOLHA DE PAPEL (cadastro) */
+  .role-card{
+    display:block; width:100%; text-align:left; background: var(--paper-light);
+    border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px;
+    cursor:pointer; font-family:inherit; transition: border-color 0.15s, transform 0.15s;
+  }
+  .role-card:hover{ border-color: var(--stamp-green); transform: translateY(-1px); }
+  .role-icon{
+    width:38px; height:38px; border-radius:10px; background: var(--paper-dark);
+    display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:12px;
+  }
+  .role-card h3{ font-family:'Space Grotesk', sans-serif; font-size:16px; font-weight:700; color: var(--ink); margin-bottom:6px; }
+  .role-card p{ font-size:13px; color: var(--ink-soft); line-height:1.5; margin-bottom:12px; }
+  .role-cta{ font-size:13px; font-weight:600; color: var(--stamp-green-dark); }
+
+  /* CHECKBOX DE TERMOS */
+  .field-check{
+    display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color: var(--ink-soft);
+    line-height:1.5; margin: 14px 0 4px;
+  }
+  .field-check input{ margin-top:3px; accent-color: var(--stamp-green); flex-shrink:0; }
+  .field-check a{ color: var(--stamp-green-dark); text-decoration:underline; }
+
   .contratado-card{
     background: var(--paper-light); border:1px solid var(--line); border-radius:12px;
     padding: 13px 15px; margin-bottom: 9px;
@@ -399,6 +459,7 @@
   let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
   let authErro = '';
   let authCarregando = false;
+  let senhaRedefinidaComSucesso = false;
 
   let state = {
     config: { empresa: '', responsavel: '' },
@@ -407,9 +468,27 @@
     marcacoes: []
   };
 
+  let modoRecuperacaoSenha = /type=recovery/.test(window.location.hash);
+
+  sb.auth.onAuthStateChange((event) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      modoRecuperacaoSenha = true;
+      currentPage = 'auth-nova-senha';
+      renderApp();
+    }
+  });
+
   // ---- AUTENTICAÇÃO ----
   async function initApp(){
+    if(modoRecuperacaoSenha){
+      // Veio de um link de "esqueci a senha" — espera o evento PASSWORD_RECOVERY
+      // do Supabase decidir a tela, em vez de seguir o fluxo normal de login.
+      currentPage = 'auth-carregando';
+      renderApp();
+      return;
+    }
     const { data: { session } } = await sb.auth.getSession();
+    if(modoRecuperacaoSenha) return; // a tela de nova senha já foi mostrada pelo listener acima
     if(!session){
       currentPage = 'auth-login';
       renderApp();
@@ -419,6 +498,7 @@
   }
 
   async function carregarAposLogin(){
+    if(modoRecuperacaoSenha) return; // não deixa nenhum fluxo normal de login sobrescrever a tela de nova senha
     const { data: { user } } = await sb.auth.getUser();
     if(!user){ currentPage = 'auth-login'; renderApp(); return; }
 
@@ -462,6 +542,7 @@
   }
 
   async function fazerLogin(){
+    senhaRedefinidaComSucesso = false;
     const email = document.getElementById('authEmail').value.trim();
     const senha = document.getElementById('authSenha').value;
     if(!email || !senha){ authErro = 'Preenche email e senha.'; renderApp(); return; }
@@ -494,6 +575,7 @@
     const nomeEmpresa = document.getElementById('novaEmpresaNome').value.trim();
     const meuNome = document.getElementById('novoResponsavelNome').value.trim();
     if(!nomeEmpresa || !meuNome){ authErro = 'Preenche os dois campos.'; renderApp(); return; }
+    if(!document.getElementById('termosResponsavel').checked){ authErro = 'Precisa aceitar os Termos de Uso e a Política de Privacidade pra continuar.'; renderApp(); return; }
     authCarregando = true; authErro = ''; renderApp();
 
     const { data: { user } } = await sb.auth.getUser();
@@ -516,6 +598,7 @@
     const meuNome = document.getElementById('novoPrestadorNome').value.trim();
     const valorDia = parseFloat((document.getElementById('novoPrestadorValor').value || '35').replace(',', '.')) || 35;
     if(!empresaId || !meuNome){ authErro = 'Preenche o código da empresa e seu nome.'; renderApp(); return; }
+    if(!document.getElementById('termosPrestador').checked){ authErro = 'Precisa aceitar os Termos de Uso e a Política de Privacidade pra continuar.'; renderApp(); return; }
     authCarregando = true; authErro = ''; renderApp();
 
     const { data: { user } } = await sb.auth.getUser();
@@ -528,7 +611,35 @@
     await carregarAposLogin();
   }
 
-  async function sair(){
+  function customConfirm(title, message, confirmLabel, danger){
+    danger = danger !== false;
+    return new Promise(function(resolve){
+      const overlay = document.createElement('div');
+      overlay.className = 'confirm-overlay';
+      overlay.innerHTML =
+        '<div class="confirm-card">' +
+          '<div class="confirm-title">' + title + '</div>' +
+          '<div class="confirm-text">' + message + '</div>' +
+          '<div class="confirm-actions">' +
+            '<button class="confirm-btn confirm-cancel">Cancelar</button>' +
+            '<button class="confirm-btn confirm-ok ' + (danger ? 'danger' : 'safe') + '">' + (confirmLabel || 'Confirmar') + '</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      function cleanup(result){ overlay.remove(); resolve(result); }
+      overlay.querySelector('.confirm-cancel').onclick = function(){ cleanup(false); };
+      overlay.querySelector('.confirm-ok').onclick = function(){ cleanup(true); };
+      overlay.onclick = function(e){ if(e.target === overlay) cleanup(false); };
+    });
+  }
+
+  function togglePwd(inputId, btn){
+    const input = document.getElementById(inputId);
+    if(input.type === 'password'){ input.type = 'text'; btn.textContent = '🙈'; }
+    else { input.type = 'password'; btn.textContent = '👁️'; }
+  }
+
+  async function executarLogout(){
     await sb.auth.signOut();
     meuUsuario = null;
     state = { config:{empresa:'',responsavel:''}, contratados:[], depositos:[], marcacoes:[] };
@@ -536,10 +647,17 @@
     renderApp();
   }
 
+  async function sair(){
+    const ok = await customConfirm('Sair da conta', 'Você vai precisar fazer login novamente da próxima vez. Tem certeza que quer sair?', 'Sair da conta');
+    if(!ok) return;
+    await executarLogout();
+  }
+
   async function sairDaEmpresa(){
-    if(!confirm('Isso remove seu vínculo com essa empresa (histórico, saldo, tudo). Seu login continua existindo — na próxima vez você pode entrar numa empresa diferente. Confirma?')) return;
+    const ok = await customConfirm('Sair da empresa', 'Isso remove seu vínculo com essa empresa (histórico, saldo, tudo). Seu login continua existindo — na próxima vez você pode entrar numa empresa diferente.', 'Sair da empresa');
+    if(!ok) return;
     await sb.from('usuarios').delete().eq('id', meuUsuario.id);
-    await sair();
+    await executarLogout();
   }
 
   function isoLocal(d){
@@ -1268,7 +1386,7 @@
   }
 
   // ---- PÁGINAS DE AUTENTICAÇÃO ----
-  function irParaCadastro(){ authErro=''; currentPage = 'auth-cadastro'; renderApp(); }
+  function irParaCadastro(){ authErro=''; senhaRedefinidaComSucesso = false; currentPage = 'auth-cadastro'; renderApp(); }
   function irParaLogin(){ authErro=''; currentPage = 'auth-login'; renderApp(); }
 
   function paginaAuthCarregando(){
@@ -1278,15 +1396,22 @@
   function paginaAuthLogin(){
     return `
       <div class="page-header"><h2>Entrar</h2><div class="sub">Saldou<span style="color:var(--stamp-green)">VR</span></div></div>
+      ${senhaRedefinidaComSucesso ? `<div style="background:var(--paper-light); border:1px solid var(--stamp-green); border-radius:10px; padding:11px 14px; font-size:13px; color:var(--stamp-green-dark); margin-bottom:14px;">✓ Senha alterada! Já pode entrar com a senha nova.</div>` : ''}
       <div class="today-card">
         <div class="field-label" style="margin-top:0;">Email</div>
         <input class="field-input" id="authEmail" type="email" placeholder="seu@email.com">
         <div class="field-label">Senha</div>
-        <input class="field-input" id="authSenha" type="password" placeholder="••••••••">
+        <div class="pwd-wrap">
+          <input class="field-input" id="authSenha" type="password" placeholder="••••••••">
+          <button type="button" class="pwd-toggle" onclick="togglePwd('authSenha', this)">👁️</button>
+        </div>
         ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
         <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerLogin()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Entrando…' : 'Entrar'}</button>
       </div>
-      <div style="text-align:center; margin-top:16px; font-size:13px; color:var(--ink-soft);">
+      <div style="text-align:center; margin-top:12px; font-size:13px;">
+        <a href="#" onclick="irParaEsqueciSenha(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Esqueci minha senha</a>
+      </div>
+      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--ink-soft);">
         Não tem conta? <a href="#" onclick="irParaCadastro(); return false;" style="color:var(--stamp-green-dark); font-weight:600; text-decoration:underline;">Cadastrar</a>
       </div>
     `;
@@ -1302,7 +1427,10 @@
         <div class="field-label" style="margin-top:0;">Email</div>
         <input class="field-input" id="authEmailCad" type="email" placeholder="seu@email.com">
         <div class="field-label">Senha (mínimo 6 caracteres)</div>
-        <input class="field-input" id="authSenhaCad" type="password" placeholder="••••••••">
+        <div class="pwd-wrap">
+          <input class="field-input" id="authSenhaCad" type="password" placeholder="••••••••">
+          <button type="button" class="pwd-toggle" onclick="togglePwd('authSenhaCad', this)">👁️</button>
+        </div>
         ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
         <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerCadastro()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Criando…' : 'Criar conta'}</button>
       </div>
@@ -1321,17 +1449,118 @@
     `;
   }
 
+  function irParaEsqueciSenha(){ authErro=''; currentPage = 'auth-esqueci-senha'; renderApp(); }
+
+  function paginaAuthEsqueciSenha(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irParaLogin()">←</button>
+        <div><h2>Recuperar senha</h2></div>
+      </div>
+      <div class="today-card">
+        <div style="font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin-bottom:14px;">
+          Digita o email da sua conta. Vamos mandar um link pra você criar uma senha nova.
+        </div>
+        <div class="field-label" style="margin-top:0;">Email</div>
+        <input class="field-input" id="authEmailRecuperar" type="email" placeholder="seu@email.com">
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="enviarRecuperacaoSenha()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Enviando…' : 'Enviar link de recuperação'}</button>
+      </div>
+    `;
+  }
+
+  function paginaAuthEsqueciSenhaEnviado(){
+    return `
+      <div class="page-header"><h2>Verifica seu email</h2></div>
+      <div class="today-card">
+        <div style="font-size:14px; line-height:1.6;">
+          Se esse email tiver uma conta no SaldouVR, te mandamos um link pra redefinir a senha. Abre a caixa de entrada, clica no link, e cria uma senha nova.
+        </div>
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="irParaLogin()">Voltar pro login</button>
+      </div>
+    `;
+  }
+
+  async function enviarRecuperacaoSenha(){
+    const email = document.getElementById('authEmailRecuperar').value.trim();
+    if(!email){ authErro = 'Digita seu email.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname
+    });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    posthog.capture('recuperacao_senha_solicitada');
+    currentPage = 'auth-esqueci-senha-enviado';
+    renderApp();
+  }
+
+  function paginaAuthNovaSenha(){
+    return `
+      <div class="page-header"><h2>Criar senha nova</h2></div>
+      <div class="today-card">
+        <div style="font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin-bottom:14px;">
+          Digita sua nova senha de acesso.
+        </div>
+        <div class="field-label" style="margin-top:0;">Senha nova (mínimo 6 caracteres)</div>
+        <div class="pwd-wrap">
+          <input class="field-input" id="authNovaSenha" type="password" placeholder="••••••••">
+          <button type="button" class="pwd-toggle" onclick="togglePwd('authNovaSenha', this)">👁️</button>
+        </div>
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="salvarNovaSenha()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Salvando…' : 'Salvar senha nova'}</button>
+      </div>
+    `;
+  }
+
+  async function salvarNovaSenha(){
+    const novaSenha = document.getElementById('authNovaSenha').value;
+    if(!novaSenha || novaSenha.length < 6){ authErro = 'A senha precisa ter no mínimo 6 caracteres.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.updateUser({ password: novaSenha });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    posthog.capture('senha_redefinida');
+    await sb.auth.signOut(); // encerra a sessão temporária de recuperação — a pessoa confirma a senha nova fazendo login manual
+    modoRecuperacaoSenha = false;
+    authErro = '';
+    senhaRedefinidaComSucesso = true;
+    currentPage = 'auth-login';
+    renderApp();
+  }
+
   function paginaAuthEscolherPapel(){
     return `
-      <div class="page-header"><h2>Só mais um passo</h2><div class="sub">Como você vai usar o Saldou?</div></div>
-      <button class="collab-card" onclick="irPara('auth-cadastro-responsavel')" style="margin-bottom:12px;">
-        <div class="collab-left"><div><div class="collab-name">Sou responsável</div><div class="collab-meta">Vou criar a empresa e cadastrar contratados</div></div></div>
-        <span class="collab-chevron">›</span>
+      <div class="page-header"><h2>Bem-vindo ao Saldou<span style="color:var(--stamp-green)">VR</span></h2><div class="sub">Como você vai usar o app?</div></div>
+      <button class="role-card" onclick="irPara('auth-cadastro-responsavel')" style="margin-bottom:12px;">
+        <div class="role-icon">🏢</div>
+        <h3>Sou Empresa</h3>
+        <p>Quero controlar o vale-refeição da minha equipe e gerar o código de convite pros colaboradores.</p>
+        <div class="role-cta">Cadastrar minha empresa →</div>
       </button>
-      <button class="collab-card" onclick="irPara('auth-cadastro-prestador')">
-        <div class="collab-left"><div><div class="collab-name">Sou prestador</div><div class="collab-meta">Já tenho o código de uma empresa</div></div></div>
-        <span class="collab-chevron">›</span>
+      <button class="role-card" onclick="irPara('auth-cadastro-prestador')">
+        <div class="role-icon">🙋</div>
+        <h3>Sou Colaborador</h3>
+        <p>Já tenho o código da minha empresa e quero controlar meu próprio saldo de almoço e janta.</p>
+        <div class="role-cta">Cadastrar minha conta →</div>
       </button>
+      <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
+        Já tem conta? <a href="#" onclick="irParaLogin(); return false;" style="color:var(--stamp-green-dark); font-weight:600; text-decoration:underline;">Fazer login</a>
+      </div>
+    `;
+  }
+
+  function paginaTermosPrivacidade(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="history.back ? window.history.back() : irParaLogin()">←</button>
+        <div><h2>Termos e Privacidade</h2></div>
+      </div>
+      <div class="today-card">
+        <div style="font-size:13.5px; line-height:1.6; color:var(--ink-soft);">
+          Os Termos de Uso e a Política de Privacidade do SaldouVR ainda estão sendo redigidos e serão publicados aqui em breve.
+        </div>
+      </div>
     `;
   }
 
@@ -1346,6 +1575,10 @@
         <input class="field-input" id="novaEmpresaNome" placeholder="Ex: Agasense">
         <div class="field-label">Seu nome</div>
         <input class="field-input" id="novoResponsavelNome" placeholder="Seu nome completo">
+        <label class="field-check">
+          <input type="checkbox" id="termosResponsavel">
+          <span>Li e concordo com os <a href="#" onclick="irPara('termos-privacidade'); return false;">Termos de Uso</a> e a <a href="#" onclick="irPara('termos-privacidade'); return false;">Política de Privacidade</a>.</span>
+        </label>
         ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
         <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="criarEmpresaEEntrar()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Criando…' : 'Criar empresa e entrar'}</button>
       </div>
@@ -1365,6 +1598,10 @@
         <input class="field-input" id="novoPrestadorNome" placeholder="Seu nome completo">
         <div class="field-label">Valor padrão do dia (R$)</div>
         <input class="field-input" id="novoPrestadorValor" placeholder="35" inputmode="decimal">
+        <label class="field-check">
+          <input type="checkbox" id="termosPrestador">
+          <span>Li e concordo com os <a href="#" onclick="irPara('termos-privacidade'); return false;">Termos de Uso</a> e a <a href="#" onclick="irPara('termos-privacidade'); return false;">Política de Privacidade</a>.</span>
+        </label>
         ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
         <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="entrarComoContratado()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Entrando…' : 'Entrar'}</button>
       </div>
@@ -1414,7 +1651,11 @@
       case 'auth-login': html = paginaAuthLogin(); break;
       case 'auth-cadastro': html = paginaAuthCadastro(); break;
       case 'auth-confirme-email': html = paginaAuthConfirmeEmail(); break;
+      case 'auth-esqueci-senha': html = paginaAuthEsqueciSenha(); break;
+      case 'auth-esqueci-senha-enviado': html = paginaAuthEsqueciSenhaEnviado(); break;
+      case 'auth-nova-senha': html = paginaAuthNovaSenha(); break;
       case 'auth-escolher-papel': html = paginaAuthEscolherPapel(); break;
+      case 'termos-privacidade': html = paginaTermosPrivacidade(); break;
       case 'auth-cadastro-responsavel': html = paginaAuthCadastroResponsavel(); break;
       case 'auth-cadastro-prestador': html = paginaAuthCadastroPrestador(); break;
       case 'prestador-hoje': html = paginaPrestadorHoje(); break;
