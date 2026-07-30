@@ -457,6 +457,7 @@
   let viewingMonth = {};
   let registroData = null;
   let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
+  let meuEmail = null;     // email de autenticação da pessoa logada
   let authErro = '';
   let authCarregando = false;
   let senhaRedefinidaComSucesso = false;
@@ -501,6 +502,7 @@
     if(modoRecuperacaoSenha) return; // não deixa nenhum fluxo normal de login sobrescrever a tela de nova senha
     const { data: { user } } = await sb.auth.getUser();
     if(!user){ currentPage = 'auth-login'; renderApp(); return; }
+    meuEmail = user.email;
 
     const { data: perfil, error } = await sb.from('usuarios').select('*').eq('id', user.id).maybeSingle();
     if(error || !perfil){
@@ -642,9 +644,39 @@
   async function executarLogout(){
     await sb.auth.signOut();
     meuUsuario = null;
+    meuEmail = null;
     state = { config:{empresa:'',responsavel:''}, contratados:[], depositos:[], marcacoes:[] };
     currentPage = 'auth-login';
     renderApp();
+  }
+
+  async function excluirConta(){
+    if(meuUsuario.papel === 'responsavel' && state.contratados.length > 0){
+      await customConfirm(
+        'Não é possível excluir ainda',
+        'Antes de excluir sua conta, remove todos os colaboradores cadastrados (menu Configurações → Contratados). Isso evita deixar o histórico deles órfão.',
+        'Entendi', false
+      );
+      return;
+    }
+
+    const aviso = meuUsuario.papel === 'responsavel'
+      ? 'Isso apaga a empresa e todo o seu histórico de forma permanente. Seu login continua existindo, mas você vai precisar se cadastrar de novo do zero se quiser voltar a usar o SaldouVR. Essa ação não pode ser desfeita.'
+      : 'Isso apaga seu vínculo com a empresa e todo o seu histórico de depósitos e marcações de forma permanente. Seu login continua existindo, mas você vai precisar se cadastrar de novo do zero se quiser voltar a usar o SaldouVR. Essa ação não pode ser desfeita.';
+
+    const ok = await customConfirm('Excluir conta', aviso, 'Excluir tudo permanentemente');
+    if(!ok) return;
+
+    if(meuUsuario.papel === 'prestador'){
+      await sb.from('depositos').delete().eq('contratado_id', meuUsuario.id);
+      await sb.from('marcacoes').delete().eq('contratado_id', meuUsuario.id);
+      await sb.from('usuarios').delete().eq('id', meuUsuario.id);
+    } else {
+      await sb.from('usuarios').delete().eq('id', meuUsuario.id);
+      await sb.from('empresas').delete().eq('id', meuUsuario.empresa_id);
+    }
+    posthog.capture('conta_excluida', { papel: meuUsuario.papel });
+    await executarLogout();
   }
 
   async function sair(){
@@ -809,6 +841,12 @@
     const responsavel = document.getElementById('inputResponsavelNome').value.trim();
     if(empresa) await sb.from('empresas').update({ nome: empresa }).eq('id', meuUsuario.empresa_id);
     if(responsavel && meuUsuario.papel === 'responsavel') await sb.from('usuarios').update({ nome: responsavel }).eq('id', meuUsuario.id);
+    await carregarDadosDaEmpresa();
+  }
+  async function salvarMeuNome(){
+    const nome = document.getElementById('inputMeuNome').value.trim();
+    if(!nome) return;
+    await sb.from('usuarios').update({ nome }).eq('id', meuUsuario.id);
     await carregarDadosDaEmpresa();
   }
   async function adicionarContratado(){
@@ -1355,6 +1393,14 @@
         <div><h2>${souResponsavel ? 'Configurações' : 'Minha conta'}</h2></div>
       </div>
 
+      <div class="field-label" style="margin-top:0;">Seu email</div>
+      <div class="field-input" style="color:var(--ink-soft);">${meuEmail || '—'}</div>
+
+      ${!souResponsavel ? `
+        <div class="field-label">Seu nome</div>
+        <input class="field-input" id="inputMeuNome" value="${meuUsuario ? meuUsuario.nome : ''}" onchange="salvarMeuNome()">
+      ` : ''}
+
       <div class="field-label">Nome da empresa</div>
       <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" ${souResponsavel ? 'onchange="salvarConfig()"' : 'disabled'}>
 
@@ -1382,6 +1428,8 @@
       ${!souResponsavel ? `<button class="deposit-btn" style="width:100%; margin-top:20px; padding:14px; background:var(--mustard);" onclick="sairDaEmpresa()">Sair desta empresa (trocar de empresa)</button>` : ''}
 
       <button class="deposit-btn" style="width:100%; margin-top:12px; padding:14px; background:var(--stamp-red);" onclick="sair()">Sair da conta</button>
+
+      <button class="deposit-btn" style="width:100%; margin-top:8px; padding:14px; background:transparent; color:var(--stamp-red); border:1px solid var(--stamp-red);" onclick="excluirConta()">Excluir conta permanentemente</button>
     `;
   }
 
