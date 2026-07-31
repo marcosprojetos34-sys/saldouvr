@@ -713,7 +713,10 @@
       posthog.capture('desbloqueio_biometria_sucesso');
       await carregarAposLogin();
     } catch(e){
+      // Cancelou ou falhou a digital — volta sozinho pro login normal, sem travar a pessoa na tela
       console.warn('Saldou: biometria falhou ou foi cancelada', e);
+      mostrandoBloqueioBiometria = false;
+      await executarLogout();
     }
   }
   function entrarComSenhaEmVezDeBiometria(){
@@ -1002,10 +1005,11 @@
 
     const saudacao = nome ? `Olá, ${nome}!` : 'Olá!';
     const mensagem = `${saudacao} Aqui é da ${state.config.empresa} — você recebeu um convite pra usar o SaldouVR.\n\n`
-      + `1. Acessa: ${linkApp}\n`
-      + `2. Clica em "Cadastrar" → "Sou Colaborador"\n`
-      + `3. Usa esse código da empresa: ${meuUsuario.empresa_id}\n`
-      + `4. Valor padrão do seu dia: R$ ${valor.toFixed(2).replace('.', ',')}\n\n`
+      + `*1.* Acessa: ${linkApp}\n`
+      + `*2.* Clica em "Cadastrar" → "Sou Colaborador"\n\n`
+      + `*Código da empresa* (toca e segura pra copiar):\n`
+      + `\`\`\`${meuUsuario.empresa_id}\`\`\`\n\n`
+      + `*Valor padrão do seu dia:* R$ ${valor.toFixed(2).replace('.', ',')}\n\n`
       + `Assim você já controla seu vale-refeição direto pelo celular.`;
 
     const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
@@ -1604,16 +1608,7 @@
   }
 
   function paginaBiometriaBloqueio(){
-    return `
-      <div class="page-header"><h2>Saldou<span style="color:var(--stamp-green)">VR</span></h2></div>
-      <div class="today-card" style="text-align:center; padding:38px 22px;">
-        <div style="font-size:42px; margin-bottom:14px;">👆</div>
-        <div style="font-size:14px; color:var(--ink-soft);">Use sua impressão digital</div>
-        <div style="text-align:center; margin-top:20px; font-size:12.5px;">
-          <a href="#" onclick="entrarComSenhaEmVezDeBiometria(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Cancelar</a>
-        </div>
-      </div>
-    `;
+    return `<div class="empty" style="margin-top:60px;"></div>`;
   }
 
   function paginaAuthLogin(){
