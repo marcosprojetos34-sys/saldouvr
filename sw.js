@@ -1,7 +1,7 @@
 // Saldou — Service Worker
 // Cache básico do "app shell" pra funcionar offline e ser instalável de verdade como PWA.
 
-const CACHE_NAME = 'saldou-v2';
+const CACHE_NAME = 'saldou-v3';
 const ARQUIVOS_PARA_CACHE = [
   './',
   './index.html',
@@ -51,5 +51,34 @@ self.addEventListener('fetch', (event) => {
         return resposta;
       })
       .catch(() => caches.match(event.request))
+  );
+});
+
+// Recebe o push do servidor (mesmo com o app fechado) e mostra a notificação
+self.addEventListener('push', (event) => {
+  let dados = { title: 'SaldouVR', body: 'Você ainda não registrou o uso do vale hoje.' };
+  try { if (event.data) dados = event.data.json(); } catch (e) { /* usa o padrão acima */ }
+
+  event.waitUntil(
+    self.registration.showNotification(dados.title || 'SaldouVR', {
+      body: dados.body || 'Você ainda não registrou o uso do vale hoje.',
+      icon: './icon-192.png',
+      badge: './favicon-32.png',
+      tag: 'saldou-lembrete-diario',
+      renotify: true
+    })
+  );
+});
+
+// Ao tocar na notificação, abre (ou foca) o app
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((janelas) => {
+      for (const janela of janelas) {
+        if ('focus' in janela) return janela.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow('./');
+    })
   );
 });
