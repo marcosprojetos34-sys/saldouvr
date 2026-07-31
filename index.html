@@ -458,6 +458,7 @@
   let registroData = null;
   let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
   let meuEmail = null;     // email de autenticação da pessoa logada
+  let mostrandoBloqueioBiometria = false;
   let authErro = '';
   let authCarregando = false;
   let senhaRedefinidaComSucesso = false;
@@ -492,6 +493,12 @@
     if(modoRecuperacaoSenha) return; // a tela de nova senha já foi mostrada pelo listener acima
     if(!session){
       currentPage = 'auth-login';
+      renderApp();
+      return;
+    }
+    if(biometriaEstaAtivaAqui()){
+      mostrandoBloqueioBiometria = true;
+      currentPage = 'biometria-bloqueio';
       renderApp();
       return;
     }
@@ -641,6 +648,78 @@
     else { input.type = 'password'; btn.textContent = '👁️'; }
   }
 
+  // ---- BIOMETRIA (digital / reconhecimento facial) ----
+  // Funciona como um "cadeado local": a sessão do Supabase continua sendo a
+  // autenticação de verdade. A biometria só decide se libera o acesso a essa
+  // sessão já salva no aparelho, sem precisar digitar a senha de novo.
+  function biometriaSuportada(){
+    return typeof window.PublicKeyCredential !== 'undefined';
+  }
+  async function biometriaDisponivelNoAparelho(){
+    if(!biometriaSuportada()) return false;
+    try { return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable(); }
+    catch(e){ return false; }
+  }
+  function biometriaEstaAtivaAqui(){
+    return localStorage.getItem('saldou_biometria_ativa') === '1';
+  }
+  async function ativarBiometria(){
+    const disponivel = await biometriaDisponivelNoAparelho();
+    if(!disponivel){
+      await customConfirm('Biometria indisponível', 'Esse aparelho ou navegador não tem suporte a digital/reconhecimento facial (ou você está fora do PWA instalado). Tenta abrir o app instalado na tela inicial.', 'Entendi', false);
+      return;
+    }
+    try{
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const userId = new TextEncoder().encode(meuUsuario.id);
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge,
+          rp: { name: 'SaldouVR' },
+          user: { id: userId, name: meuEmail || 'usuario', displayName: meuUsuario.nome || 'Usuário' },
+          pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+          authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
+          timeout: 60000
+        }
+      });
+      if(!credential) return;
+      const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+      localStorage.setItem('saldou_biometria_ativa', '1');
+      localStorage.setItem('saldou_biometria_credential_id', credentialId);
+      posthog.capture('biometria_ativada');
+      renderApp();
+    } catch(e){
+      console.warn('Saldou: falha ao ativar biometria', e);
+    }
+  }
+  function desativarBiometria(){
+    localStorage.removeItem('saldou_biometria_ativa');
+    localStorage.removeItem('saldou_biometria_credential_id');
+    posthog.capture('biometria_desativada');
+    renderApp();
+  }
+  async function desbloquearComBiometria(){
+    const credentialIdB64 = localStorage.getItem('saldou_biometria_credential_id');
+    if(!credentialIdB64){ mostrandoBloqueioBiometria = false; await carregarAposLogin(); return; }
+    try{
+      const credentialId = Uint8Array.from(atob(credentialIdB64), c => c.charCodeAt(0));
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const assertion = await navigator.credentials.get({
+        publicKey: { challenge, allowCredentials: [{ id: credentialId, type: 'public-key' }], userVerification: 'required', timeout: 60000 }
+      });
+      if(!assertion) return;
+      mostrandoBloqueioBiometria = false;
+      posthog.capture('desbloqueio_biometria_sucesso');
+      await carregarAposLogin();
+    } catch(e){
+      console.warn('Saldou: biometria falhou ou foi cancelada', e);
+    }
+  }
+  function entrarComSenhaEmVezDeBiometria(){
+    mostrandoBloqueioBiometria = false;
+    executarLogout();
+  }
+
   async function executarLogout(){
     await sb.auth.signOut();
     meuUsuario = null;
@@ -648,6 +727,70 @@
     state = { config:{empresa:'',responsavel:''}, contratados:[], depositos:[], marcacoes:[] };
     currentPage = 'auth-login';
     renderApp();
+  }
+
+  // ---- NOTIFICAÇÃO PUSH (lembrete diário, funciona com o app fechado) ----
+  const VAPID_PUBLIC_KEY = 'BM4R5sm3bEQAI6y_vLIfJuXSTu4jFH4cgCB9LNg945DhgTd9CqQDepd3jK8TxMzgdTLnO8flYt6EKLaymJX_nfQ';
+  function urlBase64ToUint8Array(base64String){
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for(let i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
+    return outputArray;
+  }
+  async function ativarNotificacoesPush(){
+    if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+      await customConfirm('Não suportado', 'Esse navegador não suporta notificações push. No iPhone, precisa instalar o app na tela de início primeiro (compartilhar → adicionar à tela de início).', 'Entendi', false);
+      return;
+    }
+    try{
+      const permissao = await Notification.requestPermission();
+      if(permissao !== 'granted'){
+        await customConfirm('Permissão negada', 'Você recusou a permissão de notificação. Pra ativar depois, precisa liberar manualmente nas configurações de notificação do navegador/celular.', 'Entendi', false);
+        return;
+      }
+      const registration = await navigator.serviceWorker.ready;
+      let subscription = await registration.pushManager.getSubscription();
+      if(!subscription){
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        });
+      }
+      const subJson = subscription.toJSON();
+      await sb.from('push_subscriptions').upsert({
+        user_id: meuUsuario.id,
+        endpoint: subJson.endpoint,
+        p256dh: subJson.keys.p256dh,
+        auth: subJson.keys.auth
+      }, { onConflict: 'endpoint' });
+      posthog.capture('push_ativado');
+      await customConfirm('Notificações ativadas ✓', 'A partir de amanhã, você recebe um lembrete às 11h nos dias em que ainda não tiver registrado o uso do vale. Pode desativar quando quiser, aqui ou nas configurações do celular.', 'Show', false);
+      renderApp();
+    } catch(e){
+      console.warn('Saldou: falha ao ativar push', e);
+    }
+  }
+  async function desativarNotificacoesPush(){
+    try{
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+      if(subscription){
+        await sb.from('push_subscriptions').delete().eq('endpoint', subscription.endpoint);
+        await subscription.unsubscribe();
+      }
+      posthog.capture('push_desativado');
+      renderApp();
+    } catch(e){ console.warn('Saldou: falha ao desativar push', e); }
+  }
+  async function statusNotificacoesPush(){
+    if(!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+    try{
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+      return !!subscription;
+    } catch(e){ return false; }
   }
 
   async function excluirConta(){
@@ -849,13 +992,23 @@
     await sb.from('usuarios').update({ nome }).eq('id', meuUsuario.id);
     await carregarDadosDaEmpresa();
   }
-  async function adicionarContratado(){
+  function convidarViaWhatsApp(){
     const nomeInput = document.getElementById('novoContratadoNome');
     const valorInput = document.getElementById('novoContratadoValor');
     const nome = nomeInput.value.trim();
     const valor = parseFloat((valorInput.value || '').replace(',', '.')) || VALOR_PADRAO_DIA;
-    if(!nome){ nomeInput.focus(); return; }
-    alert('Pra cadastrar um contratado, ele precisa criar a própria conta (Cadastrar → "Sou prestador") e usar este código da empresa:\n\n' + meuUsuario.empresa_id + '\n\nManda esse código pra ele por WhatsApp.');
+    const linkApp = window.location.origin + window.location.pathname;
+
+    const saudacao = nome ? `Olá, ${nome}!` : 'Olá!';
+    const mensagem = `${saudacao} Aqui é da ${state.config.empresa} — você recebeu um convite pra usar o SaldouVR.\n\n`
+      + `1. Acessa: ${linkApp}\n`
+      + `2. Clica em "Cadastrar" → "Sou Colaborador"\n`
+      + `3. Usa esse código da empresa: ${meuUsuario.empresa_id}\n`
+      + `4. Valor padrão do seu dia: R$ ${valor.toFixed(2).replace('.', ',')}\n\n`
+      + `Assim você já controla seu vale-refeição direto pelo celular.`;
+
+    const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
+    window.open(urlWhatsApp, '_blank');
   }
   async function removerContratado(id){
     if(!confirm('Remover esse contratado? O histórico de depósitos e marcações dele também será apagado.')) return;
@@ -1396,9 +1549,17 @@
       <div class="field-label" style="margin-top:0;">Seu email</div>
       <div class="field-input" style="color:var(--ink-soft);">${meuEmail || '—'}</div>
 
+      <div class="field-label">Entrar com biometria neste aparelho</div>
+      <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px; background:${biometriaEstaAtivaAqui() ? 'var(--stamp-red)' : 'var(--stamp-green)'};" onclick="${biometriaEstaAtivaAqui() ? 'desativarBiometria()' : 'ativarBiometria()'}">${biometriaEstaAtivaAqui() ? 'Desativar biometria' : '🔒 Ativar biometria (digital/rosto)'}</button>
+
       ${!souResponsavel ? `
         <div class="field-label">Seu nome</div>
         <input class="field-input" id="inputMeuNome" value="${meuUsuario ? meuUsuario.nome : ''}" onchange="salvarMeuNome()">
+
+        <div class="field-label">Lembrete diário (11h)</div>
+        <div style="font-size:11.5px; color:var(--ink-soft); margin-bottom:8px;">Recebe um aviso todo dia às 11h se ainda não tiver marcado se usou o vale — mesmo com o app fechado.</div>
+        <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px; background:var(--stamp-green);" onclick="ativarNotificacoesPush()">🔔 Ativar lembrete diário</button>
+        <button class="deposit-btn" style="width:100%; padding:10px; font-size:12px; background:transparent; color:var(--ink-soft); border:1px solid var(--line); margin-top:6px;" onclick="desativarNotificacoesPush()">Desativar lembrete</button>
       ` : ''}
 
       <div class="field-label">Nome da empresa</div>
@@ -1416,12 +1577,12 @@
         ${listaContratados}
 
         <div class="add-contratado-card">
-          <div class="field-label">Adicionar contratado</div>
+          <div class="field-label">Convidar colaborador</div>
           <div class="row">
-            <input class="nome" id="novoContratadoNome" placeholder="Nome">
+            <input class="nome" id="novoContratadoNome" placeholder="Nome (opcional)">
             <input class="valor" id="novoContratadoValor" placeholder="R$/dia" inputmode="decimal">
           </div>
-          <button onclick="adicionarContratado()">Ver como convidar</button>
+          <button onclick="convidarViaWhatsApp()">📲 Convidar via WhatsApp</button>
         </div>
       ` : ''}
 
@@ -1439,6 +1600,20 @@
 
   function paginaAuthCarregando(){
     return `<div class="empty" style="margin-top:60px;">Carregando…</div>`;
+  }
+
+  function paginaBiometriaBloqueio(){
+    return `
+      <div class="page-header"><h2>Saldou<span style="color:var(--stamp-green)">VR</span></h2></div>
+      <div class="today-card" style="text-align:center; padding:38px 22px;">
+        <div style="font-size:42px; margin-bottom:14px;">🔒</div>
+        <div style="font-size:14px; color:var(--ink-soft); margin-bottom:22px;">Desbloqueia com sua digital ou reconhecimento facial pra continuar.</div>
+        <button class="deposit-btn" style="width:100%; padding:14px; font-size:14px;" onclick="desbloquearComBiometria()">Desbloquear</button>
+        <div style="text-align:center; margin-top:14px; font-size:12.5px;">
+          <a href="#" onclick="entrarComSenhaEmVezDeBiometria(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Entrar com senha em vez disso</a>
+        </div>
+      </div>
+    `;
   }
 
   function paginaAuthLogin(){
@@ -1681,7 +1856,7 @@
 
   // ---- RENDER GERAL ----
   function renderApp(){
-    const telaDeAuth = currentPage.startsWith('auth-');
+    const telaDeAuth = currentPage.startsWith('auth-') || currentPage === 'biometria-bloqueio';
     const topbarEl = document.querySelector('.topbar');
     const empresaTagEl = document.getElementById('empresaTag');
 
@@ -1696,6 +1871,7 @@
     let html = '';
     switch(currentPage){
       case 'auth-carregando': html = paginaAuthCarregando(); break;
+      case 'biometria-bloqueio': html = paginaBiometriaBloqueio(); break;
       case 'auth-login': html = paginaAuthLogin(); break;
       case 'auth-cadastro': html = paginaAuthCadastro(); break;
       case 'auth-confirme-email': html = paginaAuthConfirmeEmail(); break;
