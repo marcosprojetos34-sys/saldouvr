@@ -500,6 +500,7 @@
       mostrandoBloqueioBiometria = true;
       currentPage = 'biometria-bloqueio';
       renderApp();
+      await desbloquearComBiometria(); // já pede a digital/rosto direto, sem precisar tocar em nada antes
       return;
     }
     await carregarAposLogin();
@@ -1606,11 +1607,10 @@
     return `
       <div class="page-header"><h2>Saldou<span style="color:var(--stamp-green)">VR</span></h2></div>
       <div class="today-card" style="text-align:center; padding:38px 22px;">
-        <div style="font-size:42px; margin-bottom:14px;">🔒</div>
-        <div style="font-size:14px; color:var(--ink-soft); margin-bottom:22px;">Desbloqueia com sua digital ou reconhecimento facial pra continuar.</div>
-        <button class="deposit-btn" style="width:100%; padding:14px; font-size:14px;" onclick="desbloquearComBiometria()">Desbloquear</button>
-        <div style="text-align:center; margin-top:14px; font-size:12.5px;">
-          <a href="#" onclick="entrarComSenhaEmVezDeBiometria(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Entrar com senha em vez disso</a>
+        <div style="font-size:42px; margin-bottom:14px;">👆</div>
+        <div style="font-size:14px; color:var(--ink-soft);">Use sua impressão digital</div>
+        <div style="text-align:center; margin-top:20px; font-size:12.5px;">
+          <a href="#" onclick="entrarComSenhaEmVezDeBiometria(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Cancelar</a>
         </div>
       </div>
     `;
