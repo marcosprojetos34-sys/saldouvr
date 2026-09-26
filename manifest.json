@@ -1,13 +1,18 @@
 {
-  "name": "SaldouVR",
-  "short_name": "SaldouVR",
-  "description": "Controle de saldo de VR entre prestador e responsável",
+  "name": "Orçamento Familiar",
+  "short_name": "Orçamento",
+  "description": "Orçamento da família com modo TV",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#F6F1E4",
-  "theme_color": "#F6F1E4",
+  "orientation": "any",
+  "background_color": "#14543F",
+  "theme_color": "#F5F0E6",
+  "lang": "pt-BR",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
