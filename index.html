@@ -1,1233 +1,1945 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="Ji Yi init fn mn Hr pn bn cn capture calculateEventProperties Sn register register_once register_for_session unregister unregister_for_session Tn getFeatureFlag getFeatureFlagPayload getFeatureFlagResult getAllFeatureFlags isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync Mn identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset shutdown setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty Cn xn createPersonProfile setInternalOrTestUser In hn Pn opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing debug Ur Rt getPageViewId captureTraceFeedback captureTraceMetric an".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_uVWSxJnTXUCeEcavGWiv2HDNTTEsNiCXyw4TG9oNktLR', {
+        api_host: 'https://us.i.posthog.com',
+        defaults: '2026-05-30',
+        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+    })
+</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Orçamento Familiar</title>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#F5F0E6">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Orçamento Familiar">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<meta name="apple-mobile-web-app-title" content="SaldouVR">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F6F1E4">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>SaldouVR — Controle de VR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#F5F0E6;color:#2B1B10;font-family:'Manrope',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
-:root{--tv-bg0:#0C0906;--tv-bg1:#151009;--tv-paper:#1B140C;--tv-hair:#2A2015;--tv-ink:#EFE7D9;--tv-ink-dim:#9A8F7A;--tv-ring:clamp(96px,min(12.5vw,23vh),220px);--tv-badge-w:clamp(118px,min(13.5vw,26vh),215px);--app-bg:#F5F0E6;--app-card:#EEE6D6;--app-card2:#FFFFFF;--app-border:#E2D6BE;--app-text:#2B1B10;--app-text-dim:#8C7B68;--app-accent:#2B1B10;--app-accent-text:#F5F0E6;--app-highlight:#F5C518;--app-success:#2E8B57;--app-danger:#C0392B}
-.tv-body{display:flex;flex:1;min-height:0}
-.tv-photo-col{flex:0 0 40%;position:relative;padding:3vh 3vw}
-.tv-content-col{flex:1;display:flex;flex-direction:column;padding:3vh 3.5vw;min-width:0}
-.tv-rings-row{display:flex;gap:clamp(14px,3vw,56px);align-items:flex-start;justify-content:center;flex-wrap:wrap;row-gap:3.5vh}
-.tv-pillar{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
-.tv-ring-wrap{position:relative;width:var(--tv-ring);height:var(--tv-ring)}
-@media (max-width:780px), (max-height:520px) and (orientation:landscape){
-  .tv-body{flex-direction:column;overflow-y:auto}
-  .tv-photo-col{flex:0 0 auto;width:100%;height:26vh;min-height:150px;padding:2vh 4vw 1vh}
-  .tv-content-col{padding:2vh 4vw}
-  :root{--tv-ring:clamp(84px,24vw,120px);--tv-badge-w:clamp(84px,24vw,120px)}
-  .tv-rings-row{gap:3vw;row-gap:2.4vh}
-}
-@media (max-width:420px){
-  :root{--tv-ring:clamp(76px,26vw,105px)}
-}
-.tv-serif{font-family:'Fraunces',Georgia,serif}
-.tv-sans{font-family:'Manrope',system-ui,sans-serif}
-input,select{background:var(--app-card2);border:1.5px solid var(--app-border);color:var(--app-text);border-radius:12px;padding:12px 14px;font-size:15px;outline:none;width:100%;-webkit-appearance:none;appearance:none;font-family:'Manrope',system-ui,sans-serif}
-input:focus{border-color:var(--app-accent)}
-input[type=number]::-webkit-inner-spin-button{opacity:.3}
-#ev-data,.campo-data input[type=date]{position:relative;min-height:48px}
-.campo-data input[type=date]::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:auto;height:auto;opacity:0;cursor:pointer}
-#ev-data::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:auto;height:auto;opacity:0;cursor:pointer}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%238C7B68' d='M0 0l5 7 5-7z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.btn{border:none;color:var(--app-accent-text);background:var(--app-accent);border-radius:99px;padding:12px 18px;cursor:pointer;font-size:15px;font-weight:700;font-family:'Manrope',system-ui,sans-serif}
-.btn:active{opacity:.7}
-.sec{background:var(--app-card);border:1.5px solid var(--app-border);border-radius:20px;padding:18px 20px}
-#tv{position:fixed;inset:0;display:none;background:#050508;z-index:999}
-.tvx{position:absolute;inset:0;display:flex;flex-direction:column;color:var(--tv-ink);font-family:'Manrope',system-ui,sans-serif;overflow:hidden;
-  background:radial-gradient(ellipse 55% 45% at 50% 22%,#132430 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 12% 100%,#1c140b 0%,transparent 60%),radial-gradient(ellipse 45% 55% at 95% 90%,#101a14 0%,transparent 60%),#07090c}
-.tvx-main{flex:1;min-height:0;display:flex;flex-direction:column;gap:2.6vh;padding:3.2vh 3vw 2.4vh}
-.tvx-top{flex:0 0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.6vw;height:43vh}
-.tvx-glass{background:linear-gradient(155deg,rgba(255,255,255,.08),rgba(255,255,255,.02) 60%);border:1px solid rgba(255,255,255,.09);border-radius:clamp(14px,1.3vw,26px);box-shadow:0 24px 50px -28px #000,inset 0 1px 0 rgba(255,255,255,.06)}
-.tvx-fam{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;text-align:left;padding:2vh 1.4vw 2.2vh;gap:1.1vh;cursor:pointer;min-width:0;min-height:0;overflow:hidden}
-.tvx-foto{position:relative;width:100%;flex:1 1 0;min-height:0;border-radius:clamp(10px,.9vw,18px);overflow:hidden;box-shadow:0 10px 30px -12px #000;background:#141a22;display:flex;align-items:center;justify-content:center}
-.tvx-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.tvx-nome{font-size:clamp(17px,2vw,40px);font-weight:800;line-height:1.1;margin-top:.4vh;flex-shrink:0}
-.tvx-msg{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:clamp(12px,1.15vw,24px);color:#CFC4B0;line-height:1.35;flex-shrink:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.tvx-ring{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.4vh}
-.tvx-ring-wrap{position:relative;height:min(35vh,24vw);aspect-ratio:1}
-.tvx-side{display:flex;flex-direction:column;min-width:0;min-height:0;padding:2.4vh 1.6vw}
-.tvx-ring-num{font-size:min(8.6vh,5.8vw)}
-.tvx-ring-lbl{font-size:max(11px,min(2.4vh,1.6vw))}
-.tvx-clock-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1.2vw}
-.tvx-side-card{margin-top:auto;padding-top:2.2vh;border-top:1px solid rgba(255,255,255,.08)}
-.tvx-cards{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.6vw}
-.tvx-card{display:flex;flex-direction:column;padding:2.2vh 1.5vw 1.5vh;min-height:0;min-width:0}
-.tvx-chart{flex:1;min-height:40px;position:relative;margin-top:1.4vh}
-.tvx-chart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.tvx-ticker{flex:0 0 auto;height:clamp(44px,6.5vh,76px);border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.4);position:relative;overflow:hidden;display:none;align-items:center}
-.tvx-sair{background:rgba(239,231,217,.06);border:1px solid rgba(255,255,255,.12);color:var(--tv-ink-dim);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;font-family:'Manrope',system-ui,sans-serif}
-@media (max-width:780px),(max-height:520px) and (orientation:landscape){
-  .tvx-main{overflow-y:auto;padding:2vh 4vw;gap:14px}
-  .tvx-top{grid-template-columns:1fr;height:auto;gap:14px}
-  .tvx-side{order:-1}
-  .tvx-ring-wrap{height:min(58vw,230px)}
-  .tvx-foto{flex:0 0 auto;height:190px}
-  .tvx-fam{padding:14px;gap:8px}
-  .tvx-ring-num{font-size:min(15vw,60px)}
-  .tvx-ring-lbl{font-size:13px}
-  .tvx-cards{grid-template-columns:1fr;flex:0 0 auto;gap:14px}
-  .tvx-card{height:250px;padding:16px}
-  .tvx-side{padding:16px}
-  .tvx-side-card{margin-top:16px;padding-top:14px}
-}
-@media (prefers-reduced-motion:reduce){ .tvx *{transition:none!important} }
-#sync{position:fixed;bottom:16px;right:16px;background:var(--app-highlight);color:var(--app-text);border-radius:99px;padding:6px 14px;font-size:12px;font-weight:700;display:none;z-index:100}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:var(--app-border);border-radius:4px}
+  :root{
+    --paper: #F6F1E4;
+    --paper-light: #FCFAF3;
+    --paper-dark: #EDE6D2;
+    --ink: #21261F;
+    --ink-soft: #565C4E;
+    --stamp-green: #1F6F4C;
+    --stamp-green-dark: #17553A;
+    --stamp-red: #A6362B;
+    --mustard: #C68A2C;
+    --line: #D9D0B8;
+    --shadow: 0 1px 0 rgba(33,38,31,0.06), 0 8px 20px -12px rgba(33,38,31,0.25);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ min-height:100%; }
+  body{
+    background: var(--paper);
+    background-image:
+      radial-gradient(circle at 10% 5%, rgba(0,0,0,0.02) 0%, transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(0,0,0,0.02) 0%, transparent 40%);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  input, select{ font-size: 16px !important; min-width: 0; }
+  .app{ width:100%; max-width: 440px; padding: max(18px, env(safe-area-inset-top)) 16px 0; padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+  h1,h2,h3,.display{ font-family:'Space Grotesk', sans-serif; }
+  button{ font-family: inherit; }
+
+  /* TOPBAR */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
+  .hamburger-btn, .icon-btn{
+    width:34px; height:34px; border-radius:9px;
+    border:1px solid var(--line); background: var(--paper-light);
+    cursor:pointer; font-size:16px; color: var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .hamburger-btn:hover, .icon-btn:hover{ color: var(--ink); background: var(--paper-dark); }
+  .topbar-title{ font-size:20px; font-weight:700; letter-spacing:-0.01em; }
+  .topbar-title span{ color: var(--stamp-green); }
+  .role-pill{
+    border:1px solid var(--line); background: var(--paper-dark);
+    border-radius:999px; padding:7px 12px;
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:11px;
+    letter-spacing:0.04em; text-transform:uppercase; color: var(--ink-soft); cursor:pointer;
+  }
+  .role-pill:hover{ color: var(--ink); }
+  .empresa-tag{ font-size:11.5px; color: var(--ink-soft); margin: 8px 2px 18px; }
+  .empresa-tag b{ color: var(--ink); }
+
+  /* PAGE HEADER (sub-pages) */
+  .page-header{ display:flex; align-items:center; gap:10px; margin: 4px 0 18px; }
+  .page-header h2{ font-size:18px; font-weight:700; }
+  .page-header .sub{ font-size:11px; color: var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-weight:400; margin-top:2px; }
+
+  /* SECTION TITLES */
+  .section-title{
+    font-size:12.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em;
+    color: var(--ink-soft); margin: 22px 0 10px 2px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .section-title::after{ content:""; flex:1; border-top:1px dashed var(--line); }
+  .section-title:first-child{ margin-top:0; }
+
+  /* USER SELECT (prestador, modo teste) */
+  .user-select-wrap{ margin-bottom: 16px; }
+  .user-select-label{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color: var(--ink-soft); margin-bottom:6px; }
+  select.user-select{
+    width:100%; padding: 11px 14px; border-radius:10px; border:1px solid var(--line);
+    background: var(--paper-light); font-family:'Space Grotesk', sans-serif; font-weight:600;
+    font-size:14px; color: var(--ink);
+  }
+
+  /* CARNE CARD */
+  .carne{
+    background: var(--paper-light); border-radius: 14px; box-shadow: var(--shadow);
+    border: 1px solid var(--line); position:relative; overflow:hidden; margin-bottom: 18px;
+  }
+  .carne::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:6px;
+    background-image: radial-gradient(circle, var(--paper) 3px, transparent 3.2px);
+    background-size: 16px 100%; background-position: -4px 0;
+  }
+  .carne-top{ padding: 24px 22px 18px; text-align:center; }
+  .carne-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.12em; color: var(--ink-soft); margin-bottom:8px; }
+  .carne-value{ font-family:'IBM Plex Mono', monospace; font-weight:700; font-size: 42px; letter-spacing:-0.02em; line-height:1; }
+  .carne-value.low{ color: var(--mustard); }
+  .carne-value.deficit{ color: var(--stamp-red); }
+  .carne-sub{ margin-top:10px; font-size:13px; color: var(--ink-soft); }
+  .carne-divider{ border-top: 1px dashed var(--line); margin: 0 22px; }
+  .carne-bottom{ padding: 16px 22px 18px; display:flex; justify-content:space-between; gap:12px; }
+  .stat{ flex:1; text-align:center; }
+  .stat-num{ font-size:19px; font-weight:600; }
+  .stat-num.deficit{ color: var(--stamp-red); }
+  .stat-label{ font-size:9.5px; text-transform:uppercase; letter-spacing:0.06em; color: var(--ink-soft); margin-top:2px; }
+
+  /* TODAY CARD */
+  .today-card{ background: var(--paper-light); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); margin-bottom: 6px; }
+  .today-date{ font-size:12px; color:var(--ink-soft); margin-bottom:12px; }
+  .today-actions{ display:flex; gap:10px; }
+  .stamp-btn{
+    flex:1; border-radius:10px; padding: 14px 8px; font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:14px; cursor:pointer; border:2px solid; background:transparent;
+    transition: transform 0.12s ease; position:relative;
+  }
+  .stamp-btn:active{ transform: scale(0.96); }
+  .stamp-btn.used{ border-color: var(--stamp-green); color: var(--stamp-green-dark); }
+  .stamp-btn.used:hover{ background: rgba(31,111,76,0.08); }
+  .stamp-btn.notused{ border-color: var(--stamp-red); color: var(--stamp-red); }
+  .stamp-btn.notused:hover{ background: rgba(166,54,43,0.06); }
+  .stamp-btn.selected.used{ background: var(--stamp-green); color:#fff; }
+  .stamp-btn.selected.notused{ background: var(--stamp-red); color:#fff; }
+  .today-hint{ text-align:center; font-size:11px; color: var(--ink-soft); margin-top:10px; }
+
+  .stamp-mark{
+    position:fixed; top:50%; left:50%; transform: translate(-50%,-50%) scale(2.2) rotate(-12deg);
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:38px; letter-spacing:0.05em;
+    padding: 14px 28px; border:5px solid; border-radius:10px; opacity:0; pointer-events:none; z-index:50;
+  }
+  .stamp-mark.show{ animation: stampDown 0.55s cubic-bezier(.2,1.4,.4,1) forwards; }
+  @keyframes stampDown{
+    0%{ opacity:0; transform: translate(-50%,-50%) scale(3) rotate(-18deg); }
+    55%{ opacity:1; transform: translate(-50%,-50%) scale(0.95) rotate(-8deg); }
+    70%{ transform: translate(-50%,-50%) scale(1.05) rotate(-8deg); }
+    100%{ opacity:1; transform: translate(-50%,-50%) scale(1) rotate(-8deg); }
+  }
+
+  /* ACCORDION MONTH CARDS */
+  .month-card{ background: var(--paper-light); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px; overflow:hidden; }
+  .month-header-btn{
+    width:100%; border:none; background:transparent; cursor:pointer;
+    padding: 14px 16px; display:flex; justify-content:space-between; align-items:center; text-align:left;
+  }
+  .month-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13.5px; text-transform:capitalize; }
+  .month-header-right{ display:flex; align-items:center; gap:10px; }
+  .month-net{ font-size:13px; font-weight:700; }
+  .month-net.pos{ color: var(--stamp-green-dark); }
+  .month-net.neg{ color: var(--stamp-red); }
+  .chevron{ font-size:12px; color: var(--ink-soft); transition: transform 0.2s ease; display:inline-block; }
+  .chevron.open{ transform: rotate(180deg); }
+  .month-rows{ display:flex; gap:14px; padding: 0 16px 14px; flex-wrap:wrap; }
+  .month-row{ flex:1; min-width:70px; }
+  .month-row-label{ font-size:9.5px; text-transform:uppercase; letter-spacing:0.05em; color: var(--ink-soft); }
+  .month-row-val{ font-size:13.5px; font-weight:600; margin-top:2px; }
+  .month-detail-list{ border-top: 1px dashed var(--line); padding: 10px 12px 12px; }
+  .month-porcontratado{ padding: 0 16px 14px; }
+
+  /* MONTH NAV CAROUSEL */
+  .month-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom: 12px;
+  }
+  .month-nav-btn{
+    width:38px; height:38px; border-radius:10px;
+    border:1px solid var(--line); background: var(--paper-light);
+    font-size:18px; font-family:'Space Grotesk', sans-serif; font-weight:700;
+    color: var(--ink); cursor:pointer; flex-shrink:0;
+  }
+  .month-nav-btn:hover{ background: var(--paper-dark); }
+  .month-nav-label{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px;
+    text-transform:capitalize; text-align:center;
+  }
+  .month-net-line{
+    text-align:center; padding: 12px 16px; font-weight:700; font-size:14px;
+    border-top: 1px dashed var(--line);
+  }
+  .month-net-line.pos{ color: var(--stamp-green-dark); }
+  .month-net-line.neg{ color: var(--stamp-red); }
+  .month-back-link{
+    display:block; width:100%; text-align:center; border:none; background:transparent;
+    color: var(--stamp-green-dark); font-family:'Space Grotesk', sans-serif; font-weight:600;
+    font-size:12px; text-decoration:underline; cursor:pointer; margin-bottom:12px; padding:2px;
+  }
+
+  /* HISTORY ITEMS (dentro da sanfona / detalhe) */
+  .hist-item{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 11px 12px; background: var(--paper); border:1px solid var(--line);
+    border-radius:9px; margin-bottom:7px; font-size:12.5px;
+  }
+  .hist-item:last-child{ margin-bottom:0; }
+  .hist-left{ display:flex; align-items:center; gap:9px; }
+  .hist-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .hist-dot.green{ background:var(--stamp-green); }
+  .hist-dot.red{ background:var(--stamp-red); }
+  .hist-dot.mustard{ background:var(--mustard); }
+  .hist-date{ color:var(--ink-soft); font-size:10.5px; }
+  .hist-val{ font-weight:600; }
+  .hist-val.neg{ color: var(--stamp-red); }
+  .hist-val.pos{ color: var(--stamp-green-dark); }
+  .hist-right{ display:flex; align-items:center; gap:2px; }
+  .hist-del, .hist-edit{
+    border:none; background:transparent; color: var(--ink-soft); font-size:13px;
+    line-height:1; cursor:pointer; padding:5px 6px; border-radius:6px;
+  }
+  .hist-del:hover{ color: var(--stamp-red); background: rgba(166,54,43,0.08); }
+  .hist-edit:hover{ color: var(--stamp-green-dark); background: rgba(31,111,76,0.08); }
+  .hist-edit-form{ width:100%; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .hist-edit-form input, .hist-edit-form select{
+    border:1px solid var(--line); border-radius:8px; padding:8px 10px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background: var(--paper-light); color: var(--ink);
+  }
+  .hist-edit-form input.valor{ width:90px; }
+  .hist-edit-form input.data{ flex:1; min-width:120px; }
+  .hist-edit-form button{ border:none; border-radius:7px; padding: 8px 10px; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:12px; cursor:pointer; }
+  .btn-salvar{ background: var(--stamp-green); color:#fff; }
+  .btn-cancelar{ background: var(--paper-dark); color: var(--ink-soft); }
+
+  .empty{ text-align:center; padding: 22px 12px; color: var(--ink-soft); font-size:13px; }
+
+  /* COLABORADORES (lista compacta) */
+  .collab-card{
+    width:100%; display:flex; align-items:center; justify-content:space-between;
+    background: var(--paper-light); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 9px; cursor:pointer; text-align:left;
+  }
+  .collab-card.alert{ border-color: var(--mustard); background: linear-gradient(180deg, rgba(198,138,44,0.06), var(--paper-light) 45%); }
+  .collab-left{ display:flex; align-items:center; gap:11px; }
+  .collab-avatar{
+    width:36px; height:36px; border-radius:50%; background: var(--paper-dark);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:14px; color: var(--ink-soft); flex-shrink:0;
+  }
+  .collab-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14.5px; }
+  .collab-meta{ font-size:11px; color: var(--ink-soft); margin-top:1px; }
+  .collab-meta.deficit{ color: var(--stamp-red); font-weight:600; }
+  .collab-right{ display:flex; align-items:center; gap:10px; }
+  .collab-saldo{ font-weight:700; font-size:15px; }
+  .collab-saldo.deficit{ color: var(--stamp-red); }
+  .collab-chevron{ color: var(--ink-soft); font-size:16px; }
+
+  /* SITUACAO ATUAL (resumo) */
+  .situ-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 11px 14px; background: var(--paper-light); border:1px solid var(--line);
+    border-radius:10px; margin-bottom:7px; font-size:13px;
+  }
+  .situ-name{ font-weight:600; font-family:'Space Grotesk', sans-serif; font-size:13.5px; }
+  .situ-tag{ font-size:11px; color: var(--ink-soft); margin-top:1px; }
+  .situ-tag.deficit{ color: var(--stamp-red); font-weight:600; }
+  .situ-saldo{ font-weight:700; }
+  .situ-saldo.deficit{ color: var(--stamp-red); }
+
+  /* DEPOSIT FORM */
+  .deposit-form{ display:flex; gap:8px; }
+  .deposit-form input{
+    flex:1; border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:14px; background: var(--paper); color: var(--ink);
+  }
+  .deposit-form input:focus{ outline:2px solid var(--stamp-green); outline-offset:1px; }
+  .deposit-btn{
+    border:none; background: var(--ink); color: var(--paper-light); font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:13px; padding: 0 16px; border-radius:8px; cursor:pointer;
+  }
+  .deposit-btn:hover{ background: var(--stamp-green-dark); }
+
+  /* SETTINGS PAGE */
+  .field-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color: var(--ink-soft); margin-bottom:5px; margin-top:16px; }
+  .field-label:first-child{ margin-top:0; }
+  .field-input{
+    width:100%; border:1px solid var(--line); border-radius:9px; padding:11px 13px;
+    font-family:'IBM Plex Mono', monospace; font-size:13.5px; background: var(--paper-light); color: var(--ink);
+  }
+  .field-input:focus{ outline:2px solid var(--stamp-green); outline-offset:1px; }
+
+  /* MODAL DE CONFIRMAÇÃO CUSTOMIZADO */
+  .confirm-overlay{
+    position:fixed; inset:0; background:rgba(33,38,31,0.55);
+    display:flex; align-items:center; justify-content:center;
+    z-index:9999; padding:22px; backdrop-filter: blur(2px);
+    animation: fadeIn 0.15s ease-out;
+  }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  .confirm-card{
+    background: var(--paper-light); border:1px solid var(--line);
+    border-radius:16px; padding:24px; max-width:380px; width:100%;
+    box-shadow: var(--shadow);
+    animation: popIn 0.18s ease-out;
+  }
+  @keyframes popIn{ from{ opacity:0; transform: translateY(6px) scale(0.98); } to{ opacity:1; transform: translateY(0) scale(1); } }
+  .confirm-title{ font-family:'Space Grotesk', sans-serif; font-size:18px; font-weight:700; margin-bottom:10px; color: var(--ink); }
+  .confirm-text{ font-size:13.5px; color: var(--ink-soft); line-height:1.55; margin-bottom:22px; }
+  .confirm-actions{ display:flex; gap:10px; }
+  .confirm-btn{
+    flex:1; padding:12px 16px; border-radius:10px; border:1px solid var(--line);
+    background: var(--paper); color: var(--ink); font-family:'Space Grotesk', sans-serif; font-size:13.5px;
+    cursor:pointer; font-weight:600; transition: filter 0.15s;
+  }
+  .confirm-btn:active{ filter: brightness(0.95); }
+  .confirm-btn.confirm-ok.danger{ background: var(--stamp-red); border-color: var(--stamp-red); color:#fff; }
+  .confirm-btn.confirm-ok.safe{ background: var(--stamp-green); border-color: var(--stamp-green); color:#fff; }
+
+  /* OLHO MÁGICO DA SENHA */
+  .pwd-wrap{ position:relative; }
+  .pwd-wrap .field-input{ padding-right:42px; }
+  .pwd-toggle{
+    position:absolute; right:4px; top:50%; transform: translateY(-50%);
+    width:32px; height:32px; border:none; background:transparent; cursor:pointer;
+    color: var(--ink-soft); display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .pwd-toggle:hover{ color: var(--ink); }
+
+  /* CARDS DE ESCOLHA DE PAPEL (cadastro) */
+  .role-card{
+    display:block; width:100%; text-align:left; background: var(--paper-light);
+    border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px;
+    cursor:pointer; font-family:inherit; transition: border-color 0.15s, transform 0.15s;
+  }
+  .role-card:hover{ border-color: var(--stamp-green); transform: translateY(-1px); }
+  .role-icon{
+    width:38px; height:38px; border-radius:10px; background: var(--paper-dark);
+    display:flex; align-items:center; justify-content:center; font-size:18px; margin-bottom:12px;
+  }
+  .role-card h3{ font-family:'Space Grotesk', sans-serif; font-size:16px; font-weight:700; color: var(--ink); margin-bottom:6px; }
+  .role-card p{ font-size:13px; color: var(--ink-soft); line-height:1.5; margin-bottom:12px; }
+  .role-cta{ font-size:13px; font-weight:600; color: var(--stamp-green-dark); }
+
+  /* CHECKBOX DE TERMOS */
+  .field-check{
+    display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color: var(--ink-soft);
+    line-height:1.5; margin: 14px 0 4px;
+  }
+  .field-check input{ margin-top:3px; accent-color: var(--stamp-green); flex-shrink:0; }
+  .field-check a{ color: var(--stamp-green-dark); text-decoration:underline; }
+
+  .contratado-card{
+    background: var(--paper-light); border:1px solid var(--line); border-radius:12px;
+    padding: 13px 15px; margin-bottom: 9px;
+  }
+  .contratado-card-view{ display:flex; align-items:center; justify-content:space-between; }
+  .contratado-card-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14px; }
+  .contratado-card-val{ font-size:11px; color: var(--ink-soft); margin-top:2px; }
+  .contratado-card-actions{ display:flex; gap:2px; }
+  .contratado-edit-form{ display:flex; flex-direction:column; gap:8px; }
+  .contratado-edit-form .row{ display:flex; gap:8px; }
+  .contratado-edit-form input{
+    border:1px solid var(--line); border-radius:8px; padding:9px 11px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background: var(--paper); color: var(--ink);
+  }
+  .contratado-edit-form input.nome{ flex:2; }
+  .contratado-edit-form input.valor{ flex:1; }
+  .contratado-edit-form .row.actions{ gap:8px; }
+  .contratado-edit-form .row.actions button{
+    flex:1; border:none; border-radius:8px; padding:9px; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:12px; cursor:pointer;
+  }
+
+  .add-contratado-card{
+    background: var(--paper-dark); border: 1px dashed var(--line); border-radius: 12px; padding: 14px 15px; margin-top: 6px;
+  }
+  .add-contratado-card .field-label{ margin-top:0; }
+  .add-contratado-card .row{ display:flex; gap:8px; margin-top:8px; }
+  .add-contratado-card input{
+    border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px; background: var(--paper-light); color: var(--ink);
+  }
+  .add-contratado-card input.nome{ flex:2; }
+  .add-contratado-card input.valor{ flex:1; }
+  .add-contratado-card button{
+    border:none; background: var(--ink); color: var(--paper-light); font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:13px; padding: 10px 14px; border-radius:8px; cursor:pointer; width:100%; margin-top:8px;
+  }
+
+  .footnote{ text-align:center; font-size:10.5px; color: var(--ink-soft); margin: 24px 0 8px; line-height:1.6; padding: 0 10px; }
+
+  /* BOTTOM NAV */
+  .bottom-nav{
+    position:fixed; bottom:0; left:0; right:0;
+    display:flex; justify-content:center;
+    background: var(--paper-light);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index:40;
+  }
+  .bottom-nav-inner{ width:100%; max-width:440px; display:flex; }
+  .nav-btn{
+    flex:1; border:none; background:transparent; cursor:pointer;
+    padding: 11px 4px 9px; display:flex; flex-direction:column; align-items:center; gap:3px;
+    color: var(--ink-soft); font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:10.5px;
+  }
+  .nav-btn .icon{ font-size:19px; line-height:1; }
+  .nav-btn.active{ color: var(--stamp-green-dark); }
+
+  @media (prefers-reduced-motion: reduce){
+    .stamp-mark.show{ animation: none; opacity:1; }
+    .stamp-btn:active{ transform:none; }
+  }
 </style>
 </head>
 <body>
-<div id="app"></div>
-<div id="tv"></div>
-<div id="sync">✓ Salvo</div>
-<input type="file" id="foto-inp" accept="image/*" style="display:none;width:auto">
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
-// ── Firebase config ──────────────────────────────────────────────────────────
-const firebaseConfig = {
-  apiKey: "AIzaSyAgno41QI3KYQMSYnrNrUFkXSz5gzy-7ZQ",
-  authDomain: "orcamento-familiar-c5232.firebaseapp.com",
-  projectId: "orcamento-familiar-c5232",
-  storageBucket: "orcamento-familiar-c5232.firebasestorage.app",
-  messagingSenderId: "948868489584",
-  appId: "1:948868489584:web:6995a75b5f95ccfd5eefb5",
-  measurementId: "G-WLL9FC1FL1"
-};
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-const REF = doc(db, "familias", "principal");
-
-// ── Constantes ───────────────────────────────────────────────────────────────
-const PILARES = ['Moradia','Investimentos','Lazer'];
-const IC   = {Moradia:'🏠', Investimentos:'📈', Lazer:'😊', Geral:'📌'};
-const PERC_PADRAO = {Moradia:50, Investimentos:30, Lazer:20};
-const percDe = p => ((D.percentuais && D.percentuais[p]!=null) ? D.percentuais[p] : PERC_PADRAO[p]) / 100;
-const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const hoje = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
-const novoId = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const COR  = {Moradia:'#2E8AF5', Investimentos:'#1DB954', Lazer:'#F5820D', Geral:'#D4A537'};
-
-let D = {
-  receita: 6000,
-  despesas: [],
-  eventos: [],
-  fixas: [],
-  percentuais: {...PERC_PADRAO},
-  metaFamilia: null,
-  receitaInfo: null,
-  percentuaisInfo: null,
-  tvInfo: null,
-  mensagem: 'Família unida, finanças em ordem! 💚',
-  nomeFamilia: 'Nossa Família',
-  foto: null,
-  filtro: 'Todos',
-  editando: null,
-  historicoAberto: false,
-  historicoModo: 'mes',
-  historicoPeriodo: null,
-  historicoBusca: '',
-  tela: 'inicio'
-};
-let salvando = false;
-let renderPendente = false;
-
-// ── Firebase: salvar ─────────────────────────────────────────────────────────
-async function salvar(){
-  try{
-    salvando = true;
-    const payload = {
-      receita:   D.receita,
-      despesas:  D.despesas,
-      eventos:   D.eventos,
-      mensagem:  D.mensagem,
-      nomeFamilia: D.nomeFamilia,
-      foto:      D.foto || null,
-      fixas:     D.fixas || [],
-      percentuais: D.percentuais || {...PERC_PADRAO},
-      metaFamilia: D.metaFamilia || null,
-      receitaInfo: D.receitaInfo || null,
-      percentuaisInfo: D.percentuaisInfo || null,
-      tvInfo: D.tvInfo || null
-    };
-    await setDoc(REF, payload, { merge: true });
-    mostrarSync();
-  }catch(e){ console.error(e); }
-  finally{ salvando = false; }
-}
-
-function mostrarSync(){
-  const el = document.getElementById('sync');
-  el.style.display = 'block';
-  clearTimeout(mostrarSync._t);
-  mostrarSync._t = setTimeout(()=>{ el.style.display='none'; }, 2000);
-}
-
-// ── Firebase: escutar em tempo real ─────────────────────────────────────────
-onSnapshot(REF, snap => {
-  if(salvando) return;
-  if(snap.exists()){
-    const r = snap.data();
-    D.receita  = r.receita  ?? D.receita;
-    D.despesas = r.despesas ?? [];
-    D.eventos  = r.eventos  ?? [];
-    D.mensagem = r.mensagem ?? D.mensagem;
-    D.nomeFamilia = r.nomeFamilia ?? D.nomeFamilia;
-    D.foto     = r.foto     ?? null;
-    D.fixas    = r.fixas    ?? [];
-    D.percentuais = r.percentuais ?? {...PERC_PADRAO};
-    D.metaFamilia = r.metaFamilia ?? null;
-    D.receitaInfo = r.receitaInfo ?? null;
-    D.percentuaisInfo = r.percentuaisInfo ?? null;
-    D.tvInfo = r.tvInfo ?? null;
-    const ativo = document.activeElement;
-    const digitando = ativo && ['INPUT','SELECT','TEXTAREA'].includes(ativo.tagName) && document.getElementById('app').contains(ativo);
-    if(!digitando) render(); else renderPendente = true;
-    if(document.getElementById('tv').style.display !== 'none') montarTV();
-  }
-});
-
-// Assim que o usuário sai de um campo (clica fora, muda de campo), atualiza a tela
-// pra refletir qualquer mudança que tenha chegado de outro aparelho enquanto digitava.
-document.getElementById('app').addEventListener('focusout', ()=>{
-  if(!renderPendente) return;
-  setTimeout(()=>{
-    const a=document.activeElement;
-    if(a && ['INPUT','SELECT','TEXTAREA'].includes(a.tagName) && document.getElementById('app').contains(a)) return;
-    renderPendente=false; render();
-  }, 350);
-});
-
-// ── Cálculos ─────────────────────────────────────────────────────────────────
-const meta  = p => D.receita * percDe(p);
-const gasto = p => { const am=periodoAtualStr(); return D.despesas.filter(d=>d.pilar===p && d.data && d.data.startsWith(am)).reduce((s,d)=>s+d.valor,0); };
-const porc  = p => meta(p)>0 ? gasto(p)/meta(p) : 0;
-const brl   = v => `R$ ${(+v||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
-const mesNow= ()=>{ const d=new Date(); return ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][d.getMonth()]+'/'+d.getFullYear(); };
-
-// ── Histórico / busca ────────────────────────────────────────────────────────
-const MESES_EXT=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-function periodoAtualStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
-function mesLabel(anoMes){ const [a,m]=anoMes.split('-'); return MESES_EXT[parseInt(m,10)-1]+' de '+a; }
-function mudarPeriodo(delta){
-  if(D.historicoModo==='ano'){ D.historicoPeriodo=String(parseInt(D.historicoPeriodo,10)+delta); }
-  else{ let [a,m]=D.historicoPeriodo.split('-').map(Number); m+=delta; if(m<1){m=12;a--;} if(m>12){m=1;a++;} D.historicoPeriodo=a+'-'+String(m).padStart(2,'0'); }
-  render();
-}
-function alternarModoHistorico(modo){
-  if(D.historicoModo===modo) return;
-  D.historicoModo=modo;
-  D.historicoPeriodo = modo==='ano' ? String(new Date().getFullYear()) : periodoAtualStr();
-  render();
-}
-function toggleHistorico(){ D.historicoAberto=!D.historicoAberto; render(); }
-function despesasDoPeriodo(pilar){
-  const p=D.historicoPeriodo;
-  return D.despesas.filter(d=> d.data && d.data.startsWith(p) && (!pilar || d.pilar===pilar) );
-}
-function despesasFiltradasHistorico(pilar){
-  const termo=(D.historicoBusca||'').trim().toLowerCase();
-  const base=despesasDoPeriodo(pilar);
-  return termo ? base.filter(d=>(d.descricao+' '+(d.sub||'')).toLowerCase().includes(termo)) : base;
-}
-function agregarPorItem(lista){
-  const mapa={};
-  lista.forEach(d=>{
-    const chave=d.descricao.trim().toLowerCase();
-    if(!mapa[chave]) mapa[chave]={descricao:d.descricao.trim(),total:0,qtd:0,pilar:d.pilar};
-    mapa[chave].total+=d.valor; mapa[chave].qtd++;
-  });
-  return Object.values(mapa).sort((a,b)=>b.total-a.total);
-}
-function recordesPorPilar(){
-  const porMes={};
-  D.despesas.forEach(d=>{
-    if(!d.data) return;
-    const am=d.data.slice(0,7);
-    if(!porMes[am]) porMes[am]={Moradia:0,Investimentos:0,Lazer:0};
-    porMes[am][d.pilar]=(porMes[am][d.pilar]||0)+d.valor;
-  });
-  const meses=Object.keys(porMes);
-  return PILARES.map(p=>{
-    let melhorMes=null,melhorVal=-1;
-    meses.forEach(am=>{ if(porMes[am][p]>melhorVal){ melhorVal=porMes[am][p]; melhorMes=am; } });
-    return{pilar:p,mes:melhorMes,valor:melhorVal<0?0:melhorVal};
-  });
-}
-function atualizarHistoricoResultados(){
-  const el=$('hist-resultados'); if(!el) return;
-  const pilarAtual=PILARES.includes(D.tela)?D.tela:null;
-  const lista=despesasFiltradasHistorico(pilarAtual);
-  const itens=agregarPorItem(lista);
-  const totalPeriodo=lista.reduce((s,d)=>s+d.valor,0);
-  el.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--app-border);margin-bottom:10px">
-      <span style="font-size:12px;color:var(--app-text-dim)">${lista.length} lançamento${lista.length===1?'':'s'}${D.historicoBusca?' · filtrado':''}</span>
-      <span style="font-size:15px;font-weight:800">${brl(totalPeriodo)}</span>
-    </div>
-    ${itens.length===0?`<div style="text-align:center;padding:20px;color:var(--app-text-dim);font-size:13px">Nada encontrado.</div>`:
-      itens.map(it=>`
-      <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--app-border)">
-        <span style="font-size:18px;flex-shrink:0">${IC[it.pilar]}</span>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:13.5px;color:var(--app-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.descricao}</div>
-          <div style="font-size:11px;color:var(--app-text-dim)">${it.qtd}x${pilarAtual?'':' · <span style=\"color:'+COR[it.pilar]+'\">'+it.pilar+'</span>'}</div>
-        </div>
-        <span style="font-size:13.5px;font-weight:700;flex-shrink:0">${brl(it.total)}</span>
-      </div>`).join('')}`;
-}
-function navegar(tela){
-  D.tela=tela; D.historicoBusca=''; D.editando=null;
-  if(!D.historicoPeriodo) D.historicoPeriodo=periodoAtualStr();
-  render();
-  window.scrollTo(0,0);
-}
-window.navegar=navegar;
-window.atualizarHistoricoResultados=atualizarHistoricoResultados;
-window.mudarPeriodo=mudarPeriodo;
-window.alternarModoHistorico=alternarModoHistorico;
-window.toggleHistorico=toggleHistorico;
-window.buscarHistorico=v=>{ D.historicoBusca=v; atualizarHistoricoResultados(); };
-const $     = id => document.getElementById(id);
-
-function fracMes(){ const d=new Date(); const dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate(); return d.getDate()/dim; }
-function statusCat(p){
-  const v=porc(p);
-  if(p==='Investimentos'){
-    const f=fracMes();
-    if(v>=1)                 return{cor:'#1DB954',texto:'META ATINGIDA',  label:'META ATINGIDA',  icone:'🟢'};
-    if(f<1/3 || v>=f*0.8)    return{cor:'#1DB954',texto:'NO RITMO',       label:'NO RITMO',       icone:'🟢'};
-    if(f>=0.8 && v<0.5)      return{cor:'#E02020',texto:'LONGE DA META',  label:'LONGE DA META',  icone:'🔴'};
-    return                          {cor:'#F5A623',texto:'ABAIXO DO RITMO',label:'ABAIXO DO RITMO',icone:'🟡'};
-  }
-  if(v>=0.9) return{cor:'#E02020',texto:'ATINGIU O LIMITE',   label:'ACIMA DA META', icone:'🔴'};
-  if(v>=0.6) return{cor:'#F5A623',texto:'PERTO DO LIMITE',    label:'NA META',       icone:'🟡'};
-  return           {cor:'#1DB954',texto:'DENTRO DO ORÇAMENTO',label:'ABAIXO DA META',icone:'🟢'};
-}
-function semaforo(p){ const s=statusCat(p); return {cor:s.cor,fundo:s.cor+'1a',label:s.label,icone:s.icone}; }
-function statusTV(p){ return statusCat(p); }
-function restoInfo(p){
-  const r=meta(p)-gasto(p);
-  if(p==='Investimentos') return r>0?{txt:'faltam '+brl(r),cor:'var(--app-text-dim)'}:{txt:'superou '+brl(-r),cor:'var(--app-success)'};
-  return r>=0?{txt:'resta '+brl(r),cor:'var(--app-success)'}:{txt:'excede '+brl(-r),cor:'var(--app-danger)'};
-}
-// Saúde geral: Moradia 40% + Lazer 30% + Investimentos 30%
-function saudeGeral(){
-  const gastoScore=p=>{ const u=porc(p); if(u<=0.9) return 100; if(u<=1) return 100-(u-0.9)*150; return Math.max(0,85-(u-1)*150); };
-  const f=fracMes(), pi=porc('Investimentos');
-  const inv = pi>=1 ? 100 : (f<1/3 ? 100 : Math.min(100, pi/f*100));
-  const n=Math.round(gastoScore('Moradia')*0.4 + gastoScore('Lazer')*0.3 + inv*0.3);
-  if(n>=85) return {n,texto:'SAUDÁVEL',cor:'#1DB954',g1:'#2E8AF5',g2:'#34E39B'};
-  if(n>=60) return {n,texto:'ATENÇÃO', cor:'#F5A623',g1:'#F5820D',g2:'#F5C518'};
-  return          {n,texto:'CRÍTICA', cor:'#E02020',g1:'#B8141C',g2:'#FF5A4F'};
-}
-
-// ── Atualiza receita sem perder foco ─────────────────────────────────────────
-function atualizaReceita(v){
-  D.receita=parseFloat(v)||0; D.receitaInfo=carimbo(); salvar();
-  const md=$('metas-row');
-  if(md) md.innerHTML=PILARES.map(p=>`<span>${IC[p]} ${brl(meta(p))}</span>`).join('');
-  const tg=PILARES.reduce((s,p)=>s+gasto(p),0), sd=D.receita-tg;
-  const dl=$('disp-label'); if(dl) dl.textContent=sd>=0?'💰 Disponível:':'⚠️ Excedeu:';
-  const ds=$('disp-saldo'); if(ds){ ds.textContent=brl(Math.abs(sd)); ds.style.color=sd>=0?'#2B1B10':'var(--app-danger)'; }
-  PILARES.forEach(p=>{
-    const{cor,label,icone}=semaforo(p),w=Math.min(porc(p),1)*100,r=meta(p)-gasto(p);
-    const cd=$('cd-'+p);if(cd){cd.style.borderColor=cor+'45';}
-    const br=$('br-'+p);if(br){br.style.width=w+'%';br.style.background=cor;}
-    const ic=$('ic-'+p);if(ic)ic.textContent=icone;
-    const lb=$('lb-'+p);if(lb){lb.textContent=label;lb.style.color=cor;lb.style.background=cor+'22';}
-    const mt=$('mt-'+p);if(mt)mt.textContent='de '+brl(meta(p));
-    const rt=$('rt-'+p);if(rt){const ri=restoInfo(p);rt.textContent=ri.txt;rt.style.color=ri.cor;}
-  });
-}
-
-// ── Despesas ─────────────────────────────────────────────────────────────────
-function adicionarDespesa(){
-  const desc=($('d-desc').value||'').trim();
-  const valor=parseFloat(($('d-val').value||'').replace(',','.'));
-  const sub=(($('d-sub')||{}).value||'').trim();
-  const data=lerData('d-data');
-  const pilar=D.tela;
-  if(!PILARES.includes(pilar)){return;}
-  if(!desc||isNaN(valor)||valor<=0){alert('Preencha descrição e valor.');return;}
-  garantirAutor(()=>{
-    D.despesas.push({id:novoId(),descricao:desc,valor,pilar,sub,data,autor:autorAtual()});
-    if(data.slice(0,7)!==periodoAtualStr()) setTimeout(()=>alert(`Lançado em ${mesLabel(data.slice(0,7))}. Ele entra no histórico daquele mês, não no mês atual.`),50);
-    salvar(); render(); const i=$('d-desc'); if(i) i.focus();
-  });
-}
-function excluirDespesa(id){ D.despesas=D.despesas.filter(d=>d.id!==id); salvar(); render(); }
-function editarDespesa(id){ D.editando=id; render(); }
-function cancelarEdicao(){ D.editando=null; render(); }
-function salvarEdicao(id){
-  const desc=($('edit-desc').value||'').trim();
-  const valor=parseFloat(($('edit-val').value||'').replace(',','.'));
-  const data=lerData('edit-data');
-  const sub=(($('edit-sub')||{}).value||'').trim();
-  if(!desc||isNaN(valor)||valor<=0){alert('Preencha descrição e valor.');return;}
-  garantirAutor(()=>{
-    D.despesas=D.despesas.map(d=>d.id===id?{...d,descricao:desc,valor,sub,data,editadoPor:autorAtual(),editadoEm:new Date().toISOString()}:d);
-    D.editando=null; salvar(); render();
-  });
-}
-function teclaAdd(e){ if(e.key==='Enter') adicionarDespesa(); }
-
-// ── Quem lançou (nome guardado por aparelho) ─────────────────────────────────
-const AUTOR_KEY='gcf_autor';
-function autorAtual(){ try{ return localStorage.getItem(AUTOR_KEY)||''; }catch{ return ''; } }
-let aposAutor=null;
-function carimbo(){ return {por:autorAtual(), em:new Date().toISOString()}; }
-function fmtQuando(iso){ if(!iso) return ''; const d=new Date(iso); if(isNaN(d)) return ''; return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+' às '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
-function assinatura(info,verbo){ if(!info||!info.por) return ''; const q=fmtQuando(info.em); return `${verbo||'Atualizado'} por ${esc(info.por)}${q?' · '+q:''}`; }
-function linhaAssinatura(info,verbo,estilo){ const a=assinatura(info,verbo); return a?`<div style="font-size:11.5px;color:var(--app-text-dim);${estilo||''}">👤 ${a}</div>`:''; }
-function garantirAutorFoco(el){ if(autorAtual()) return; el.blur(); pedirAutor(()=>{ render(); }); }
-window.garantirAutorFoco=garantirAutorFoco;
-function garantirAutor(cb){ if(autorAtual()) cb(); else pedirAutor(cb); }
-function pedirAutor(cb){
-  aposAutor=cb||null;
-  const nomes=[...new Set(D.despesas.map(d=>d.autor).filter(Boolean))];
-  let m=$('autor-modal');
-  if(!m){ m=document.createElement('div'); m.id='autor-modal'; document.body.appendChild(m); }
-  m.innerHTML=`
-  <div style="position:fixed;inset:0;background:rgba(43,27,16,.45);z-index:1100;display:flex;align-items:flex-end;justify-content:center;padding:16px">
-    <div style="background:var(--app-bg);border-radius:22px;padding:22px;width:100%;max-width:440px;margin-bottom:env(safe-area-inset-bottom)">
-      <div style="font-size:17px;font-weight:800;margin-bottom:4px">Quem está usando este aparelho?</div>
-      <div style="font-size:13px;color:var(--app-text-dim);margin-bottom:14px">Seu nome fica gravado em cada despesa lançada daqui. A pergunta aparece só uma vez.</div>
-      ${nomes.length?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">${nomes.map(n=>`<button class="btn" data-n="${esc(n)}" onclick="confirmarAutor(this.dataset.n)" style="background:var(--app-card2);color:var(--app-text);border:1.5px solid var(--app-border);padding:9px 16px">${esc(n)}</button>`).join('')}</div>`:''}
-      <input type="text" id="autor-inp" placeholder="Seu nome (ex: Marcos)" value="${esc(autorAtual())}" style="margin-bottom:10px" onkeydown="if(event.key==='Enter')confirmarAutor(this.value)">
-      <div style="display:flex;gap:8px">
-        <button class="btn" style="flex:1;background:var(--app-border);color:var(--app-text)" onclick="fecharModalAutor()">Cancelar</button>
-        <button class="btn" style="flex:2" onclick="confirmarAutor(document.getElementById('autor-inp').value)">Confirmar</button>
-      </div>
-    </div>
-  </div>`;
-  m.style.display='block';
-  setTimeout(()=>{ const i=$('autor-inp'); if(i) i.focus(); },60);
-}
-function confirmarAutor(nome){
-  nome=(nome||'').trim();
-  if(!nome){ alert('Digite seu nome.'); return; }
-  try{ localStorage.setItem(AUTOR_KEY,nome); }catch{}
-  const cb=aposAutor; fecharModalAutor();
-  if(cb) cb(); else render();
-}
-function fecharModalAutor(){ const m=$('autor-modal'); if(m) m.style.display='none'; aposAutor=null; }
-
-// ── Despesas fixas / recorrentes ─────────────────────────────────────────────
-function fixasPendentes(pilar){
-  const am=periodoAtualStr();
-  return (D.fixas||[]).filter(f=>(!pilar||f.pilar===pilar) && !D.despesas.some(d=>d.fixaId===f.id && d.data && d.data.startsWith(am)));
-}
-function adicionarFixa(){
-  const desc=($('fx-desc').value||'').trim();
-  const valor=parseFloat(($('fx-val').value||'').replace(',','.'));
-  const pilar=$('fx-pilar').value;
-  const sub=($('fx-sub').value||'').trim();
-  if(!desc||isNaN(valor)||valor<=0){ alert('Preencha descrição e valor da despesa fixa.'); return; }
-  garantirAutor(()=>{ D.fixas=[...(D.fixas||[]),{id:novoId(),descricao:desc,valor,pilar,sub,autor:autorAtual()}]; salvar(); render(); });
-}
-function excluirFixa(id){
-  if(!confirm('Remover esta despesa fixa? Os lançamentos já feitos continuam no histórico.')) return;
-  D.fixas=(D.fixas||[]).filter(f=>f.id!==id); salvar(); render();
-}
-function criarDespesaDeFixa(f,valor,data){
-  D.despesas.push({id:novoId(),descricao:f.descricao,valor,pilar:f.pilar,sub:f.sub||'',data:data||hoje(),autor:autorAtual(),fixaId:f.id});
-}
-function valorDaFixa(f){
-  const inp=$('fxv-'+f.id);
-  const v=parseFloat(((inp&&inp.value)||'').replace(',','.'));
-  return isNaN(v)?f.valor:v;
-}
-function lancarFixa(id){
-  const f=(D.fixas||[]).find(x=>x.id===id); if(!f) return;
-  const valor=valorDaFixa(f);
-  if(!(valor>0)){ alert('Informe um valor maior que zero.'); return; }
-  const data=lerData('fx-data-lanc');
-  garantirAutor(()=>{ criarDespesaDeFixa(f,valor,data); salvar(); render(); });
-}
-function lancarTodasFixas(pilar){
-  const itens=fixasPendentes(pilar).map(f=>({f,valor:valorDaFixa(f)})).filter(x=>x.valor>0);
-  if(!itens.length) return;
-  const data=lerData('fx-data-lanc');
-  garantirAutor(()=>{ itens.forEach(x=>criarDespesaDeFixa(x.f,x.valor,data)); salvar(); render(); });
-}
-
-// ── Subcategorias ────────────────────────────────────────────────────────────
-function subsDoPilar(p){
-  return [...new Set([...D.despesas,...(D.fixas||[])].filter(d=>d.pilar===p && d.sub).map(d=>d.sub.trim()))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
-}
-function resumoSubs(p){
-  const am=periodoAtualStr(), mapa={};
-  D.despesas.filter(d=>d.pilar===p && d.data && d.data.startsWith(am)).forEach(d=>{
-    const k=(d.sub||'').trim()||'Sem subcategoria';
-    mapa[k]=(mapa[k]||0)+d.valor;
-  });
-  return Object.entries(mapa).map(([nome,total])=>({nome,total})).sort((a,b)=>b.total-a.total);
-}
-
-// ── Divisão do orçamento (percentuais editáveis) ─────────────────────────────
-function lerPercInputs(){ const o={}; PILARES.forEach(p=>{ o[p]=parseInt(($('pc-'+p)||{}).value,10)||0; }); return o; }
-function atualizarSomaPerc(){
-  const o=lerPercInputs(), soma=PILARES.reduce((s,p)=>s+o[p],0), el=$('pc-soma');
-  if(el){ el.textContent=`Total: ${soma}%`+(soma===100?' ✓':' (precisa dar 100%)'); el.style.color=soma===100?'var(--app-success)':'var(--app-danger)'; }
-}
-function salvarPercentuais(){
-  const o=lerPercInputs(), soma=PILARES.reduce((s,p)=>s+o[p],0);
-  if(soma!==100){ alert(`A soma está em ${soma}%. Ajuste para fechar 100%.`); return; }
-  garantirAutor(()=>{ D.percentuais=o; D.percentuaisInfo=carimbo(); salvar(); render(); });
-}
-function restaurarPercPadrao(){ garantirAutor(()=>{ D.percentuais={...PERC_PADRAO}; D.percentuaisInfo=carimbo(); salvar(); render(); }); }
-
-// ── Meta da família ──────────────────────────────────────────────────────────
-function progressoMeta(){
-  const m=D.metaFamilia; if(!m||!(m.alvo>0)) return null;
-  const aportes=D.despesas.filter(d=>d.pilar==='Investimentos' && d.data && d.data>=(m.desde||'0000')).reduce((s,d)=>s+d.valor,0);
-  const atual=(m.inicial||0)+aportes;
-  return {nome:m.nome, alvo:m.alvo, atual, pct:Math.min(atual/m.alvo,1), falta:Math.max(m.alvo-atual,0)};
-}
-function salvarMetaFamilia(){
-  const nome=($('mf-nome').value||'').trim();
-  const alvo=parseFloat(($('mf-alvo').value||'').replace(',','.'));
-  const inicial=parseFloat(($('mf-ini').value||'0').replace(',','.'))||0;
-  if(!nome||isNaN(alvo)||alvo<=0){ alert('Preencha o nome da meta e o valor a alcançar.'); return; }
-  const desde=lerData('mf-desde');
-  garantirAutor(()=>{
-    const antes=D.metaFamilia||{};
-    D.metaFamilia={nome, alvo, inicial, desde, criadaPor:antes.criadaPor||autorAtual(), ...carimboMeta()};
-    salvar(); render(); if($('tv').style.display!=='none') montarTV();
-  });
-}
-function carimboMeta(){ const c=carimbo(); return {atualizadaPor:c.por, atualizadaEm:c.em}; }
-function removerMetaFamilia(){
-  if(!confirm('Remover a meta da família? Ela some da tela inicial e da TV.')) return;
-  D.metaFamilia=null; salvar(); render(); if($('tv').style.display!=='none') montarTV();
-}
-function barraMetaApp(pm){
-  const pct=Math.floor(pm.pct*100);
-  return `
-    <div class="sec" style="margin-bottom:14px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <span style="font-size:15px;font-weight:800">🎯 ${esc(pm.nome)}</span>
-        <span style="font-size:18px;font-weight:800;color:${COR.Investimentos}">${pct}%</span>
-      </div>
-      <div style="background:var(--app-border);border-radius:99px;height:10px;overflow:hidden;margin-bottom:8px">
-        <div style="width:${pct}%;height:100%;background:${COR.Investimentos};border-radius:99px;transition:width .5s"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--app-text-dim)">
-        <span>${brl(pm.atual)} de ${brl(pm.alvo)}</span>
-        <span style="font-weight:700">${pm.falta>0?'faltam '+brl(pm.falta):'meta alcançada 🎉'}</span>
-      </div>
-    </div>`;
-}
-
-window.adicionarFixa=adicionarFixa; window.excluirFixa=excluirFixa;
-window.lancarFixa=lancarFixa; window.lancarTodasFixas=lancarTodasFixas;
-window.pedirAutor=pedirAutor; window.confirmarAutor=confirmarAutor; window.fecharModalAutor=fecharModalAutor;
-window.atualizarSomaPerc=atualizarSomaPerc; window.salvarPercentuais=salvarPercentuais; window.restaurarPercPadrao=restaurarPercPadrao;
-window.salvarMetaFamilia=salvarMetaFamilia; window.removerMetaFamilia=removerMetaFamilia;
-
-// ── Eventos ──────────────────────────────────────────────────────────────────
-const PILARES_EVENTO = [...PILARES,'Geral'];
-function adicionarEvento(){
-  const data=$('ev-data').value;
-  const texto=($('ev-texto').value||'').trim();
-  const pilar=$('ev-pilar').value;
-  if(!data){ const i=$('ev-data'); if(i){ i.style.borderColor='var(--app-danger)'; i.focus(); try{i.showPicker();}catch{} } alert('Escolha a data do evento no 📅.'); return; }
-  if(!texto){alert('Escreva o evento.');return;}
-  garantirAutor(()=>{ D.eventos.push({id:novoId(),data,texto,pilar,autor:autorAtual(),criadoEm:new Date().toISOString()}); salvar(); render(); });
-}
-function rotuloData(v){
-  if(!v) return 'Hoje';
-  if(v===hoje()) return 'Hoje';
-  const o=new Date(); o.setDate(o.getDate()-1);
-  const ontem=o.getFullYear()+'-'+String(o.getMonth()+1).padStart(2,'0')+'-'+String(o.getDate()).padStart(2,'0');
-  if(v===ontem) return 'Ontem';
-  const a=v.slice(0,4);
-  return fmtDataEvento(v)+(a!==String(new Date().getFullYear())?' '+a:'');
-}
-function campoData(id,valor,estilo){
-  const v=valor||hoje();
-  return `<label class="campo-data" style="position:relative;display:block;min-width:0;cursor:pointer;${estilo||''}">
-    <input type="date" id="${id}" value="${v}" onchange="atualizarRotuloCampo(this)" onblur="atualizarRotuloCampo(this)" aria-label="Data" style="width:100%;padding-left:42px;color:transparent">
-    <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:19px;pointer-events:none">📅</span>
-    <span class="cd-rotulo" style="position:absolute;left:42px;right:8px;top:50%;transform:translateY(-50%);font-size:15px;font-weight:700;color:var(--app-text);pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${rotuloData(v)}</span>
-  </label>`;
-}
-function atualizarRotuloCampo(el){ const r=el.parentElement.querySelector('.cd-rotulo'); if(r) r.textContent=rotuloData(el.value); }
-function lerData(id){ const el=$(id); return (el&&el.value)||hoje(); }
-window.atualizarRotuloCampo=atualizarRotuloCampo;
-function atualizarRotuloData(el){
-  const r=$('ev-data-rotulo'); if(!r) return;
-  r.textContent = el.value ? fmtDataEvento(el.value) : 'Data';
-  r.style.color = el.value ? 'var(--app-text)' : 'var(--app-text-dim)';
-  r.style.fontWeight = el.value ? '700' : '500';
-}
-window.atualizarRotuloData=atualizarRotuloData;
-function excluirEvento(id){ D.eventos=D.eventos.filter(e=>e.id!==id); salvar(); render(); }
-function salvarNomeFamilia(){ const v=($('nome-familia-inp').value||'').trim(); garantirAutor(()=>{ D.nomeFamilia=v; D.tvInfo=carimbo(); salvar(); render(); if(document.getElementById('tv').style.display!=='none')montarTV(); }); return; mostrarSalvoOk('nome-familia-inp'); if(document.getElementById('tv').style.display!=='none')montarTV(); }
-function salvarMensagem(){ const v=($('mensagem-inp').value||'').trim(); garantirAutor(()=>{ D.mensagem=v; D.tvInfo=carimbo(); salvar(); render(); if(document.getElementById('tv').style.display!=='none')montarTV(); }); return; mostrarSalvoOk('mensagem-inp'); if(document.getElementById('tv').style.display!=='none')montarTV(); }
-function mostrarSalvoOk(id){
-  const el=$(id); if(!el) return;
-  const cor=el.style.borderColor;
-  el.style.borderColor='#2E8B57';
-  setTimeout(()=>{ if($(id)) $(id).style.borderColor=cor; },900);
-}
-function eventosOrdenados(){ return D.eventos.slice().sort((a,b)=>a.data.localeCompare(b.data)); }
-function eventosFuturos(){ const h=hoje(); return eventosOrdenados().filter(e=>e.data>=h); }
-function fmtDataEvento(iso){
-  const [ano,mes,dia]=iso.split('-');
-  const MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-  return `${dia} ${MES[parseInt(mes,10)-1]}`;
-}
-
-// Expor funções para onclick no HTML
-window.atualizaReceita=atualizaReceita;
-window.adicionarDespesa=adicionarDespesa;
-window.excluirDespesa=excluirDespesa;
-window.editarDespesa=editarDespesa;
-window.cancelarEdicao=cancelarEdicao;
-window.salvarEdicao=salvarEdicao;
-window.teclaAdd=teclaAdd;
-window.adicionarEvento=adicionarEvento;
-window.excluirEvento=excluirEvento;
-window.salvarNomeFamilia=salvarNomeFamilia;
-window.salvarMensagem=salvarMensagem;
-window.abrirTV=abrirTV;
-window.fecharTV=fecharTV;
-
-// ── Render ────────────────────────────────────────────────────────────────────
-function tituloPagina(){
-  if(D.tela==='inicio') return '💰 Orçamento Familiar';
-  if(D.tela==='mais') return '⚙️ Mais';
-  return `${IC[D.tela]} ${D.tela}`;
-}
-
-function navInferior(){
-  const itens=[{id:'inicio',ic:'🏠',lb:'Início'},...PILARES.map(p=>({id:p,ic:IC[p],lb:p})),{id:'mais',ic:'⚙️',lb:'Mais'}];
-  return `
-  <div style="position:fixed;left:0;right:0;bottom:0;background:var(--app-card2);border-top:1.5px solid var(--app-border);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom)">
-    ${itens.map(it=>{
-      const ativo=D.tela===it.id;
-      return `<button onclick="navegar('${it.id}')" style="flex:1;background:none;border:none;padding:9px 2px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:'Manrope',system-ui,sans-serif">
-        <span style="font-size:19px;opacity:${ativo?'1':'.5'}">${it.ic}</span>
-        <span style="font-size:10px;font-weight:${ativo?800:600};color:${ativo?'var(--app-text)':'var(--app-text-dim)'}">${it.lb}</span>
-        <span style="width:18px;height:2.5px;border-radius:99px;background:${ativo?'var(--app-accent)':'transparent'};margin-top:1px"></span>
-      </button>`;
-    }).join('')}
-  </div>`;
-}
-
-function painelHistorico(){
-  return `
-  <button onclick="toggleHistorico()" style="width:100%;background:var(--app-card2);border:1.5px solid var(--app-border);color:var(--app-text-dim);border-radius:99px;padding:11px;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Manrope',system-ui,sans-serif">
-    🔍 Histórico e busca ${D.historicoAberto?'▲':'▼'}
-  </button>
-  ${D.historicoAberto?`
-  <div class="sec" style="margin-top:10px">
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <button onclick="alternarModoHistorico('mes')" style="flex:1;background:${D.historicoModo==='mes'?'var(--app-accent)':'var(--app-card2)'};color:${D.historicoModo==='mes'?'var(--app-accent-text)':'var(--app-text-dim)'};border:1.5px solid var(--app-border);border-radius:99px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Manrope',system-ui,sans-serif">Por mês</button>
-      <button onclick="alternarModoHistorico('ano')" style="flex:1;background:${D.historicoModo==='ano'?'var(--app-accent)':'var(--app-card2)'};color:${D.historicoModo==='ano'?'var(--app-accent-text)':'var(--app-text-dim)'};border:1.5px solid var(--app-border);border-radius:99px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Manrope',system-ui,sans-serif">Por ano</button>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--app-card2);border:1.5px solid var(--app-border);border-radius:14px;padding:10px 14px;margin-bottom:12px">
-      <button onclick="mudarPeriodo(-1)" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--app-text);padding:4px 8px">‹</button>
-      <span style="font-size:14px;font-weight:800">${D.historicoModo==='mes'?mesLabel(D.historicoPeriodo):D.historicoPeriodo}</span>
-      <button onclick="mudarPeriodo(1)" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--app-text);padding:4px 8px">›</button>
-    </div>
-    <input type="text" id="hist-busca" value="${D.historicoBusca||''}" placeholder="🔍 Buscar por descrição (ex: açougue, mercado, CDB…)" oninput="buscarHistorico(this.value)" style="margin-bottom:12px">
-    <div id="hist-resultados"></div>
-  </div>`:''}`;
-}
-
-function renderInicio(){
-  const totalGasto=PILARES.reduce((s,p)=>s+gasto(p),0), saldo=D.receita-totalGasto;
-  const pend=fixasPendentes(), pm=progressoMeta();
-  const totalPend=pend.reduce((s,f)=>s+f.valor,0);
-  return `
-    ${pend.length?`
-    <button onclick="navegar('${pend[0].pilar}')" style="width:100%;text-align:left;background:var(--app-card2);border:1.5px dashed var(--app-text-dim);border-radius:16px;padding:13px 16px;margin-bottom:14px;cursor:pointer;display:flex;align-items:center;gap:12px;font-family:'Manrope',system-ui,sans-serif;color:var(--app-text)">
-      <span style="font-size:22px">📌</span>
-      <span style="flex:1;min-width:0">
-        <span style="display:block;font-size:14px;font-weight:800">${pend.length} despesa${pend.length>1?'s':''} fixa${pend.length>1?'s':''} para lançar este mês</span>
-        <span style="display:block;font-size:12px;color:var(--app-text-dim)">${PILARES.filter(p=>pend.some(f=>f.pilar===p)).map(p=>IC[p]+' '+p).join('  ')} · ${brl(totalPend)}</span>
-      </span>
-      <span style="color:var(--app-text-dim);font-size:18px">›</span>
-    </button>`:''}
-    <div style="background:var(--app-highlight);border-radius:20px;padding:18px 20px;margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:#2B1B10;font-weight:800;margin-bottom:10px;opacity:.7">RECEITA DO MÊS</div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="font-size:20px;color:#2B1B10;opacity:.55">R$</span>
-        <input type="number" value="${D.receita}" min="0" step="100" onfocus="garantirAutorFoco(this)" oninput="atualizaReceita(this.value)"
-          style="font-size:34px;font-weight:800;color:#2B1B10;background:transparent;border:none;border-bottom:2px solid #2B1B1030;border-radius:0;padding:4px 0;flex:1;outline:none;min-width:0">
-      </div>
-      <div id="metas-row" style="font-size:13px;color:#2B1B10;opacity:.75;display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
-        ${PILARES.map(p=>`<span>${IC[p]} ${brl(meta(p))}</span>`).join('')}
-      </div>
-      <div style="padding-top:12px;border-top:1px solid #2B1B1025;display:flex;justify-content:space-between;align-items:center">
-        <span id="disp-label" style="font-size:13px;color:#2B1B10;opacity:.75">${saldo>=0?'💰 Disponível:':'⚠️ Excedeu:'}</span>
-        <span id="disp-saldo" style="font-size:22px;font-weight:800;color:${saldo>=0?'#2B1B10':'var(--app-danger)'}">${brl(Math.abs(saldo))}</span>
-      </div>
-      ${D.receitaInfo&&D.receitaInfo.por?`<div style="font-size:11.5px;color:#2B1B10;opacity:.6;margin-top:8px">👤 Receita ${assinatura(D.receitaInfo,'atualizada')}</div>`:''}
-    </div>
-
-    <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:10px">SUAS CATEGORIAS</div>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-      ${PILARES.map(p=>{
-        const{cor,label,icone}=semaforo(p),w=Math.min(porc(p),1)*100,r=meta(p)-gasto(p);
-        return`
-        <button onclick="navegar('${p}')" style="text-align:left;background:var(--app-card2);border:1.5px solid var(--app-border);border-radius:18px;padding:16px;cursor:pointer;font-family:'Manrope',system-ui,sans-serif;display:flex;align-items:center;gap:14px">
-          <span style="font-size:28px;flex-shrink:0">${IC[p]}</span>
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-              <span style="font-size:15px;font-weight:800;color:var(--app-text)">${p}</span>
-              <span style="font-size:10px;font-weight:700;color:${cor};background:${cor}22;padding:2px 8px;border-radius:99px">${icone} ${label}</span>
-            </div>
-            <div style="background:var(--app-border);border-radius:99px;height:6px;overflow:hidden;margin-bottom:6px">
-              <div style="width:${w}%;height:100%;background:${cor};border-radius:99px"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--app-text-dim)">
-              <span>${brl(gasto(p))} de ${brl(meta(p))}</span>
-              <span style="color:${restoInfo(p).cor};font-weight:700">${restoInfo(p).txt}</span>
-            </div>
-          </div>
-          <span style="color:var(--app-text-dim);font-size:18px;flex-shrink:0">›</span>
-        </button>`;
-      }).join('')}
-    </div>
-
-    ${pm?barraMetaApp(pm):''}
-
-    <div class="sec">
-      <div style="font-size:11px;letter-spacing:1.5px;color:var(--app-text-dim);font-weight:700;margin-bottom:10px">🏆 RECORDES POR PILAR</div>
-      ${recordesPorPilar().map(r=>`
-        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12.5px">
-          <span>${IC[r.pilar]}</span>
-          <span style="color:var(--app-text-dim);flex:1">Maior ${r.pilar==='Investimentos'?'aporte':'gasto'} em ${r.pilar}:</span>
-          <span style="font-weight:700">${r.mes?mesLabel(r.mes)+' · '+brl(r.valor):'—'}</span>
-        </div>`).join('')}
-    </div>`;
-}
-
-function renderCategoria(p){
-  const{cor,label,icone}=semaforo(p),w=Math.min(porc(p),1)*100,r=meta(p)-gasto(p);
-  const lista=D.despesas.map((d,i)=>[d,i]).filter(x=>x[0].pilar===p).sort((a,b)=>(b[0].data||'').localeCompare(a[0].data||'')||b[1]-a[1]).map(x=>x[0]);
-  const pend=fixasPendentes(p), subs=subsDoPilar(p), resumo=resumoSubs(p), gMes=gasto(p);
-  const dlSub=`<datalist id="dl-sub-${p}">${subs.map(s=>`<option value="${esc(s)}">`).join('')}</datalist>`;
-  return `
-    <div style="background:var(--app-card2);border:1.5px solid ${cor}45;border-radius:18px;padding:18px 20px;margin-bottom:14px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div>
-          <div style="font-size:12px;font-weight:700;color:var(--app-text-dim);margin-bottom:2px">GASTO NO MÊS</div>
-          <div style="font-size:26px;font-weight:800">${brl(gasto(p))}</div>
-        </div>
-        <span style="font-size:11px;font-weight:700;color:${cor};background:${cor}22;padding:4px 10px;border-radius:99px">${icone} ${label}</span>
-      </div>
-      <div style="background:var(--app-border);border-radius:99px;height:8px;overflow:hidden;margin-bottom:8px">
-        <div style="width:${w}%;height:100%;background:${cor};border-radius:99px;transition:width .5s"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--app-text-dim)">
-        <span>Meta: ${brl(meta(p))} (${Math.round(percDe(p)*100)}% da receita)</span>
-        <span style="color:${restoInfo(p).cor};font-weight:700">${restoInfo(p).txt}</span>
-      </div>
-    </div>
-
-    ${pend.length?`
-    <div class="sec" style="margin-bottom:14px;border-style:dashed">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700">📌 FIXAS PENDENTES ESTE MÊS</span>
-        ${pend.length>1?`<button class="btn" style="font-size:12px;padding:7px 12px" onclick="lancarTodasFixas('${p}')">Lançar todas</button>`:''}
-      </div>
-      <div style="font-size:12px;color:var(--app-text-dim);margin-bottom:10px">Confira o valor antes de lançar (conta de luz, água etc. mudam todo mês).</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <span style="font-size:13px;font-weight:700;flex-shrink:0">Data do lançamento</span>
-        ${campoData('fx-data-lanc',hoje(),'flex:1')}
-      </div>
-      ${pend.map(f=>`
-        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--app-border)">
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(f.descricao)}</div>
-            ${f.sub?`<div style="font-size:11px;color:var(--app-text-dim)">${esc(f.sub)}</div>`:''}
-          </div>
-          <input type="number" id="fxv-${f.id}" value="${f.valor}" step="0.01" min="0" style="width:110px;flex-shrink:0;padding:9px 10px;font-size:14px">
-          <button class="btn" style="padding:9px 13px;font-size:13px;flex-shrink:0" onclick="lancarFixa('${f.id}')">Lançar</button>
-        </div>`).join('')}
-    </div>`:''}
-
-    ${gMes>0?`
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:12px">ONDE FOI O DINHEIRO EM ${MESES_EXT[new Date().getMonth()].toUpperCase()}</div>
-      ${resumo.map(s=>{ const pc=s.total/gMes*100; return `
-        <div style="margin-bottom:10px">
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="${s.nome==='Sem subcategoria'?'color:var(--app-text-dim);font-style:italic':'font-weight:700'}">${esc(s.nome)}</span>
-            <span><b>${brl(s.total)}</b> <span style="color:var(--app-text-dim);font-size:11px">${Math.round(pc)}%</span></span>
-          </div>
-          <div style="background:var(--app-border);border-radius:99px;height:6px;overflow:hidden">
-            <div style="width:${pc}%;height:100%;background:${COR[p]};border-radius:99px;opacity:${s.nome==='Sem subcategoria'?'.45':'1'}"></div>
-          </div>
-        </div>`; }).join('')}
-    </div>`:''}
-
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:14px">+ REGISTRAR DESPESA EM ${p.toUpperCase()}</div>
-      ${dlSub}
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <input type="text" id="d-desc" placeholder="Ex: ${p==='Moradia'?'Açougue, Mercado, Conta de luz…':p==='Investimentos'?'CDB Banco X, Tesouro Selic, PETR4…':'Cinema, Restaurante, Viagem…'}" onkeydown="teclaAdd(event)">
-        <div style="display:flex;gap:10px">
-          <input type="number" id="d-val" placeholder="R$ Valor" min="0" step="0.01" onkeydown="teclaAdd(event)" style="flex:1;min-width:0">
-          ${campoData('d-data',hoje(),'flex:1')}
-        </div>
-        <input type="text" id="d-sub" list="dl-sub-${p}" placeholder="Subcategoria (opcional)" onkeydown="teclaAdd(event)">
-        <button class="btn" style="width:100%;padding:14px" onclick="adicionarDespesa()">+ Adicionar em ${p}</button>
-      </div>
-    </div>
-
-    ${painelHistorico()}
-
-    <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin:18px 0 10px">TODOS OS LANÇAMENTOS</div>
-    <div style="background:var(--app-card2);border:1.5px solid var(--app-border);border-radius:20px;overflow:hidden">
-      ${lista.length===0
-        ?`<div style="text-align:center;padding:32px;color:var(--app-text-dim);font-size:14px">Nenhuma despesa em ${p} ainda.<br><span style="font-size:12px;opacity:.7">Registre acima ↑</span></div>`
-        :lista.map((d,i)=>D.editando===d.id
-          ?`<div style="display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-bottom:1px solid var(--app-border);background:var(--app-card)">
-              <div style="font-size:11px;color:var(--app-text-dim);letter-spacing:1px;font-weight:700">✏️ EDITANDO</div>
-              <input type="text" id="edit-desc" value="${esc(d.descricao)}" style="font-size:14px">
-              <div style="display:flex;gap:10px">
-                <input type="number" id="edit-val" value="${d.valor}" step="0.01" style="font-size:14px;flex:1;min-width:0">
-                ${campoData('edit-data',d.data,'flex:1')}
-              </div>
-              <input type="text" id="edit-sub" list="dl-sub-${p}" value="${esc(d.sub||'')}" placeholder="Subcategoria (opcional)" style="font-size:14px">
-              <div style="display:flex;gap:8px">
-                <button class="btn" style="background:var(--app-success);color:#fff;flex:1;padding:11px;font-size:14px" onclick="salvarEdicao('${d.id}')">✓ Salvar</button>
-                <button class="btn" style="background:var(--app-border);color:var(--app-text);flex:1;padding:11px;font-size:14px" onclick="cancelarEdicao()">✗ Cancelar</button>
-              </div>
-            </div>`
-          :`<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--app-border);${i%2?'background:rgba(43,27,16,0.02)':''}">
-              <div style="flex:1;min-width:0">
-                <div style="font-size:14px;color:var(--app-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.descricao}</div>
-                <div style="font-size:11px;color:var(--app-text-dim);margin-top:2px">${[d.data.split('-').reverse().join('/'), d.sub?esc(d.sub):'', d.autor?'por '+esc(d.autor):'', d.editadoPor?'editado por '+esc(d.editadoPor):'', d.fixaId?'📌 fixa':''].filter(Boolean).join(' · ')}</div>
-              </div>
-              <span style="font-size:14px;font-weight:700;color:var(--app-text);white-space:nowrap;flex-shrink:0">${brl(d.valor)}</span>
-              <button onclick="editarDespesa('${d.id}')" style="background:transparent;border:1.5px solid var(--app-border);color:var(--app-text-dim);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;flex-shrink:0">✏️</button>
-              <button onclick="excluirDespesa('${d.id}')" style="background:rgba(192,57,43,0.08);border:1.5px solid rgba(192,57,43,0.25);color:var(--app-danger);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;flex-shrink:0">🗑</button>
-            </div>`
-        ).join('')}
-    </div>`;
-}
-
-function renderMais(){
-  const mf=D.metaFamilia, pm=progressoMeta(), autor=autorAtual();
-  return `
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:4px">🎯 META DA FAMÍLIA</div>
-      <p style="font-size:12px;color:var(--app-text-dim);margin-bottom:12px">Tudo que for lançado em Investimentos a partir da data de início soma no progresso. Na TV aparece só a porcentagem.</p>
-      ${pm?barraMetaApp(pm):''}
-      ${mf&&mf.atualizadaPor?linhaAssinatura({por:mf.atualizadaPor,em:mf.atualizadaEm},mf.criadaPor&&mf.criadaPor!==mf.atualizadaPor?'Criada por '+esc(mf.criadaPor)+' · atualizada':'Atualizada','margin:-6px 0 12px'):''}
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <input type="text" id="mf-nome" value="${esc(mf?mf.nome:'')}" placeholder="Nome da meta (ex: Viagem de férias)">
-        <div style="display:flex;gap:10px">
-          <input type="number" id="mf-alvo" value="${mf?mf.alvo:''}" placeholder="Valor da meta R$" min="0" step="100" style="flex:1;min-width:0">
-          <input type="number" id="mf-ini" value="${mf&&mf.inicial?mf.inicial:''}" placeholder="Já guardado R$" min="0" step="100" style="flex:1;min-width:0">
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:13px;font-weight:700;flex-shrink:0">Contar aportes desde</span>
-          ${campoData('mf-desde',mf&&mf.desde?mf.desde:hoje(),'flex:1')}
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn" style="flex:2;padding:13px" onclick="salvarMetaFamilia()">${mf?'Atualizar meta':'Criar meta'}</button>
-          ${mf?`<button class="btn" style="flex:1;padding:13px;background:rgba(192,57,43,0.08);color:var(--app-danger);border:1.5px solid rgba(192,57,43,0.25)" onclick="removerMetaFamilia()">Remover</button>`:''}
-        </div>
-      </div>
-    </div>
-
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:4px">📌 DESPESAS FIXAS</div>
-      <p style="font-size:12px;color:var(--app-text-dim);margin-bottom:12px">Cadastre uma vez. Todo mês elas aparecem como pendentes para lançar com um toque.</p>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:${(D.fixas||[]).length?'12px':'0'}">
-        <input type="text" id="fx-desc" placeholder="Ex: Aluguel, Internet, Escola">
-        <div style="display:flex;gap:10px">
-          <input type="number" id="fx-val" placeholder="R$ Valor" min="0" step="0.01" style="flex:1;min-width:0">
-          <select id="fx-pilar" style="flex:1;min-width:0">${PILARES.map(p=>`<option value="${p}">${IC[p]} ${p}</option>`).join('')}</select>
-        </div>
-        <input type="text" id="fx-sub" placeholder="Subcategoria (opcional, ex: Contas)">
-        <button class="btn" style="width:100%;padding:13px" onclick="adicionarFixa()">+ Adicionar despesa fixa</button>
-      </div>
-      ${(D.fixas||[]).map(f=>`
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 4px;border-top:1px solid var(--app-border)">
-          <span style="font-size:16px;flex-shrink:0">${IC[f.pilar]}</span>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(f.descricao)}</div>
-            <div style="font-size:11px;color:var(--app-text-dim)">${f.pilar}${f.sub?' · '+esc(f.sub):''}${f.autor?' · por '+esc(f.autor):''}</div>
-          </div>
-          <span style="font-size:13.5px;font-weight:700;flex-shrink:0">${brl(f.valor)}</span>
-          <button onclick="excluirFixa('${f.id}')" style="background:rgba(192,57,43,0.08);border:1.5px solid rgba(192,57,43,0.25);color:var(--app-danger);border-radius:8px;padding:5px 9px;cursor:pointer;font-size:12px;flex-shrink:0">🗑</button>
-        </div>`).join('')}
-    </div>
-
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:4px">📊 DIVISÃO DO ORÇAMENTO</div>
-      <p style="font-size:12px;color:var(--app-text-dim);margin-bottom:12px">Quanto da receita vai para cada categoria. A soma precisa dar 100%.</p>
-      ${PILARES.map(p=>`
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span style="flex:1;font-size:14px;font-weight:700">${IC[p]} ${p}</span>
-          <input type="number" id="pc-${p}" value="${Math.round(percDe(p)*100)}" min="0" max="100" step="5" oninput="atualizarSomaPerc()" style="width:84px;text-align:right;padding:9px 12px">
-          <span style="font-size:14px;color:var(--app-text-dim);width:14px">%</span>
-        </div>`).join('')}
-      <div id="pc-soma" style="font-size:12px;font-weight:700;color:var(--app-success);margin:4px 0 ${D.percentuaisInfo&&D.percentuaisInfo.por?'4px':'12px'}">Total: 100% ✓</div>
-      ${linhaAssinatura(D.percentuaisInfo,'Alterada','margin-bottom:12px')}
-      <div style="display:flex;gap:8px">
-        <button class="btn" style="flex:2;padding:13px" onclick="salvarPercentuais()">Salvar divisão</button>
-        <button class="btn" style="flex:1;padding:13px;background:var(--app-card2);color:var(--app-text);border:1.5px solid var(--app-border)" onclick="restaurarPercPadrao()">50/30/20</button>
-      </div>
-    </div>
-
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:8px">👤 ESTE APARELHO</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="flex:1;font-size:13.5px">Despesas lançadas daqui ficam em nome de <b>${autor?esc(autor):'ninguém ainda'}</b></span>
-        <button class="btn" style="padding:9px 16px;font-size:13px;background:var(--app-card2);color:var(--app-text);border:1.5px solid var(--app-border)" onclick="pedirAutor()">${autor?'Trocar':'Definir'}</button>
-      </div>
-    </div>
-
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:4px">📅 EVENTOS E LEMBRETES</div>
-      <p style="font-size:12px;color:var(--app-text-dim);margin-bottom:14px">Aparece em carrossel no rodapé do Modo TV</p>
-      <div style="display:flex;gap:10px;margin-bottom:10px">
-        <label style="flex:1.4;position:relative;display:block;min-width:0;cursor:pointer">
-          <input type="date" id="ev-data" onchange="atualizarRotuloData(this)" onblur="atualizarRotuloData(this)" aria-label="Data do evento" style="width:100%;padding-left:42px;color:transparent">
-          <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:19px;pointer-events:none">📅</span>
-          <span id="ev-data-rotulo" style="position:absolute;left:42px;right:8px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--app-text-dim);pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Data</span>
-        </label>
-        <input type="text" id="ev-texto" placeholder="Ex: Ir ao parque" style="flex:2">
-      </div>
-      <select id="ev-pilar" style="margin-bottom:12px">
-        ${PILARES_EVENTO.map(p=>`<option value="${p}">${IC[p]} ${p}</option>`).join('')}
-      </select>
-      <button class="btn" style="width:100%;padding:14px;margin-bottom:${D.eventos.length?'12px':'0'}" onclick="adicionarEvento()">+ Adicionar Evento</button>
-      ${D.eventos.length?eventosOrdenados().map(e=>{ const passou=e.data<hoje(); return `
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 4px;border-top:1px solid var(--app-border);${passou?'opacity:.5':''}">
-          <span style="width:8px;height:8px;border-radius:50%;background:${COR[e.pilar||'Geral']};flex-shrink:0"></span>
-          <span style="font-size:12px;color:var(--app-text);font-weight:700;flex-shrink:0;width:52px">${fmtDataEvento(e.data)}</span>
-          <span style="font-size:13px;color:var(--app-text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(e.texto)}${e.autor?`<br><span style="font-size:11px;color:var(--app-text-dim)">por ${esc(e.autor)}</span>`:''}${passou?'<br><span style="font-size:11px;font-weight:700;color:var(--app-danger)">Já passou · não aparece na TV</span>':''}</span>
-          <button onclick="excluirEvento('${e.id}')" style="background:rgba(192,57,43,0.08);border:1.5px solid rgba(192,57,43,0.25);color:var(--app-danger);border-radius:8px;padding:5px 9px;cursor:pointer;font-size:12px;flex-shrink:0">🗑</button>
-        </div>`; }).join(''):''}
-    </div>
-
-    <div class="sec" style="margin-bottom:14px">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:${D.tvInfo&&D.tvInfo.por?'4px':'8px'}">📺 TELA DA TV</div>
-      ${linhaAssinatura(D.tvInfo,'Alterada','margin-bottom:10px')}
-      <div style="font-size:12px;color:var(--app-text-dim);margin-bottom:10px">Nome exibido sobre a foto</div>
-      <div style="display:flex;gap:10px;margin-bottom:14px">
-        <input type="text" id="nome-familia-inp" value="${D.nomeFamilia||''}" placeholder="Ex: Família Silva" style="flex:1">
-        <button class="btn" style="padding:0 18px" onclick="salvarNomeFamilia()">Salvar</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--app-card2);border:1.5px solid var(--app-border)">
-          ${D.foto?`<img src="${D.foto}" style="width:100%;height:100%;object-fit:cover">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px">👨‍👩‍👧‍👦</div>`}
-        </div>
-        <button class="btn" style="background:var(--app-card2);color:var(--app-text);border:1.5px solid var(--app-border);flex:1;padding:12px" onclick="document.getElementById('foto-inp').click()">📷 ${D.foto?'Trocar foto':'Adicionar foto'}</button>
-      </div>
-    </div>
-
-    <div class="sec">
-      <div style="font-size:11px;letter-spacing:2px;color:var(--app-text-dim);font-weight:700;margin-bottom:8px">💬 MENSAGEM PARA A TV</div>
-      <div style="display:flex;gap:10px">
-        <input type="text" id="mensagem-inp" value="${D.mensagem||''}" placeholder="Ex: Semana boa! 🎉" style="flex:1">
-        <button class="btn" style="padding:0 18px" onclick="salvarMensagem()">Salvar</button>
-      </div>
-    </div>`;
-}
-
-function render(){
-  const conteudo = D.tela==='inicio' ? renderInicio() : PILARES.includes(D.tela) ? renderCategoria(D.tela) : renderMais();
-  $('app').innerHTML=`
-  <div style="background:var(--app-card2);border-bottom:1px solid var(--app-border);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10">
-    <span style="font-size:17px;font-weight:800">${tituloPagina()}</span>
-    <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:11px;color:var(--app-success)">🔴 ao vivo</span>
-      <button class="btn" style="font-size:13px;padding:9px 14px" onclick="abrirTV()">📺 TV</button>
-    </div>
+<div class="app">
+  <div class="topbar">
+    <button class="hamburger-btn" onclick="irPara('settings')" title="Menu">☰</button>
+    <div class="topbar-title">Saldou<span>VR</span></div>
+    <button class="role-pill" id="rolePill" style="cursor:default;"></button>
   </div>
-  <div style="padding:16px;padding-bottom:88px;max-width:680px;margin:0 auto">
-    ${conteudo}
-  </div>
-  ${navInferior()}
-  `;
-  if(D.historicoAberto) atualizarHistoricoResultados();
-}
+  <div class="empresa-tag" id="empresaTag"></div>
 
-// ── TV ────────────────────────────────────────────────────────────────────────
-let relogio;
-function abrirTV(){
-  $('tv').style.display='block'; montarTV();
-  relogio=setInterval(atualizarRelogioTV,1000);
-  try{ const pr=document.documentElement.requestFullscreen(); if(pr&&pr.catch) pr.catch(()=>{}); }catch{}
-}
-function fecharTV(){$('tv').style.display='none';clearInterval(relogio);pararCarrosselEventos();try{ if(document.fullscreenElement){ const pr=document.exitFullscreen(); if(pr&&pr.catch) pr.catch(()=>{}); } }catch{}}
+  <div id="pageContent"></div>
+</div>
 
-let eventoAnimId=null, eventoPosX=0, eventoUltimoTs=null, eventoLoopW=0;
-const EVENTO_VELOCIDADE=60; // px por segundo
+<div class="bottom-nav">
+  <div class="bottom-nav-inner" id="bottomNav"></div>
+</div>
 
-function itemEventoTV(e){
-  const cor=COR[e.pilar||'Geral'];
-  const hojeStr=hoje(), amanha=(()=>{const d=new Date();d.setDate(d.getDate()+1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})();
-  const quando = e.data===hojeStr ? 'HOJE' : e.data===amanha ? 'AMANHÃ' : fmtDataEvento(e.data).toUpperCase();
-  return `<span style="display:inline-flex;align-items:center;gap:clamp(8px,.8vw,14px)">
-      <span style="font-size:clamp(15px,1.5vw,28px)">${IC[e.pilar||'Geral']}</span>
-      <span style="color:${cor};font-weight:800;letter-spacing:1px;font-size:clamp(13px,1.25vw,24px)">${quando}</span>
-      <span style="color:var(--tv-ink);font-size:clamp(13px,1.3vw,26px)">${esc(e.texto)}</span>
-    </span>`;
-}
-const SEP_EVENTO=`<span style="display:inline-block;width:1px;height:1.3em;background:rgba(255,255,255,.22);margin:0 clamp(18px,2vw,40px)"></span>`;
+<div class="stamp-mark" id="stampMark"></div>
 
-function tickEventoTV(ts){
-  const wrap=$('tv-evento-wrap'), el=$('tv-evento');
-  if(!wrap||!el){ eventoAnimId=null; return; }
-  if(eventoUltimoTs===null) eventoUltimoTs=ts;
-  const dt=Math.min((ts-eventoUltimoTs)/1000,0.1); eventoUltimoTs=ts;
-  eventoPosX-=EVENTO_VELOCIDADE*dt;
-  // saiu inteiro pela esquerda: volta a entrar pela direita
-  if(eventoPosX < -eventoLoopW) eventoPosX=wrap.offsetWidth;
-  el.style.transform=`translateX(${eventoPosX}px)`;
-  eventoAnimId=requestAnimationFrame(tickEventoTV);
-}
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = 'https://cefrtcvlfvqsrlshomqc.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_ZG9dmwrjxf4-qhSKBi6f0A__agTy2Rv';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
+<script>
+  const VALOR_PADRAO_DIA = 35;
 
-function iniciarCarrosselEventos(){
-  cancelAnimationFrame(eventoAnimId); eventoAnimId=null;
-  const wrap=$('tv-evento-wrap'), el=$('tv-evento');
-  if(!wrap||!el) return;
-  const lista=eventosFuturos();
-  if(!lista.length){ mostrarSemEventosTV(); return; }
-  wrap.style.display='flex';
-  el.innerHTML=`<span style="display:inline-flex;align-items:center;flex-shrink:0">${lista.map(itemEventoTV).join(SEP_EVENTO)}</span>`;
-  eventoLoopW=el.offsetWidth;
-  eventoPosX=wrap.offsetWidth; eventoUltimoTs=null;
-  el.style.transform=`translateX(${eventoPosX}px)`;
-  if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ el.style.transform='translateX(24px)'; return; }
-  eventoAnimId=requestAnimationFrame(tickEventoTV);
-}
+  let currentUserId = null;
+  let currentRole = 'prestador';
+  let currentPage = 'auth-carregando';
+  let selectedColaboradorId = null;
+  let editingDepositId = null;
+  let editingMarcacaoId = null;
+  let editingContratadoId = null;
+  let expandedMonths = {};
+  let viewingMonth = {};
+  let registroData = null;
+  let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
+  let meuEmail = null;     // email de autenticação da pessoa logada
+  let mostrandoBloqueioBiometria = false;
+  let authErro = '';
+  let authCarregando = false;
+  let senhaRedefinidaComSucesso = false;
 
-function mostrarSemEventosTV(){
-  const wrap=$('tv-evento-wrap'), el=$('tv-evento'); if(!wrap||!el) return;
-  wrap.style.display='flex';
-  el.innerHTML=`<span style="display:inline-flex;align-items:center;gap:12px"><span style="font-size:clamp(15px,1.5vw,28px)">📅</span><span style="color:var(--tv-ink-dim);font-size:clamp(13px,1.3vw,26px)">Nenhum compromisso agendado</span></span>`;
-  requestAnimationFrame(()=>{ el.style.transform=`translateX(${Math.max(0,(wrap.offsetWidth-el.offsetWidth)/2)}px)`; });
-}
-function pararCarrosselEventos(){ cancelAnimationFrame(eventoAnimId); eventoAnimId=null; }
+  let state = {
+    config: { empresa: '', responsavel: '' },
+    contratados: [],
+    depositos: [],
+    marcacoes: []
+  };
 
-function anelSVG(p,tam){
-  const cor=COR[p];
-  const raio=tam/2-tam*0.075, c=2*Math.PI*raio, pct=Math.min(porc(p),1), dash=c*pct;
-  return `<svg width="100%" height="100%" viewBox="0 0 ${tam} ${tam}" style="display:block;transform:rotate(-90deg);overflow:visible">
-    <circle cx="${tam/2}" cy="${tam/2}" r="${raio}" fill="none" stroke="var(--tv-hair)" stroke-width="${tam*0.065}"/>
-    <circle cx="${tam/2}" cy="${tam/2}" r="${raio}" fill="none" stroke="${cor}" stroke-width="${tam*0.065}" stroke-linecap="round"
-      stroke-dasharray="${dash} ${c}" style="filter:drop-shadow(0 0 ${tam*0.05}px ${cor}90);transition:stroke-dasharray .7s ease"/>
-  </svg>`;
-}
+  let modoRecuperacaoSenha = /type=recovery/.test(window.location.hash);
 
-function atualizarRelogioTV(){
-  const el=$('tv-relogio'); if(!el){ clearInterval(relogio); return; }
-  const d=new Date();
-  el.textContent=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  const dt=$('tv-data'); if(dt){ const t=d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'}); dt.textContent=t.charAt(0).toUpperCase()+t.slice(1); }
-}
-
-// Acumulado dia a dia de um pilar num mês (mes 0-11)
-function serieAcumulada(pilar,ano,mes,ateDia){
-  const pref=ano+'-'+String(mes+1).padStart(2,'0');
-  const dim=new Date(ano,mes+1,0).getDate(), lim=ateDia||dim;
-  const porDia=new Array(dim+1).fill(0);
-  D.despesas.forEach(d=>{
-    if(d.pilar===pilar && d.data && d.data.startsWith(pref)){
-      const dia=parseInt(d.data.slice(8,10),10); if(dia>=1&&dia<=dim) porDia[dia]+=d.valor;
+  sb.auth.onAuthStateChange((event) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      modoRecuperacaoSenha = true;
+      currentPage = 'auth-nova-senha';
+      renderApp();
     }
   });
-  const out=[]; let acc=0; for(let i=1;i<=lim;i++){ acc+=porDia[i]; out.push(acc); }
-  return {out,dim};
-}
 
-function cardCategoriaTV(p){
-  const cor=COR[p], st=statusCat(p), pct=Math.round(porc(p)*100);
-  const now=new Date(), ano=now.getFullYear(), mes=now.getMonth(), dia=now.getDate();
-  const m=meta(p)||1;
-  const cur=serieAcumulada(p,ano,mes,dia);
-  const pa=mes===0?ano-1:ano, pmes=mes===0?11:mes-1;
-  const prev=serieAcumulada(p,pa,pmes);
-  const temPrev=prev.out.some(v=>v>0);
-  const fc=cur.out.map(v=>v/m), fp=prev.out.map(v=>v/m);
-  const maxY=Math.max(1.25,...fc,...(temPrev?fp:[0]))*1.06;
-  const X=(i,dim)=> (i/(dim-1))*100;
-  const Y=v=> 100-(v/maxY)*100;
-  const linha=(arr,dim)=> arr.map((v,i)=>(i?'L':'M')+X(i,dim).toFixed(2)+' '+Y(v).toFixed(2)).join(' ');
-  const curPath=linha(fc,cur.dim);
-  const ultX=X(fc.length-1,cur.dim), ultY=Y(fc[fc.length-1]||0);
-  const area=curPath+` L ${ultX.toFixed(2)} 100 L 0 100 Z`;
-  const yMeta=Y(1);
-  const prevAteHoje = temPrev ? Math.round((fp[Math.min(dia,fp.length)-1]||0)*100) : null;
-  const gid='g'+p;
-  const rotulo = p==='Investimentos' ? 'da meta' : 'do orçamento';
-  return `
-  <div class="tvx-glass tvx-card">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1vw">
-      <span style="font-size:clamp(15px,1.6vw,34px);font-weight:800;letter-spacing:.3px;color:${cor};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">${p.toUpperCase()}</span>
-      <span style="font-size:clamp(20px,2.1vw,44px);line-height:1;flex-shrink:0">${IC[p]}</span>
-    </div>
-    <div style="display:flex;align-items:flex-end;gap:.6vw;flex-wrap:wrap;row-gap:.6vh;margin-top:.6vh">
-      <span style="font-size:clamp(30px,3.4vw,72px);font-weight:800;line-height:1;color:${cor};font-variant-numeric:tabular-nums">${pct}%</span>
-      <span style="font-size:clamp(11px,1vw,20px);color:var(--tv-ink-dim);padding-bottom:.45vh;white-space:nowrap">${rotulo}</span>
-    </div>
-    <div style="margin-top:1vh"><span style="display:inline-block;color:${st.cor};background:${st.cor}1f;border:1px solid ${st.cor}55;border-radius:99px;padding:.45vh .8vw;font-size:clamp(9px,.75vw,15px);font-weight:800;letter-spacing:.8px;white-space:nowrap">${st.texto}</span></div>
-    <div class="tvx-chart">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${cor}" stop-opacity=".35"/><stop offset="1" stop-color="${cor}" stop-opacity="0"/></linearGradient></defs>
-        <line x1="0" x2="100" y1="${yMeta.toFixed(2)}" y2="${yMeta.toFixed(2)}" stroke="#EFE7D9" stroke-opacity=".45" stroke-width="1.2" stroke-dasharray="2 5" vector-effect="non-scaling-stroke"/>
-        ${temPrev?`<path d="${linha(fp,prev.dim)}" fill="none" stroke="#EFE7D9" stroke-opacity=".38" stroke-width="1.6" stroke-dasharray="6 5" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`:''}
-        <path d="${area}" fill="url(#${gid})"/>
-        <path d="${curPath}" fill="none" stroke="${cor}" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 6px ${cor}99)"/>
-      </svg>
-      <span style="position:absolute;right:0;top:calc(${yMeta.toFixed(2)}% - 1.9em);font-size:clamp(9px,.75vw,14px);color:#EFE7D9a0;letter-spacing:.5px">meta</span>
-      <span style="position:absolute;left:${ultX.toFixed(2)}%;top:${ultY.toFixed(2)}%;width:clamp(8px,.7vw,14px);height:clamp(8px,.7vw,14px);border-radius:50%;background:${cor};transform:translate(-50%,-50%);box-shadow:0 0 0 3px ${cor}40,0 0 14px ${cor}"></span>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:clamp(9px,.78vw,15px);color:var(--tv-ink-dim);margin-top:.8vh">
-      <span>dia 1</span><span>dia ${Math.round(cur.dim/2)}</span><span>dia ${cur.dim}</span>
-    </div>
-    <div style="display:flex;gap:1.2vw;font-size:clamp(9px,.75vw,14px);color:var(--tv-ink-dim);margin-top:.6vh">
-      <span><span style="display:inline-block;width:14px;height:3px;border-radius:2px;background:${cor};vertical-align:middle;margin-right:5px"></span>este mês</span>
-      ${temPrev?`<span><span style="display:inline-block;width:14px;border-top:2px dashed #EFE7D980;vertical-align:middle;margin-right:5px"></span>mês passado · <b style="color:var(--tv-ink)">${prevAteHoje}%</b> até hoje</span>`:`<span>primeiro mês com lançamentos</span>`}
-    </div>
-  </div>`;
-}
+  // ---- AUTENTICAÇÃO ----
+  async function initApp(){
+    if(modoRecuperacaoSenha){
+      // Veio de um link de "esqueci a senha" — espera o evento PASSWORD_RECOVERY
+      // do Supabase decidir a tela, em vez de seguir o fluxo normal de login.
+      currentPage = 'auth-carregando';
+      renderApp();
+      return;
+    }
+    const { data: { session } } = await sb.auth.getSession();
+    if(modoRecuperacaoSenha) return; // a tela de nova senha já foi mostrada pelo listener acima
+    if(!session){
+      currentPage = 'auth-login';
+      renderApp();
+      return;
+    }
+    if(biometriaEstaAtivaAqui()){
+      mostrandoBloqueioBiometria = true;
+      currentPage = 'biometria-bloqueio';
+      renderApp();
+      await desbloquearComBiometria(); // já pede a digital/rosto direto, sem precisar tocar em nada antes
+      return;
+    }
+    await carregarAposLogin();
+  }
 
-function montarTV(){
-  const sg=saudeGeral(), pm=progressoMeta();
-  const R=86, C=2*Math.PI*R, dash=C*(sg.n/100);
-  const f=fracMes(), hojeD=new Date();
-  const dimHoje=new Date(hojeD.getFullYear(),hojeD.getMonth()+1,0).getDate();
-  const ladoDireito = pm ? `
-      <div class="tvx-side-card">
-        <div style="font-size:clamp(11px,.95vw,19px);color:var(--tv-ink-dim);letter-spacing:1px;margin-bottom:1vh">🎯 META DA FAMÍLIA</div>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:1vw;margin-bottom:1.6vh">
-          <span style="font-size:clamp(15px,1.6vw,34px);font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(pm.nome)}</span>
-          <span style="font-size:clamp(24px,2.8vw,58px);font-weight:800;color:${COR.Investimentos};line-height:1">${Math.floor(pm.pct*100)}%</span>
+  async function carregarAposLogin(){
+    if(modoRecuperacaoSenha) return; // não deixa nenhum fluxo normal de login sobrescrever a tela de nova senha
+    const { data: { user } } = await sb.auth.getUser();
+    if(!user){ currentPage = 'auth-login'; renderApp(); return; }
+    meuEmail = user.email;
+
+    const { data: perfil, error } = await sb.from('usuarios').select('*').eq('id', user.id).maybeSingle();
+    if(error || !perfil){
+      // usuário autenticado mas ainda sem perfil (empresa/contratado) — manda pro cadastro
+      currentPage = 'auth-escolher-papel';
+      renderApp();
+      return;
+    }
+    meuUsuario = perfil;
+    currentRole = perfil.papel;
+    currentUserId = perfil.papel === 'prestador' ? perfil.id : null;
+    currentPage = paginaInicialDoRole();
+    await carregarDadosDaEmpresa();
+  }
+
+  async function carregarDadosDaEmpresa(){
+    if(!meuUsuario) return;
+
+    const { data: empresa } = await sb.from('empresas').select('*').eq('id', meuUsuario.empresa_id).maybeSingle();
+    const { data: usuarios } = await sb.from('usuarios').select('*').eq('empresa_id', meuUsuario.empresa_id);
+    const { data: depositos } = await sb.from('depositos').select('*').order('data', { ascending: true });
+    const { data: marcacoes } = await sb.from('marcacoes').select('*').order('data', { ascending: true });
+
+    const responsavelRow = (usuarios || []).find(u => u.papel === 'responsavel');
+
+    state.config.empresa = empresa ? empresa.nome : '';
+    state.config.responsavel = responsavelRow ? responsavelRow.nome : '';
+    state.contratados = (usuarios || []).filter(u => u.papel === 'prestador').map(u => ({
+      id: u.id, nome: u.nome, valorDiaPadrao: Number(u.valor_dia_padrao)
+    }));
+    state.depositos = (depositos || []).map(d => ({
+      id: d.id, contratadoId: d.contratado_id, valor: Number(d.valor), data: d.data
+    }));
+    state.marcacoes = (marcacoes || []).map(m => ({
+      id: m.id, contratadoId: m.contratado_id, data: m.data, usou: m.usou, valorDia: Number(m.valor_dia)
+    }));
+
+    renderApp();
+  }
+
+  async function fazerLogin(){
+    senhaRedefinidaComSucesso = false;
+    const email = document.getElementById('authEmail').value.trim();
+    const senha = document.getElementById('authSenha').value;
+    if(!email || !senha){ authErro = 'Preenche email e senha.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    posthog.identify(email);
+    posthog.capture('login_realizado');
+    currentPage = 'auth-carregando';
+    renderApp();
+    await carregarAposLogin();
+  }
+
+  async function fazerCadastro(){
+    const email = document.getElementById('authEmailCad').value.trim();
+    const senha = document.getElementById('authSenhaCad').value;
+    if(!email || !senha || senha.length < 6){ authErro = 'Email válido e senha com 6+ caracteres.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.signUp({ email, password: senha });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    posthog.capture('cadastro_realizado', { email: email });
+    authErro = '';
+    currentPage = 'auth-confirme-email';
+    renderApp();
+  }
+
+  async function criarEmpresaEEntrar(){
+    const nomeEmpresa = document.getElementById('novaEmpresaNome').value.trim();
+    const meuNome = document.getElementById('novoResponsavelNome').value.trim();
+    if(!nomeEmpresa || !meuNome){ authErro = 'Preenche os dois campos.'; renderApp(); return; }
+    if(!document.getElementById('termosResponsavel').checked){ authErro = 'Precisa aceitar os Termos de Uso e a Política de Privacidade pra continuar.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+
+    const { data: { user } } = await sb.auth.getUser();
+    const novaEmpresaId = crypto.randomUUID();
+
+    const { error: e1 } = await sb.from('empresas').insert({ id: novaEmpresaId, nome: nomeEmpresa });
+    if(e1){ authCarregando = false; authErro = e1.message; renderApp(); return; }
+
+    const { error: e2 } = await sb.from('usuarios').insert({
+      id: user.id, empresa_id: novaEmpresaId, papel: 'responsavel', nome: meuNome
+    });
+    authCarregando = false;
+    if(e2){ authErro = e2.message; renderApp(); return; }
+    posthog.capture('empresa_criada', { nome_empresa: nomeEmpresa });
+    await carregarAposLogin();
+  }
+
+  async function entrarComoContratado(){
+    const empresaId = document.getElementById('empresaIdInput').value.trim();
+    const meuNome = document.getElementById('novoPrestadorNome').value.trim();
+    const valorDia = parseFloat((document.getElementById('novoPrestadorValor').value || '35').replace(',', '.')) || 35;
+    if(!empresaId || !meuNome){ authErro = 'Preenche o código da empresa e seu nome.'; renderApp(); return; }
+    if(!document.getElementById('termosPrestador').checked){ authErro = 'Precisa aceitar os Termos de Uso e a Política de Privacidade pra continuar.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+
+    const { data: { user } } = await sb.auth.getUser();
+    const { error } = await sb.from('usuarios').insert({
+      id: user.id, empresa_id: empresaId, papel: 'prestador', nome: meuNome, valor_dia_padrao: valorDia
+    });
+    authCarregando = false;
+    if(error){ authErro = 'Código de empresa inválido ou erro: ' + error.message; renderApp(); return; }
+    posthog.capture('prestador_entrou_empresa', { empresa_id: empresaId });
+    await carregarAposLogin();
+  }
+
+  function customConfirm(title, message, confirmLabel, danger){
+    danger = danger !== false;
+    return new Promise(function(resolve){
+      const overlay = document.createElement('div');
+      overlay.className = 'confirm-overlay';
+      overlay.innerHTML =
+        '<div class="confirm-card">' +
+          '<div class="confirm-title">' + title + '</div>' +
+          '<div class="confirm-text">' + message + '</div>' +
+          '<div class="confirm-actions">' +
+            '<button class="confirm-btn confirm-cancel">Cancelar</button>' +
+            '<button class="confirm-btn confirm-ok ' + (danger ? 'danger' : 'safe') + '">' + (confirmLabel || 'Confirmar') + '</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(overlay);
+      function cleanup(result){ overlay.remove(); resolve(result); }
+      overlay.querySelector('.confirm-cancel').onclick = function(){ cleanup(false); };
+      overlay.querySelector('.confirm-ok').onclick = function(){ cleanup(true); };
+      overlay.onclick = function(e){ if(e.target === overlay) cleanup(false); };
+    });
+  }
+
+  function togglePwd(inputId, btn){
+    const input = document.getElementById(inputId);
+    if(input.type === 'password'){ input.type = 'text'; btn.textContent = '🙈'; }
+    else { input.type = 'password'; btn.textContent = '👁️'; }
+  }
+
+  // ---- BIOMETRIA (digital / reconhecimento facial) ----
+  // Funciona como um "cadeado local": a sessão do Supabase continua sendo a
+  // autenticação de verdade. A biometria só decide se libera o acesso a essa
+  // sessão já salva no aparelho, sem precisar digitar a senha de novo.
+  function biometriaSuportada(){
+    return typeof window.PublicKeyCredential !== 'undefined';
+  }
+  async function biometriaDisponivelNoAparelho(){
+    if(!biometriaSuportada()) return false;
+    try { return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable(); }
+    catch(e){ return false; }
+  }
+  function biometriaEstaAtivaAqui(){
+    return localStorage.getItem('saldou_biometria_ativa') === '1';
+  }
+  async function ativarBiometria(){
+    const disponivel = await biometriaDisponivelNoAparelho();
+    if(!disponivel){
+      await customConfirm('Biometria indisponível', 'Esse aparelho ou navegador não tem suporte a digital/reconhecimento facial (ou você está fora do PWA instalado). Tenta abrir o app instalado na tela inicial.', 'Entendi', false);
+      return;
+    }
+    try{
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const userId = new TextEncoder().encode(meuUsuario.id);
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge,
+          rp: { name: 'SaldouVR' },
+          user: { id: userId, name: meuEmail || 'usuario', displayName: meuUsuario.nome || 'Usuário' },
+          pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+          authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required' },
+          timeout: 60000
+        }
+      });
+      if(!credential) return;
+      const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+      localStorage.setItem('saldou_biometria_ativa', '1');
+      localStorage.setItem('saldou_biometria_credential_id', credentialId);
+      posthog.capture('biometria_ativada');
+      renderApp();
+    } catch(e){
+      console.warn('Saldou: falha ao ativar biometria', e);
+    }
+  }
+  function desativarBiometria(){
+    localStorage.removeItem('saldou_biometria_ativa');
+    localStorage.removeItem('saldou_biometria_credential_id');
+    posthog.capture('biometria_desativada');
+    renderApp();
+  }
+  async function desbloquearComBiometria(){
+    const credentialIdB64 = localStorage.getItem('saldou_biometria_credential_id');
+    if(!credentialIdB64){ mostrandoBloqueioBiometria = false; await carregarAposLogin(); return; }
+    try{
+      const credentialId = Uint8Array.from(atob(credentialIdB64), c => c.charCodeAt(0));
+      const challenge = crypto.getRandomValues(new Uint8Array(32));
+      const assertion = await navigator.credentials.get({
+        publicKey: { challenge, allowCredentials: [{ id: credentialId, type: 'public-key' }], userVerification: 'required', timeout: 60000 }
+      });
+      if(!assertion) return;
+      mostrandoBloqueioBiometria = false;
+      posthog.capture('desbloqueio_biometria_sucesso');
+      await carregarAposLogin();
+    } catch(e){
+      // Cancelou ou falhou a digital — volta sozinho pro login normal, sem travar a pessoa na tela
+      console.warn('Saldou: biometria falhou ou foi cancelada', e);
+      mostrandoBloqueioBiometria = false;
+      await executarLogout();
+    }
+  }
+  function entrarComSenhaEmVezDeBiometria(){
+    mostrandoBloqueioBiometria = false;
+    executarLogout();
+  }
+
+  async function executarLogout(){
+    await sb.auth.signOut();
+    meuUsuario = null;
+    meuEmail = null;
+    state = { config:{empresa:'',responsavel:''}, contratados:[], depositos:[], marcacoes:[] };
+    currentPage = 'auth-login';
+    renderApp();
+  }
+
+  // ---- NOTIFICAÇÃO PUSH (lembrete diário, funciona com o app fechado) ----
+  const VAPID_PUBLIC_KEY = 'BM4R5sm3bEQAI6y_vLIfJuXSTu4jFH4cgCB9LNg945DhgTd9CqQDepd3jK8TxMzgdTLnO8flYt6EKLaymJX_nfQ';
+  function urlBase64ToUint8Array(base64String){
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for(let i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
+    return outputArray;
+  }
+  async function ativarNotificacoesPush(){
+    if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+      await customConfirm('Não suportado', 'Esse navegador não suporta notificações push. No iPhone, precisa instalar o app na tela de início primeiro (compartilhar → adicionar à tela de início).', 'Entendi', false);
+      return;
+    }
+    try{
+      const permissao = await Notification.requestPermission();
+      if(permissao !== 'granted'){
+        await customConfirm('Permissão negada', 'Você recusou a permissão de notificação. Pra ativar depois, precisa liberar manualmente nas configurações de notificação do navegador/celular.', 'Entendi', false);
+        return;
+      }
+      const registration = await navigator.serviceWorker.ready;
+      let subscription = await registration.pushManager.getSubscription();
+      if(!subscription){
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+        });
+      }
+      const subJson = subscription.toJSON();
+      await sb.from('push_subscriptions').upsert({
+        user_id: meuUsuario.id,
+        endpoint: subJson.endpoint,
+        p256dh: subJson.keys.p256dh,
+        auth: subJson.keys.auth
+      }, { onConflict: 'endpoint' });
+      posthog.capture('push_ativado');
+      await customConfirm('Notificações ativadas ✓', 'A partir de amanhã, você recebe um lembrete às 11h nos dias em que ainda não tiver registrado o uso do vale. Pode desativar quando quiser, aqui ou nas configurações do celular.', 'Show', false);
+      renderApp();
+    } catch(e){
+      console.warn('Saldou: falha ao ativar push', e);
+    }
+  }
+  async function desativarNotificacoesPush(){
+    try{
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+      if(subscription){
+        await sb.from('push_subscriptions').delete().eq('endpoint', subscription.endpoint);
+        await subscription.unsubscribe();
+      }
+      posthog.capture('push_desativado');
+      renderApp();
+    } catch(e){ console.warn('Saldou: falha ao desativar push', e); }
+  }
+  async function statusNotificacoesPush(){
+    if(!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+    try{
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+      return !!subscription;
+    } catch(e){ return false; }
+  }
+
+  async function excluirConta(){
+    if(meuUsuario.papel === 'responsavel' && state.contratados.length > 0){
+      await customConfirm(
+        'Não é possível excluir ainda',
+        'Antes de excluir sua conta, remove todos os colaboradores cadastrados (menu Configurações → Contratados). Isso evita deixar o histórico deles órfão.',
+        'Entendi', false
+      );
+      return;
+    }
+
+    const aviso = meuUsuario.papel === 'responsavel'
+      ? 'Isso apaga a empresa e todo o seu histórico de forma permanente. Seu login continua existindo, mas você vai precisar se cadastrar de novo do zero se quiser voltar a usar o SaldouVR. Essa ação não pode ser desfeita.'
+      : 'Isso apaga seu vínculo com a empresa e todo o seu histórico de depósitos e marcações de forma permanente. Seu login continua existindo, mas você vai precisar se cadastrar de novo do zero se quiser voltar a usar o SaldouVR. Essa ação não pode ser desfeita.';
+
+    const ok = await customConfirm('Excluir conta', aviso, 'Excluir tudo permanentemente');
+    if(!ok) return;
+
+    if(meuUsuario.papel === 'prestador'){
+      await sb.from('depositos').delete().eq('contratado_id', meuUsuario.id);
+      await sb.from('marcacoes').delete().eq('contratado_id', meuUsuario.id);
+      await sb.from('usuarios').delete().eq('id', meuUsuario.id);
+    } else {
+      await sb.from('usuarios').delete().eq('id', meuUsuario.id);
+      await sb.from('empresas').delete().eq('id', meuUsuario.empresa_id);
+    }
+    posthog.capture('conta_excluida', { papel: meuUsuario.papel });
+    await executarLogout();
+  }
+
+  async function sair(){
+    const ok = await customConfirm('Sair da conta', 'Você vai precisar fazer login novamente da próxima vez. Tem certeza que quer sair?', 'Sair da conta');
+    if(!ok) return;
+    await executarLogout();
+  }
+
+  async function sairDaEmpresa(){
+    const ok = await customConfirm('Sair da empresa', 'Isso remove seu vínculo com essa empresa (histórico, saldo, tudo). Seu login continua existindo — na próxima vez você pode entrar numa empresa diferente.', 'Sair da empresa');
+    if(!ok) return;
+    await sb.from('usuarios').delete().eq('id', meuUsuario.id);
+    await executarLogout();
+  }
+
+  function isoLocal(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+  function isoDaysAgo(n){ const d = new Date(); d.setDate(d.getDate() - n); return isoLocal(d); }
+  function todayISO(){ return isoLocal(new Date()); }
+  function formatBRL(v){ return 'R$ ' + v.toFixed(2).replace('.', ','); }
+  function formatDateBR(iso){ const [y,m,d] = iso.split('-'); return `${d}/${m}`; }
+  function contratadoNome(id){ const c = state.contratados.find(x => x.id === id); return c ? c.nome : '—'; }
+  function iniciais(nome){ return nome.trim().split(/\s+/).slice(0,2).map(p=>p[0]).join('').toUpperCase(); }
+
+  // ---- CALCULOS ----
+  function totalDepositos(contratadoId){
+    return state.depositos.filter(d => d.contratadoId === contratadoId).reduce((s,d)=> s + d.valor, 0);
+  }
+  function totalUsado(contratadoId){
+    return state.marcacoes.filter(m => m.contratadoId === contratadoId && m.usou).reduce((s,m)=> s + m.valorDia, 0);
+  }
+  function saldoAtual(contratadoId){ return totalDepositos(contratadoId) - totalUsado(contratadoId); }
+  function valorDiaMedio(contratadoId){
+    const c = state.contratados.find(x => x.id === contratadoId);
+    const padrao = c ? c.valorDiaPadrao : VALOR_PADRAO_DIA;
+    const usados = state.marcacoes.filter(m => m.contratadoId === contratadoId && m.usou);
+    if(usados.length === 0) return padrao;
+    return usados.reduce((s,m)=> s + m.valorDia, 0) / usados.length;
+  }
+  function marcacaoDeHoje(contratadoId){
+    return state.marcacoes.find(m => m.contratadoId === contratadoId && m.data === todayISO());
+  }
+  function marcacaoDoDia(contratadoId, data){
+    return state.marcacoes.find(m => m.contratadoId === contratadoId && m.data === data);
+  }
+  function diasInfo(contratadoId){
+    const saldo = saldoAtual(contratadoId);
+    const media = valorDiaMedio(contratadoId);
+    if(media <= 0) return { saldo, media, deficit:false, dias:0 };
+    if(saldo < 0) return { saldo, media, deficit:true, dias: Math.floor(Math.abs(saldo)/media) };
+    return { saldo, media, deficit:false, dias: Math.floor(saldo/media) };
+  }
+
+  // ---- NAVEGAÇÃO ----
+  function irPara(page, params){
+    currentPage = page;
+    if(params && params.colaboradorId !== undefined) selectedColaboradorId = params.colaboradorId;
+    renderApp();
+    window.scrollTo(0,0);
+  }
+
+  function paginaInicialDoRole(){ return currentRole === 'prestador' ? 'prestador-hoje' : 'responsavel-colaboradores'; }
+
+  // ---- MARCAR DIA ----
+  // Função genérica: usada tanto pelo prestador (marcando o próprio dia) quanto
+  // pelo responsável (registrando um dia em nome de um colaborador). O valor do
+  // dia usa sempre o padrão do contratado — nunca a média histórica — a menos
+  // que um valor customizado seja informado (ex: dia de viagem com almoço+janta).
+  async function marcarDiaGenerico(contratadoId, usou, dataElId, valorElId){
+    if(!contratadoId) return;
+    const input = document.getElementById(dataElId);
+    const data = (input && input.value) ? input.value : todayISO();
+    const existente = marcacaoDoDia(contratadoId, data);
+
+    const valorInput = valorElId ? document.getElementById(valorElId) : null;
+    const valorCustomRaw = valorInput ? valorInput.value.trim() : '';
+    const valorCustom = valorCustomRaw ? parseFloat(valorCustomRaw.replace(',', '.')) : null;
+
+    if(existente && existente.usou === usou && valorCustom === null){
+      await sb.from('marcacoes').delete().eq('id', existente.id);
+      await carregarDadosDaEmpresa();
+      return;
+    }
+
+    const c = state.contratados.find(x => x.id === contratadoId);
+    const padrao = c ? c.valorDiaPadrao : VALOR_PADRAO_DIA;
+    const valorFinal = usou ? ((valorCustom !== null && !isNaN(valorCustom)) ? valorCustom : padrao) : 0;
+
+    if(existente){
+      await sb.from('marcacoes').update({ usou, valor_dia: valorFinal }).eq('id', existente.id);
+    } else {
+      await sb.from('marcacoes').insert({
+        empresa_id: meuUsuario.empresa_id, contratado_id: contratadoId, data,
+        usou, valor_dia: valorFinal
+      });
+    }
+    if(valorInput) valorInput.value = '';
+    posthog.capture('dia_marcado', { usou: usou });
+    if(contratadoId === currentUserId) { registroData = data; showStamp(usou); }
+    await carregarDadosDaEmpresa();
+  }
+
+  async function marcarDia(usou){
+    if(!currentUserId) return;
+    marcarDiaGenerico(currentUserId, usou, 'dataRegistroInput', 'valorCustomRegistro');
+  }
+
+  async function marcarDiaResponsavel(contratadoId, usou){
+    marcarDiaGenerico(contratadoId, usou, 'dataRegistroResp_' + contratadoId, 'valorCustomResp_' + contratadoId);
+  }
+
+  function mudarDataRegistro(valor){
+    registroData = valor;
+    renderApp();
+  }
+
+  function showStamp(usou){
+    const el = document.getElementById('stampMark');
+    el.textContent = usou ? 'USADO' : 'NÃO USADO';
+    el.style.color = usou ? 'var(--stamp-green)' : 'var(--stamp-red)';
+    el.style.borderColor = usou ? 'var(--stamp-green)' : 'var(--stamp-red)';
+    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+    setTimeout(()=> el.classList.remove('show'), 900);
+  }
+
+  // ---- DEPOSITOS ----
+  async function lancarDeposito(contratadoId){
+    const input = document.getElementById('novoDeposito_' + contratadoId);
+    const dataInput = document.getElementById('novoDepositoData_' + contratadoId);
+    const valor = parseFloat(input.value.replace(',', '.'));
+    const data = (dataInput && dataInput.value) ? dataInput.value : todayISO();
+    if(!valor || valor <= 0){ input.focus(); return; }
+    await sb.from('depositos').insert({
+      empresa_id: meuUsuario.empresa_id, contratado_id: contratadoId, valor, data, criado_por: meuUsuario.id
+    });
+    posthog.capture('deposito_criado', { valor: valor });
+    input.value = '';
+    await carregarDadosDaEmpresa();
+  }
+  async function excluirDeposito(id){
+    if(!confirm('Excluir esse depósito? Isso vai reduzir o saldo.')) return;
+    await sb.from('depositos').delete().eq('id', id);
+    await carregarDadosDaEmpresa();
+  }
+  function iniciarEdicaoDeposito(id){ editingDepositId = id; renderApp(); }
+  function cancelarEdicaoDeposito(){ editingDepositId = null; renderApp(); }
+  async function salvarEdicaoDeposito(id){
+    const valorInput = document.getElementById('editValor_' + id);
+    const dataInput = document.getElementById('editData_' + id);
+    const valor = parseFloat(valorInput.value.replace(',', '.'));
+    const data = dataInput.value;
+    if(!valor || valor <= 0 || !data) return;
+    await sb.from('depositos').update({ valor, data }).eq('id', id);
+    editingDepositId = null;
+    await carregarDadosDaEmpresa();
+  }
+  async function excluirMarcacao(id){
+    if(!confirm('Excluir essa marcação do histórico?')) return;
+    await sb.from('marcacoes').delete().eq('id', id);
+    await carregarDadosDaEmpresa();
+  }
+  function iniciarEdicaoMarcacao(id){ editingMarcacaoId = id; renderApp(); }
+  function cancelarEdicaoMarcacao(){ editingMarcacaoId = null; renderApp(); }
+  async function salvarEdicaoMarcacao(id){
+    const data = document.getElementById('editDataM_' + id).value;
+    const usou = document.getElementById('editUsouM_' + id).value === '1';
+    const valorInput = document.getElementById('editValorM_' + id).value;
+    const valor = parseFloat(valorInput.replace(',', '.'));
+    if(!data) return;
+    const m = state.marcacoes.find(x => x.id === id);
+    const c = state.contratados.find(x => x.id === m.contratadoId);
+    const valorFinal = usou ? (valor || (c ? c.valorDiaPadrao : VALOR_PADRAO_DIA)) : 0;
+    await sb.from('marcacoes').update({ data, usou, valor_dia: valorFinal }).eq('id', id);
+    editingMarcacaoId = null;
+    await carregarDadosDaEmpresa();
+  }
+
+  // ---- CONFIG / CONTRATADOS ----
+  async function salvarConfig(){
+    const empresa = document.getElementById('inputEmpresaNome').value.trim();
+    const responsavel = document.getElementById('inputResponsavelNome').value.trim();
+    if(empresa) await sb.from('empresas').update({ nome: empresa }).eq('id', meuUsuario.empresa_id);
+    if(responsavel && meuUsuario.papel === 'responsavel') await sb.from('usuarios').update({ nome: responsavel }).eq('id', meuUsuario.id);
+    await carregarDadosDaEmpresa();
+  }
+  async function salvarMeuNome(){
+    const nome = document.getElementById('inputMeuNome').value.trim();
+    if(!nome) return;
+    await sb.from('usuarios').update({ nome }).eq('id', meuUsuario.id);
+    await carregarDadosDaEmpresa();
+  }
+  function convidarViaWhatsApp(){
+    const nomeInput = document.getElementById('novoContratadoNome');
+    const valorInput = document.getElementById('novoContratadoValor');
+    const nome = nomeInput.value.trim();
+    const valor = parseFloat((valorInput.value || '').replace(',', '.')) || VALOR_PADRAO_DIA;
+    const linkApp = window.location.origin + window.location.pathname;
+
+    const saudacao = nome ? `Olá, ${nome}!` : 'Olá!';
+    const mensagem = `${saudacao} Aqui é da ${state.config.empresa} — você recebeu um convite pra usar o SaldouVR.\n\n`
+      + `*1.* Acessa: ${linkApp}\n`
+      + `*2.* Clica em "Cadastrar" → "Sou Colaborador"\n\n`
+      + `*Código da empresa* (toca e segura pra copiar):\n`
+      + `\`\`\`${meuUsuario.empresa_id}\`\`\`\n\n`
+      + `*Valor padrão do seu dia:* R$ ${valor.toFixed(2).replace('.', ',')}\n\n`
+      + `Assim você já controla seu vale-refeição direto pelo celular.`;
+
+    const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
+    window.open(urlWhatsApp, '_blank');
+  }
+  async function removerContratado(id){
+    if(!confirm('Remover esse contratado? O histórico de depósitos e marcações dele também será apagado.')) return;
+    await sb.from('usuarios').delete().eq('id', id);
+    await carregarDadosDaEmpresa();
+  }
+  function iniciarEdicaoContratado(id){ editingContratadoId = id; renderApp(); }
+  function cancelarEdicaoContratado(){ editingContratadoId = null; renderApp(); }
+  async function salvarEdicaoContratado(id){
+    const nome = document.getElementById('editNomeContratado_'+id).value.trim();
+    const valor = parseFloat(document.getElementById('editValorContratado_'+id).value.replace(',', '.'));
+    if(!nome || !valor || valor <= 0) return;
+    await sb.from('usuarios').update({ nome, valor_dia_padrao: valor }).eq('id', id);
+    editingContratadoId = null;
+    await carregarDadosDaEmpresa();
+  }
+
+  // ---- RESUMO MENSAL / HISTORICO ----
+  const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  function monthKey(iso){ return iso.slice(0,7); }
+  function monthLabel(key){ const [y,m] = key.split('-'); return `${MESES[parseInt(m,10)-1]} de ${y}`; }
+
+  function resumoMensal(contratadoId){
+    const meses = {};
+    const deps = contratadoId ? state.depositos.filter(d => d.contratadoId === contratadoId) : state.depositos;
+    const marks = contratadoId ? state.marcacoes.filter(m => m.contratadoId === contratadoId) : state.marcacoes;
+    deps.forEach(d => {
+      const k = monthKey(d.data);
+      if(!meses[k]) meses[k] = { depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 };
+      meses[k].depositado += d.valor;
+    });
+    marks.forEach(m => {
+      const k = monthKey(m.data);
+      if(!meses[k]) meses[k] = { depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 };
+      if(m.usou){ meses[k].usado += m.valorDia; meses[k].diasUsados += 1; }
+      else { meses[k].diasNaoUsados += 1; }
+    });
+    return Object.keys(meses).sort((a,b)=> b.localeCompare(a)).map(k => ({ key:k, ...meses[k] }));
+  }
+
+  function acumuladoAteMes(contratadoId, mk){
+    const meses = resumoMensal(contratadoId).filter(m => m.key <= mk);
+    const depositado = meses.reduce((s,m)=> s + m.depositado, 0);
+    const usado = meses.reduce((s,m)=> s + m.usado, 0);
+    return { depositado, usado, saldo: depositado - usado };
+  }
+
+  function resumoPeriodoParaMes(contratadoId, mk){
+    const ano = mk.slice(0,4);
+    const meses = resumoMensal(contratadoId);
+    const doMes = meses.find(m => m.key === mk);
+    const recebidoMes = doMes ? doMes.depositado : 0;
+    const recebidoAno = meses.filter(m => m.key.startsWith(ano)).reduce((s,m)=> s + m.depositado, 0);
+    return { recebidoMes, recebidoAno };
+  }
+
+  function resumoPeriodoAtual(contratadoId){
+    const hoje = todayISO();
+    const mesAtual = hoje.slice(0,7);
+    const anoAtual = hoje.slice(0,4);
+    const meses = resumoMensal(contratadoId);
+    const doMes = meses.find(m => m.key === mesAtual);
+    const recebidoMes = doMes ? doMes.depositado : 0;
+    const usadoMes = doMes ? doMes.usado : 0;
+    const recebidoAno = meses.filter(m => m.key.startsWith(anoAtual)).reduce((s,m)=> s + m.depositado, 0);
+    const usadoAno = meses.filter(m => m.key.startsWith(anoAtual)).reduce((s,m)=> s + m.usado, 0);
+    return { recebidoMes, usadoMes, recebidoAno, usadoAno };
+  }
+
+  function renderPeriodoCard(p, perspectivaEmpresa){
+    const rotulo = perspectivaEmpresa ? 'Depositado' : 'Recebido';
+    return `
+      <div class="today-card" style="margin-bottom:18px;">
+        <div class="today-date">Resumo do período</div>
+        <div class="carne-bottom" style="padding:0;">
+          <div class="stat">
+            <div class="stat-num">${formatBRL(p.recebidoMes)}</div>
+            <div class="stat-label">${rotulo} no mês</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">${formatBRL(p.recebidoAno)}</div>
+            <div class="stat-label">${rotulo} no ano</div>
+          </div>
         </div>
-        <div style="height:clamp(8px,1.1vh,14px);background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">
-          <div style="width:${Math.floor(pm.pct*100)}%;height:100%;border-radius:99px;background:linear-gradient(90deg,#2E8AF5,${COR.Investimentos});box-shadow:0 0 14px ${COR.Investimentos}90;transition:width .8s ease"></div>
+      </div>
+    `;
+  }
+
+  function resumoMensalPorContratado(){
+    const meses = {};
+    state.depositos.forEach(d => {
+      const k = monthKey(d.data);
+      if(!meses[k]) meses[k] = { total:0, porContratado:{} };
+      meses[k].total += d.valor;
+      meses[k].porContratado[d.contratadoId] = (meses[k].porContratado[d.contratadoId] || 0) + d.valor;
+    });
+    return Object.keys(meses).sort((a,b)=> b.localeCompare(a)).map(k => ({ key:k, ...meses[k] }));
+  }
+
+  function historicoAgrupado(contratadoId){
+    const deps = (contratadoId ? state.depositos.filter(d => d.contratadoId === contratadoId) : state.depositos)
+      .map(d => ({ tipo:'deposito', ...d }));
+    const marks = (contratadoId ? state.marcacoes.filter(m => m.contratadoId === contratadoId) : state.marcacoes)
+      .map(m => ({ tipo:'marcacao', ...m }));
+    const itens = [...deps, ...marks];
+    itens.sort((a,b) => {
+      if(a.data !== b.data) return a.data.localeCompare(b.data);
+      if(a.tipo !== b.tipo) return a.tipo === 'deposito' ? -1 : 1;
+      return a.id - b.id;
+    });
+    return itens;
+  }
+  function historicoDoMes(contratadoId, mk){
+    return historicoAgrupado(contratadoId).filter(item => monthKey(item.data) === mk);
+  }
+
+  function renderItemHistorico(item, mostrarNome, perspectivaEmpresa){
+    const nomeTag = mostrarNome ? ` · ${contratadoNome(item.contratadoId)}` : '';
+    if(item.tipo === 'deposito'){
+      if(editingDepositId === item.id){
+        return `
+          <div class="hist-item">
+            <div class="hist-edit-form">
+              <input class="valor" id="editValor_${item.id}" type="text" value="${item.valor.toFixed(2).replace('.',',')}" inputmode="decimal">
+              <input class="data" id="editData_${item.id}" type="date" value="${item.data}">
+              <button class="btn-salvar" onclick="salvarEdicaoDeposito('${item.id}')">Salvar</button>
+              <button class="btn-cancelar" onclick="cancelarEdicaoDeposito()">Cancelar</button>
+            </div>
+          </div>`;
+      }
+      return `
+        <div class="hist-item">
+          <div class="hist-left">
+            <div class="hist-dot mustard"></div>
+            <div><div>${(mostrarNome || perspectivaEmpresa) ? 'Depósito feito' : 'Depósito recebido'}${nomeTag}</div><div class="hist-date">${formatDateBR(item.data)}</div></div>
+          </div>
+          <div class="hist-right">
+            <div class="hist-val pos">+${formatBRL(item.valor)}</div>
+            <button class="hist-edit" onclick="iniciarEdicaoDeposito('${item.id}')" title="Editar">✎</button>
+            <button class="hist-del" onclick="excluirDeposito('${item.id}')" title="Excluir">✕</button>
+          </div>
+        </div>`;
+    }
+    if(item.tipo === 'marcacao' && editingMarcacaoId === item.id){
+      return `
+        <div class="hist-item">
+          <div class="hist-edit-form">
+            <select id="editUsouM_${item.id}" class="valor" style="width:112px;">
+              <option value="1" ${item.usou ? 'selected' : ''}>Usou VR</option>
+              <option value="0" ${!item.usou ? 'selected' : ''}>Não usou</option>
+            </select>
+            <input class="valor" id="editValorM_${item.id}" type="text" value="${(item.valorDia || 0).toFixed(2).replace('.',',')}" inputmode="decimal">
+            <input class="data" id="editDataM_${item.id}" type="date" value="${item.data}">
+            <button class="btn-salvar" onclick="salvarEdicaoMarcacao('${item.id}')">Salvar</button>
+            <button class="btn-cancelar" onclick="cancelarEdicaoMarcacao()">Cancelar</button>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="hist-item">
+        <div class="hist-left">
+          <div class="hist-dot ${item.usou ? 'red' : 'green'}"></div>
+          <div><div>${item.usou ? 'Usou VR' : 'Não usou'}${nomeTag}</div><div class="hist-date">${formatDateBR(item.data)}</div></div>
         </div>
-      </div>` : `
-      <div class="tvx-side-card">
-        <div style="font-size:clamp(11px,.95vw,19px);color:var(--tv-ink-dim);letter-spacing:1px;margin-bottom:1vh">📆 ${MESES_EXT[hojeD.getMonth()].toUpperCase()}</div>
-        <div style="font-size:clamp(15px,1.6vw,34px);font-weight:800;margin-bottom:1.6vh">Dia ${hojeD.getDate()} de ${dimHoje}</div>
-        <div style="height:clamp(8px,1.1vh,14px);background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden">
-          <div style="width:${Math.round(f*100)}%;height:100%;border-radius:99px;background:rgba(239,231,217,.5)"></div>
+        <div class="hist-right">
+          <div class="hist-val ${item.usou ? 'neg' : ''}">${item.usou ? '-' + formatBRL(item.valorDia) : 'saldo mantido'}</div>
+          <button class="hist-edit" onclick="iniciarEdicaoMarcacao('${item.id}')" title="Editar">✎</button>
+          <button class="hist-del" onclick="excluirMarcacao('${item.id}')" title="Excluir">✕</button>
         </div>
       </div>`;
+  }
 
-  $('tv').innerHTML=`
-  <div class="tvx">
-    <div class="tvx-main">
-      <div class="tvx-top">
+  function toggleMonth(scopeKey, mk){
+    expandedMonths[scopeKey] = (expandedMonths[scopeKey] === mk) ? null : mk;
+    renderApp();
+  }
 
-        <div class="tvx-glass tvx-fam" onclick="document.getElementById('foto-inp').click()" title="Trocar foto">
-          <div class="tvx-foto">${D.foto?`<img src="${D.foto}" alt="">`:`<span style="font-size:min(8vh,48px)">👨‍👩‍👧‍👦</span>`}</div>
-          ${D.nomeFamilia?`<div class="tvx-nome">${esc(D.nomeFamilia)}</div>`:''}
-          ${D.mensagem?`<div class="tvx-msg">“${esc(D.mensagem)}”</div>`:''}
+  function mesAdjacente(key, delta){
+    let [y,m] = key.split('-').map(Number);
+    m += delta;
+    if(m < 1){ m = 12; y -= 1; } else if(m > 12){ m = 1; y += 1; }
+    return `${y}-${String(m).padStart(2,'0')}`;
+  }
+
+  function navegarMes(scopeKey, delta){
+    const atual = viewingMonth[scopeKey] || todayISO().slice(0,7);
+    viewingMonth[scopeKey] = mesAdjacente(atual, delta);
+    registroData = null;
+    renderApp();
+  }
+
+  function statsDoMes(contratadoId, mk){
+    const encontrado = resumoMensal(contratadoId).find(m => m.key === mk);
+    return encontrado || { key:mk, depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 };
+  }
+
+  function voltarMesAtual(scopeKey){
+    viewingMonth[scopeKey] = todayISO().slice(0,7);
+    registroData = null;
+    renderApp();
+  }
+
+  function resumoAnual(contratadoId, ano){
+    const meses = resumoMensal(contratadoId).filter(m => m.key.startsWith(ano));
+    return meses.reduce((acc,m) => {
+      acc.depositado += m.depositado;
+      acc.usado += m.usado;
+      acc.diasUsados += m.diasUsados;
+      acc.diasNaoUsados += m.diasNaoUsados;
+      return acc;
+    }, { depositado:0, usado:0, diasUsados:0, diasNaoUsados:0 });
+  }
+
+  function renderAcumuladoAno(contratadoId, mk, perspectivaEmpresa){
+    const ano = mk.slice(0,4);
+    const r = resumoAnual(contratadoId, ano);
+    const rotulo = perspectivaEmpresa ? 'Depositado' : 'Recebido';
+    return `
+      <div class="section-title">Acumulado ${ano}</div>
+      <div class="month-card">
+        <div class="month-rows" style="padding-top:14px;">
+          <div class="month-row"><div class="month-row-label">Dias usados</div><div class="month-row-val">${r.diasUsados}</div></div>
+          <div class="month-row"><div class="month-row-label">Sem uso</div><div class="month-row-val">${r.diasNaoUsados}</div></div>
+          <div class="month-row"><div class="month-row-label">Usado no ano</div><div class="month-row-val">${formatBRL(r.usado)}</div></div>
         </div>
+        <div class="month-net-line pos" style="font-size:19px;">${rotulo} no ano: ${formatBRL(r.depositado)}</div>
+      </div>
+    `;
+  }
 
-        <div class="tvx-ring">
-          <div class="tvx-ring-wrap">
-            <svg viewBox="0 0 200 200" width="100%" height="100%" style="display:block;overflow:visible">
-              <defs><linearGradient id="saudeGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="${sg.g1}"/><stop offset="1" stop-color="${sg.g2}"/></linearGradient></defs>
-              <circle cx="100" cy="100" r="${R}" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.07)" stroke-width="13"/>
-              <circle cx="100" cy="100" r="${R}" fill="none" stroke="url(#saudeGrad)" stroke-width="13" stroke-linecap="round"
-                stroke-dasharray="${dash.toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 100 100)"
-                style="filter:drop-shadow(0 0 10px ${sg.g2}88);transition:stroke-dasharray .9s ease"/>
-            </svg>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-              <div class="tvx-ring-num" style="font-weight:800;line-height:1;font-variant-numeric:tabular-nums">${sg.n}%</div>
-              <div class="tvx-ring-lbl" style="font-weight:800;letter-spacing:2px;color:${sg.cor};margin-top:.8vh">${sg.texto}</div>
+  function renderMonthCarousel(contratadoId, scopeKey, perspectivaEmpresa){
+    const mk = viewingMonth[scopeKey] || todayISO().slice(0,7);
+    const mesAtual = todayISO().slice(0,7);
+    const stats = statsDoMes(contratadoId, mk);
+    const itens = historicoDoMes(contratadoId, mk);
+    const info = diasInfo(contratadoId);
+    const mostrarSaldoAtual = mk === mesAtual;
+    const futuro = mk > mesAtual;
+
+    if(futuro){
+      return `
+        <div class="month-nav">
+          <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',-1)">‹</button>
+          <div class="month-nav-label">${monthLabel(mk)}</div>
+          <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',1)">›</button>
+        </div>
+        <button class="month-back-link" onclick="voltarMesAtual('${scopeKey}')">↺ Voltar para ${monthLabel(mesAtual)}</button>
+        <div class="month-card">
+          ${!perspectivaEmpresa ? '<div class="empty">Esse mês ainda não chegou — nenhuma movimentação registrada.</div>' : ''}
+          <div class="month-net-line ${info.deficit ? 'neg' : (info.saldo === 0 ? 'neg' : 'pos')}">${
+            info.deficit ? `Sem saldo — déficit de ${formatBRL(Math.abs(info.saldo))}` :
+            info.saldo === 0 ? 'Sem saldo disponível' :
+            `Saldo disponível: ${formatBRL(info.saldo)}`
+          }</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="month-nav">
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',-1)">‹</button>
+        <div class="month-nav-label">${monthLabel(mk)}</div>
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',1)">›</button>
+      </div>
+      ${!mostrarSaldoAtual ? `<button class="month-back-link" onclick="voltarMesAtual('${scopeKey}')">↺ Voltar para ${monthLabel(mesAtual)}</button>` : ''}
+      <div class="month-card">
+        <div class="month-rows" style="padding-top:14px;">
+          <div class="month-row"><div class="month-row-label">${perspectivaEmpresa ? 'Depositado' : 'Recebido'}</div><div class="month-row-val">${formatBRL(stats.depositado)}</div></div>
+          <div class="month-row"><div class="month-row-label">Usado</div><div class="month-row-val">${formatBRL(stats.usado)}</div></div>
+          <div class="month-row"><div class="month-row-label">Dias usados</div><div class="month-row-val">${stats.diasUsados}</div></div>
+          <div class="month-row"><div class="month-row-label">Sem uso</div><div class="month-row-val">${stats.diasNaoUsados}</div></div>
+        </div>
+        <div class="month-detail-list">${itens.length ? itens.map(i=>renderItemHistorico(i,false,perspectivaEmpresa)).join('') : '<div class="empty">Nenhuma movimentação neste mês.</div>'}</div>
+        ${mostrarSaldoAtual ? `<div class="month-net-line ${info.deficit ? 'neg' : (info.saldo === 0 ? 'neg' : 'pos')}">${
+          info.deficit ? `Sem saldo — déficit de ${formatBRL(Math.abs(info.saldo))}` :
+          info.saldo === 0 ? 'Sem saldo disponível' :
+          `Saldo disponível: ${formatBRL(info.saldo)}`
+        }</div>` : ''}
+      </div>
+    `;
+  }
+
+  function renderMonthAccordionEmpresa(scopeKey){
+    const meses = resumoMensalPorContratado();
+    if(meses.length === 0) return '<div class="empty">Sem depósitos registrados ainda.</div>';
+    if(!(scopeKey in expandedMonths)) expandedMonths[scopeKey] = meses[0].key;
+    const aberto = expandedMonths[scopeKey];
+    return meses.map(mes => {
+      const isOpen = mes.key === aberto;
+      const linhas = Object.keys(mes.porContratado).map(cid => `
+        <div class="hist-item">
+          <div class="hist-left"><div class="hist-dot mustard"></div><div>${contratadoNome(cid)}</div></div>
+          <div class="hist-val pos">${formatBRL(mes.porContratado[cid])}</div>
+        </div>`).join('');
+      return `
+        <div class="month-card">
+          <button class="month-header-btn" onclick="toggleMonth('${scopeKey}','${mes.key}')">
+            <div class="month-name">${monthLabel(mes.key)}</div>
+            <div class="month-header-right">
+              <div class="month-net pos">${formatBRL(mes.total)}</div>
+              <span class="chevron ${isOpen ? 'open' : ''}">⌄</span>
             </div>
-          </div>
-          <div style="font-size:clamp(13px,1.35vw,28px);color:var(--tv-ink);font-weight:600">Saúde financeira geral</div>
-        </div>
+          </button>
+          ${isOpen ? `<div class="month-porcontratado">${linhas}</div>` : ''}
+        </div>`;
+    }).join('');
+  }
 
-        <div class="tvx-glass tvx-side">
-          <div class="tvx-clock-row">
+  // ================= PÁGINAS =================
+
+  function paginaPrestadorHoje(){
+    if(!currentUserId || state.contratados.length === 0){
+      return `<div class="empty">Nenhum contratado cadastrado ainda. Peça pro responsável cadastrar você no menu ☰ → Configurações.</div>`;
+    }
+    const scopeKey = 'prestador-' + currentUserId;
+    const mesAtual = todayISO().slice(0,7);
+    const mk = viewingMonth[scopeKey] || mesAtual;
+    const noMesAtual = mk === mesAtual;
+
+    let cardHtml;
+    if(mk >= mesAtual){
+      const info = diasInfo(currentUserId);
+      const futuro = mk > mesAtual;
+      cardHtml = `
+        <div class="carne">
+          <div class="carne-top">
+            <div class="carne-label">Saldo disponível</div>
+            <div class="carne-value ${info.deficit ? 'deficit' : (info.saldo < info.media ? 'low' : '')}">${formatBRL(info.saldo)}</div>
+            <div class="carne-sub">${
+              futuro ? 'esse mês ainda não chegou — saldo atual mantido' :
+              info.deficit ? 'Saldo negativo — avise o responsável' :
+              info.saldo === 0 ? 'Sem saldo — avise o responsável' :
+              info.saldo < info.media ? 'Saldo baixo, acaba logo' :
+              `cobre ${info.dias} dia${info.dias===1?'':'s'} no ritmo atual`
+            }</div>
+          </div>
+          <div class="carne-divider"></div>
+          <div class="carne-bottom">
+            <div class="stat"><div class="stat-num ${info.deficit?'deficit':''}">${futuro ? 0 : info.dias}</div><div class="stat-label">${info.deficit?'dias em déficit':'dias restantes'}</div></div>
+            <div class="stat"><div class="stat-num">R$${futuro ? 0 : info.media.toFixed(0)}</div><div class="stat-label">valor/dia médio</div></div>
+            <div class="stat"><div class="stat-num">R$${futuro ? 0 : totalUsado(currentUserId).toFixed(0)}</div><div class="stat-label">Total usado</div></div>
+          </div>
+        </div>`;
+    } else {
+      const media = valorDiaMedio(currentUserId);
+      const acumulado = acumuladoAteMes(currentUserId, mk);
+      const deficit = acumulado.saldo < 0;
+      const dias = media > 0 ? Math.floor(Math.abs(acumulado.saldo) / media) : 0;
+      cardHtml = `
+        <div class="carne">
+          <div class="carne-top">
+            <div class="carne-label">Saldo até ${monthLabel(mk)}</div>
+            <div class="carne-value ${deficit ? 'deficit' : ''}">${formatBRL(acumulado.saldo)}</div>
+            <div class="carne-sub">valores acumulados até o fim do mês selecionado</div>
+          </div>
+          <div class="carne-divider"></div>
+          <div class="carne-bottom">
+            <div class="stat"><div class="stat-num ${deficit?'deficit':''}">${dias}</div><div class="stat-label">${deficit?'dias em déficit':'dias restantes'}</div></div>
+            <div class="stat"><div class="stat-num">R$${media.toFixed(0)}</div><div class="stat-label">valor/dia médio</div></div>
+            <div class="stat"><div class="stat-num">R$${acumulado.usado.toFixed(0)}</div><div class="stat-label">Total usado</div></div>
+          </div>
+        </div>`;
+    }
+
+    const dataAtual = registroData || (noMesAtual ? todayISO() : mk + '-01');
+    const diaSelecionado = marcacaoDoDia(currentUserId, dataAtual);
+    const ehHoje = dataAtual === todayISO();
+    const labelData = new Date(dataAtual + 'T00:00:00').toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+
+    return `
+      <div class="month-nav">
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',-1)">‹</button>
+        <div class="month-nav-label">${monthLabel(mk)}</div>
+        <button class="month-nav-btn" onclick="navegarMes('${scopeKey}',1)">›</button>
+      </div>
+      ${!noMesAtual ? `<button class="month-back-link" onclick="voltarMesAtual('${scopeKey}')">↺ Voltar para ${monthLabel(mesAtual)}</button>` : ''}
+
+      ${cardHtml}
+
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Data do registro</div>
+        <input type="date" id="dataRegistroInput" class="field-input" value="${dataAtual}" onchange="mudarDataRegistro(this.value)" style="margin-bottom:12px;">
+        <div class="field-label">Valor do dia (opcional)</div>
+        <input type="text" id="valorCustomRegistro" class="field-input" inputmode="decimal" placeholder="Padrão R$${(state.contratados.find(x=>x.id===currentUserId)||{valorDiaPadrao:VALOR_PADRAO_DIA}).valorDiaPadrao.toFixed(2).replace('.',',')} — ex: 90,00 em dia de viagem" style="margin-bottom:8px;">
+        <div class="today-hint" style="margin-top:0; margin-bottom:12px;">Em dia de viagem (almoço + janta), preencha o valor total aqui antes de marcar "Usei"</div>
+        <div class="today-date">${labelData}</div>
+        <div class="today-actions">
+          <button class="stamp-btn used ${diaSelecionado && diaSelecionado.usou ? 'selected' : ''}" onclick="marcarDia(true)">✓ ${ehHoje ? 'Usei hoje' : 'Usou nesse dia'}</button>
+          <button class="stamp-btn notused ${diaSelecionado && !diaSelecionado.usou ? 'selected' : ''}" onclick="marcarDia(false)">✕ ${ehHoje ? 'Não usei' : 'Não usou'}</button>
+        </div>
+        <div class="today-hint">Toque de novo no botão marcado pra desfazer</div>
+      </div>
+    `;
+  }
+
+  function paginaPrestadorHistorico(){
+    if(!currentUserId) return `<div class="empty">Nenhum contratado selecionado.</div>`;
+    return `
+      <div class="page-header">
+        <div><h2>Histórico</h2><div class="sub">${contratadoNome(currentUserId)}</div></div>
+      </div>
+      ${renderMonthCarousel(currentUserId, 'prestador-' + currentUserId, false)}
+    `;
+  }
+
+  function paginaResponsavelColaboradores(){
+    if(state.contratados.length === 0){
+      return `<div class="empty">Nenhum contratado cadastrado. Abra o menu ☰ → Configurações pra adicionar.</div>`;
+    }
+    const cards = state.contratados.map(c => {
+      const info = diasInfo(c.id);
+      const alerta = info.deficit || info.saldo === 0 || info.saldo < info.media;
+      return `
+        <button class="collab-card ${alerta ? 'alert' : ''}" onclick="irPara('responsavel-detalhe',{colaboradorId:'${c.id}'})">
+          <div class="collab-left">
+            <div class="collab-avatar">${iniciais(c.nome)}</div>
             <div>
-              <div id="tv-relogio" style="font-size:clamp(28px,3.6vw,76px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums"></div>
-              <div id="tv-data" style="font-size:clamp(11px,1vw,20px);color:var(--tv-ink-dim);margin-top:.6vh"></div>
+              <div class="collab-name">${c.nome}</div>
+              <div class="collab-meta ${info.deficit ? 'deficit' : ''}">${info.deficit ? `déficit de ${info.dias} dia${info.dias===1?'':'s'}` : `${info.dias} dia${info.dias===1?'':'s'} restantes`}</div>
             </div>
-            <button class="tvx-sair" onclick="fecharTV()">✕ Sair</button>
           </div>
-          ${ladoDireito}
+          <div class="collab-right">
+            <div class="collab-saldo ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
+            <span class="collab-chevron">›</span>
+          </div>
+        </button>`;
+    }).join('');
+    return `
+      <div class="page-header"><h2>Colaboradores</h2></div>
+      ${cards}
+    `;
+  }
+
+  function paginaResponsavelDetalhe(){
+    const c = state.contratados.find(x => x.id === selectedColaboradorId);
+    if(!c) return `<div class="empty">Colaborador não encontrado.</div>`;
+
+    const scopeKey = 'colab-' + c.id;
+    const info = diasInfo(c.id);
+
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara('responsavel-colaboradores')">←</button>
+        <div><h2>${c.nome}</h2><div class="sub">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div></div>
+      </div>
+
+      <div class="carne">
+        <div class="carne-top">
+          <div class="carne-label">Saldo disponível</div>
+          <div class="carne-value ${info.deficit ? 'deficit' : (info.saldo < info.media ? 'low' : '')}">${formatBRL(info.saldo)}</div>
+          <div class="carne-sub">${info.deficit ? 'Saldo negativo' : `cobre ~${info.dias} dia${info.dias===1?'':'s'} · média ${formatBRL(info.media)}/dia`}</div>
+        </div>
+        <div class="carne-divider"></div>
+        <div class="carne-bottom">
+          <div class="stat"><div class="stat-num ${info.deficit?'deficit':''}">${info.dias}</div><div class="stat-label">${info.deficit?'dias em déficit':'dias restantes'}</div></div>
+          <div class="stat"><div class="stat-num">R$${info.media.toFixed(0)}</div><div class="stat-label">valor/dia médio</div></div>
+          <div class="stat"><div class="stat-num">R$${totalUsado(c.id).toFixed(0)}</div><div class="stat-label">Total usado</div></div>
         </div>
       </div>
 
-      <div class="tvx-cards">${PILARES.map(cardCategoriaTV).join('')}</div>
-    </div>
-    <div id="tv-evento-wrap" class="tvx-ticker">
-      <div id="tv-evento" style="display:flex;align-items:center;white-space:nowrap;position:absolute;left:0;top:0;height:100%;will-change:transform"></div>
-    </div>
-  </div>`;
-  atualizarRelogioTV();
-  iniciarCarrosselEventos();
-}
+      ${renderPeriodoCard(resumoPeriodoAtual(c.id), true)}
 
-// ── Foto ──────────────────────────────────────────────────────────────────────
-document.getElementById('foto-inp').addEventListener('change',function(e){
-  const f=e.target.files[0];if(!f)return;
-  const inputEl=this;
-  const r=new FileReader();
-  r.onload=ev=>{
-    const img=new Image();
-    img.onload=()=>{
-      const MAX_LARGURA=960;
-      const escala=Math.min(1, MAX_LARGURA/img.width);
-      const w=Math.round(img.width*escala), h=Math.round(img.height*escala);
-      const canvas=document.createElement('canvas');
-      canvas.width=w; canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      let qualidade=0.78;
-      let dataUrl=canvas.toDataURL('image/jpeg',qualidade);
-      // Garante folga segura do limite de 1MB do Firestore (documento inteiro, não só a foto)
-      while(dataUrl.length>650000 && qualidade>0.3){
-        qualidade-=0.1;
-        dataUrl=canvas.toDataURL('image/jpeg',qualidade);
+      <div class="today-card" style="margin-bottom:18px; padding:24px;">
+        <div class="today-date" style="font-size:15px; font-weight:600; color:var(--ink); margin-bottom:16px;">📋 Registrar dia de ${c.nome}</div>
+        <div class="field-label" style="margin-top:0;">Data</div>
+        <input type="date" id="dataRegistroResp_${c.id}" class="field-input" value="${todayISO()}" style="margin-bottom:12px;">
+        <div class="field-label">Valor do dia (opcional)</div>
+        <input type="text" id="valorCustomResp_${c.id}" class="field-input" inputmode="decimal" placeholder="Padrão R$${c.valorDiaPadrao.toFixed(2).replace('.',',')} — ex: 90,00 em dia de viagem" style="margin-bottom:8px;">
+        <div class="today-hint" style="margin-top:0; margin-bottom:12px;">Em dia de viagem (almoço + janta), preencha o valor total aqui antes de marcar "Usou"</div>
+        <div class="today-actions">
+          <button class="stamp-btn used" onclick="marcarDiaResponsavel('${c.id}', true)">✓ Usou</button>
+          <button class="stamp-btn notused" onclick="marcarDiaResponsavel('${c.id}', false)">✕ Não usou</button>
+        </div>
+      </div>
+
+      <div class="today-card" style="margin-bottom:18px; padding:24px;">
+        <div class="today-date" style="font-size:15px; font-weight:600; color:var(--ink); margin-bottom:16px;">💰 Lançar depósito</div>
+        <div class="deposit-form" style="flex-wrap:wrap; gap:12px;">
+          <input type="text" id="novoDeposito_${c.id}" placeholder="Valor em R$" inputmode="decimal" style="flex:1; min-width:130px; padding:16px 14px; font-size:18px; font-weight:600; border-radius:10px;">
+          <input type="date" id="novoDepositoData_${c.id}" value="${todayISO()}" style="flex:1; min-width:150px; border:1px solid var(--line); border-radius:10px; padding:16px 14px; font-family:'IBM Plex Mono', monospace; font-size:16px; background: var(--paper); color: var(--ink);">
+          <button class="deposit-btn" onclick="lancarDeposito('${c.id}')" style="width:100%; padding:16px; font-size:16px; border-radius:10px;">Depositar</button>
+        </div>
+      </div>
+
+      <div class="section-title">Histórico mensal</div>
+      ${renderMonthCarousel(c.id, scopeKey, true)}
+    `;
+  }
+
+  function paginaResponsavelResumo(){
+    const situ = state.contratados.map(c => {
+      const info = diasInfo(c.id);
+      return `
+        <div class="situ-row">
+          <div>
+            <div class="situ-name">${c.nome}</div>
+            <div class="situ-tag ${info.deficit ? 'deficit' : ''}">${info.deficit ? `déficit de ${info.dias} dia${info.dias===1?'':'s'}` : `${info.dias} dia${info.dias===1?'':'s'} restantes`}</div>
+          </div>
+          <div class="situ-saldo ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
+        </div>`;
+    }).join('') || '<div class="empty">Nenhum contratado cadastrado.</div>';
+
+    return `
+      <div class="page-header"><h2>Resumo</h2><div class="sub">Visão geral da empresa</div></div>
+
+      <div class="section-title">Situação atual</div>
+      ${situ}
+
+      <div class="section-title">Resumo mensal por contratado</div>
+      ${renderMonthAccordionEmpresa('empresa-resumo')}
+    `;
+  }
+
+  function paginaSettings(){
+    const listaContratados = state.contratados.map(c => {
+      if(editingContratadoId === c.id){
+        return `
+          <div class="contratado-card">
+            <div class="contratado-edit-form">
+              <div class="row">
+                <input class="nome" id="editNomeContratado_${c.id}" type="text" value="${c.nome}">
+                <input class="valor" id="editValorContratado_${c.id}" type="text" value="${c.valorDiaPadrao.toFixed(2).replace('.',',')}" inputmode="decimal">
+              </div>
+              <div class="row actions">
+                <button class="btn-salvar" onclick="salvarEdicaoContratado('${c.id}')">Salvar</button>
+                <button class="btn-cancelar" onclick="cancelarEdicaoContratado()">Cancelar</button>
+              </div>
+            </div>
+          </div>`;
       }
-      garantirAutor(()=>{
-        D.foto=dataUrl; D.tvInfo=carimbo();
-        salvar();
-        if($('tv').style.display!=='none')montarTV();
-        render();
+      return `
+        <div class="contratado-card">
+          <div class="contratado-card-view">
+            <div>
+              <div class="contratado-card-name">${c.nome}</div>
+              <div class="contratado-card-val">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div>
+            </div>
+            <div class="contratado-card-actions">
+              <button class="hist-edit" onclick="iniciarEdicaoContratado('${c.id}')" title="Editar">✎</button>
+              <button class="hist-del" onclick="removerContratado('${c.id}')" title="Remover">✕</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('') || '<div class="empty">Nenhum contratado ainda.</div>';
+
+    const souResponsavel = meuUsuario && meuUsuario.papel === 'responsavel';
+
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara(paginaInicialDoRole())">←</button>
+        <div><h2>${souResponsavel ? 'Configurações' : 'Minha conta'}</h2></div>
+      </div>
+
+      <div class="field-label" style="margin-top:0;">Seu email</div>
+      <div class="field-input" style="color:var(--ink-soft);">${meuEmail || '—'}</div>
+
+      <div class="field-label">Entrar com biometria neste aparelho</div>
+      <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px; background:${biometriaEstaAtivaAqui() ? 'var(--stamp-red)' : 'var(--stamp-green)'};" onclick="${biometriaEstaAtivaAqui() ? 'desativarBiometria()' : 'ativarBiometria()'}">${biometriaEstaAtivaAqui() ? 'Desativar biometria' : '🔒 Ativar biometria (digital/rosto)'}</button>
+
+      ${!souResponsavel ? `
+        <div class="field-label">Seu nome</div>
+        <input class="field-input" id="inputMeuNome" value="${meuUsuario ? meuUsuario.nome : ''}" onchange="salvarMeuNome()">
+
+        <div class="field-label">Lembrete diário (11h)</div>
+        <div style="font-size:11.5px; color:var(--ink-soft); margin-bottom:8px;">Recebe um aviso todo dia às 11h se ainda não tiver marcado se usou o vale — mesmo com o app fechado.</div>
+        <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px; background:var(--stamp-green);" onclick="ativarNotificacoesPush()">🔔 Ativar lembrete diário</button>
+        <button class="deposit-btn" style="width:100%; padding:10px; font-size:12px; background:transparent; color:var(--ink-soft); border:1px solid var(--line); margin-top:6px;" onclick="desativarNotificacoesPush()">Desativar lembrete</button>
+      ` : ''}
+
+      <div class="field-label">Nome da empresa</div>
+      <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" ${souResponsavel ? 'onchange="salvarConfig()"' : 'disabled'}>
+
+      <div class="field-label">Nome do responsável</div>
+      <input class="field-input" id="inputResponsavelNome" value="${state.config.responsavel}" ${souResponsavel ? 'onchange="salvarConfig()"' : 'disabled'}>
+
+      ${souResponsavel ? `
+        <div class="field-label">Código da empresa (pra convidar contratados)</div>
+        <div class="field-input" style="word-break:break-all; user-select:all;">${meuUsuario.empresa_id}</div>
+        <div style="font-size:11px; color:var(--ink-soft); margin-top:6px;">Manda esse código pro contratado. Ele usa em "Cadastrar → Sou prestador".</div>
+
+        <div class="section-title">Contratados</div>
+        ${listaContratados}
+
+        <div class="add-contratado-card">
+          <div class="field-label">Convidar colaborador</div>
+          <div class="row">
+            <input class="nome" id="novoContratadoNome" placeholder="Nome (opcional)">
+            <input class="valor" id="novoContratadoValor" placeholder="R$/dia" inputmode="decimal">
+          </div>
+          <button onclick="convidarViaWhatsApp()">📲 Convidar via WhatsApp</button>
+        </div>
+      ` : ''}
+
+      ${!souResponsavel ? `<button class="deposit-btn" style="width:100%; margin-top:20px; padding:14px; background:var(--mustard);" onclick="sairDaEmpresa()">Sair desta empresa (trocar de empresa)</button>` : ''}
+
+      <button class="deposit-btn" style="width:100%; margin-top:12px; padding:14px; background:var(--stamp-red);" onclick="sair()">Sair da conta</button>
+
+      <button class="deposit-btn" style="width:100%; margin-top:8px; padding:14px; background:transparent; color:var(--stamp-red); border:1px solid var(--stamp-red);" onclick="excluirConta()">Excluir conta permanentemente</button>
+    `;
+  }
+
+  // ---- PÁGINAS DE AUTENTICAÇÃO ----
+  function irParaCadastro(){ authErro=''; senhaRedefinidaComSucesso = false; currentPage = 'auth-cadastro'; renderApp(); }
+  function irParaLogin(){ authErro=''; currentPage = 'auth-login'; renderApp(); }
+
+  function paginaAuthCarregando(){
+    return `<div class="empty" style="margin-top:60px;">Carregando…</div>`;
+  }
+
+  function paginaBiometriaBloqueio(){
+    return `<div class="empty" style="margin-top:60px;"></div>`;
+  }
+
+  function paginaAuthLogin(){
+    return `
+      <div class="page-header"><h2>Entrar</h2><div class="sub">Saldou<span style="color:var(--stamp-green)">VR</span></div></div>
+      ${senhaRedefinidaComSucesso ? `<div style="background:var(--paper-light); border:1px solid var(--stamp-green); border-radius:10px; padding:11px 14px; font-size:13px; color:var(--stamp-green-dark); margin-bottom:14px;">✓ Senha alterada! Já pode entrar com a senha nova.</div>` : ''}
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Email</div>
+        <input class="field-input" id="authEmail" type="email" placeholder="seu@email.com">
+        <div class="field-label">Senha</div>
+        <div class="pwd-wrap">
+          <input class="field-input" id="authSenha" type="password" placeholder="••••••••">
+          <button type="button" class="pwd-toggle" onclick="togglePwd('authSenha', this)">👁️</button>
+        </div>
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerLogin()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Entrando…' : 'Entrar'}</button>
+      </div>
+      <div style="text-align:center; margin-top:12px; font-size:13px;">
+        <a href="#" onclick="irParaEsqueciSenha(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Esqueci minha senha</a>
+      </div>
+      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--ink-soft);">
+        Não tem conta? <a href="#" onclick="irParaCadastro(); return false;" style="color:var(--stamp-green-dark); font-weight:600; text-decoration:underline;">Cadastrar</a>
+      </div>
+    `;
+  }
+
+  function paginaAuthCadastro(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irParaLogin()">←</button>
+        <div><h2>Criar conta</h2></div>
+      </div>
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Email</div>
+        <input class="field-input" id="authEmailCad" type="email" placeholder="seu@email.com">
+        <div class="field-label">Senha (mínimo 6 caracteres)</div>
+        <div class="pwd-wrap">
+          <input class="field-input" id="authSenhaCad" type="password" placeholder="••••••••">
+          <button type="button" class="pwd-toggle" onclick="togglePwd('authSenhaCad', this)">👁️</button>
+        </div>
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerCadastro()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Criando…' : 'Criar conta'}</button>
+      </div>
+    `;
+  }
+
+  function paginaAuthConfirmeEmail(){
+    return `
+      <div class="page-header"><h2>Confirme seu email</h2></div>
+      <div class="today-card">
+        <div style="font-size:14px; line-height:1.6;">
+          Te mandamos um link de confirmação por email. Abre a caixa de entrada, clica no link, e depois volta aqui e faz login normalmente.
+        </div>
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="irParaLogin()">Já confirmei, ir pro login</button>
+      </div>
+    `;
+  }
+
+  function irParaEsqueciSenha(){ authErro=''; currentPage = 'auth-esqueci-senha'; renderApp(); }
+
+  function paginaAuthEsqueciSenha(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irParaLogin()">←</button>
+        <div><h2>Recuperar senha</h2></div>
+      </div>
+      <div class="today-card">
+        <div style="font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin-bottom:14px;">
+          Digita o email da sua conta. Vamos mandar um link pra você criar uma senha nova.
+        </div>
+        <div class="field-label" style="margin-top:0;">Email</div>
+        <input class="field-input" id="authEmailRecuperar" type="email" placeholder="seu@email.com">
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="enviarRecuperacaoSenha()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Enviando…' : 'Enviar link de recuperação'}</button>
+      </div>
+    `;
+  }
+
+  function paginaAuthEsqueciSenhaEnviado(){
+    return `
+      <div class="page-header"><h2>Verifica seu email</h2></div>
+      <div class="today-card">
+        <div style="font-size:14px; line-height:1.6;">
+          Se esse email tiver uma conta no SaldouVR, te mandamos um link pra redefinir a senha. Abre a caixa de entrada, clica no link, e cria uma senha nova.
+        </div>
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="irParaLogin()">Voltar pro login</button>
+      </div>
+    `;
+  }
+
+  async function enviarRecuperacaoSenha(){
+    const email = document.getElementById('authEmailRecuperar').value.trim();
+    if(!email){ authErro = 'Digita seu email.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname
+    });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    posthog.capture('recuperacao_senha_solicitada');
+    currentPage = 'auth-esqueci-senha-enviado';
+    renderApp();
+  }
+
+  function paginaAuthNovaSenha(){
+    return `
+      <div class="page-header"><h2>Criar senha nova</h2></div>
+      <div class="today-card">
+        <div style="font-size:13.5px; line-height:1.6; color:var(--ink-soft); margin-bottom:14px;">
+          Digita sua nova senha de acesso.
+        </div>
+        <div class="field-label" style="margin-top:0;">Senha nova (mínimo 6 caracteres)</div>
+        <div class="pwd-wrap">
+          <input class="field-input" id="authNovaSenha" type="password" placeholder="••••••••">
+          <button type="button" class="pwd-toggle" onclick="togglePwd('authNovaSenha', this)">👁️</button>
+        </div>
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="salvarNovaSenha()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Salvando…' : 'Salvar senha nova'}</button>
+      </div>
+    `;
+  }
+
+  async function salvarNovaSenha(){
+    const novaSenha = document.getElementById('authNovaSenha').value;
+    if(!novaSenha || novaSenha.length < 6){ authErro = 'A senha precisa ter no mínimo 6 caracteres.'; renderApp(); return; }
+    authCarregando = true; authErro = ''; renderApp();
+    const { error } = await sb.auth.updateUser({ password: novaSenha });
+    authCarregando = false;
+    if(error){ authErro = error.message; renderApp(); return; }
+    posthog.capture('senha_redefinida');
+    await sb.auth.signOut(); // encerra a sessão temporária de recuperação — a pessoa confirma a senha nova fazendo login manual
+    modoRecuperacaoSenha = false;
+    authErro = '';
+    senhaRedefinidaComSucesso = true;
+    currentPage = 'auth-login';
+    renderApp();
+  }
+
+  function paginaAuthEscolherPapel(){
+    return `
+      <div class="page-header"><h2>Bem-vindo ao Saldou<span style="color:var(--stamp-green)">VR</span></h2><div class="sub">Como você vai usar o app?</div></div>
+      <button class="role-card" onclick="irPara('auth-cadastro-responsavel')" style="margin-bottom:12px;">
+        <div class="role-icon">🏢</div>
+        <h3>Sou Empresa</h3>
+        <p>Quero controlar o vale-refeição da minha equipe e gerar o código de convite pros colaboradores.</p>
+        <div class="role-cta">Cadastrar minha empresa →</div>
+      </button>
+      <button class="role-card" onclick="irPara('auth-cadastro-prestador')">
+        <div class="role-icon">🙋</div>
+        <h3>Sou Colaborador</h3>
+        <p>Já tenho o código da minha empresa e quero controlar meu próprio saldo de almoço e janta.</p>
+        <div class="role-cta">Cadastrar minha conta →</div>
+      </button>
+      <div style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
+        Já tem conta? <a href="#" onclick="irParaLogin(); return false;" style="color:var(--stamp-green-dark); font-weight:600; text-decoration:underline;">Fazer login</a>
+      </div>
+    `;
+  }
+
+  function paginaTermosPrivacidade(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="history.back ? window.history.back() : irParaLogin()">←</button>
+        <div><h2>Termos e Privacidade</h2></div>
+      </div>
+      <div class="today-card">
+        <div style="font-size:13.5px; line-height:1.6; color:var(--ink-soft);">
+          Os Termos de Uso e a Política de Privacidade do SaldouVR ainda estão sendo redigidos e serão publicados aqui em breve.
+        </div>
+      </div>
+    `;
+  }
+
+  function paginaAuthCadastroResponsavel(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara('auth-escolher-papel')">←</button>
+        <div><h2>Criar empresa</h2></div>
+      </div>
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Nome da empresa</div>
+        <input class="field-input" id="novaEmpresaNome" placeholder="Ex: Agasense">
+        <div class="field-label">Seu nome</div>
+        <input class="field-input" id="novoResponsavelNome" placeholder="Seu nome completo">
+        <label class="field-check">
+          <input type="checkbox" id="termosResponsavel">
+          <span>Li e concordo com os <a href="#" onclick="irPara('termos-privacidade'); return false;">Termos de Uso</a> e a <a href="#" onclick="irPara('termos-privacidade'); return false;">Política de Privacidade</a>.</span>
+        </label>
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="criarEmpresaEEntrar()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Criando…' : 'Criar empresa e entrar'}</button>
+      </div>
+    `;
+  }
+
+  function paginaAuthCadastroPrestador(){
+    return `
+      <div class="page-header">
+        <button class="icon-btn" onclick="irPara('auth-escolher-papel')">←</button>
+        <div><h2>Entrar numa empresa</h2></div>
+      </div>
+      <div class="today-card">
+        <div class="field-label" style="margin-top:0;">Código da empresa</div>
+        <input class="field-input" id="empresaIdInput" placeholder="Cole o código que o responsável te mandou">
+        <div class="field-label">Seu nome</div>
+        <input class="field-input" id="novoPrestadorNome" placeholder="Seu nome completo">
+        <div class="field-label">Valor padrão do dia (R$)</div>
+        <input class="field-input" id="novoPrestadorValor" placeholder="35" inputmode="decimal">
+        <label class="field-check">
+          <input type="checkbox" id="termosPrestador">
+          <span>Li e concordo com os <a href="#" onclick="irPara('termos-privacidade'); return false;">Termos de Uso</a> e a <a href="#" onclick="irPara('termos-privacidade'); return false;">Política de Privacidade</a>.</span>
+        </label>
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="entrarComoContratado()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Entrando…' : 'Entrar'}</button>
+      </div>
+    `;
+  }
+
+  // ---- BOTTOM NAV ----
+  function renderBottomNav(){
+    const el = document.getElementById('bottomNav');
+    if(currentPage === 'settings'){ el.innerHTML = ''; return; }
+    let itens;
+    if(currentRole === 'prestador'){
+      itens = [
+        { page:'prestador-hoje', icon:'🏠', label:'Meu VR' },
+        { page:'prestador-historico', icon:'📊', label:'Histórico' }
+      ];
+    } else {
+      itens = [
+        { page:'responsavel-colaboradores', icon:'👥', label:'Colaboradores' },
+        { page:'responsavel-resumo', icon:'📈', label:'Resumo' }
+      ];
+    }
+    const ativoBase = currentPage === 'responsavel-detalhe' ? 'responsavel-colaboradores' : currentPage;
+    el.innerHTML = itens.map(it => `
+      <button class="nav-btn ${it.page===ativoBase?'active':''}" onclick="irPara('${it.page}')">
+        <span class="icon">${it.icon}</span><span>${it.label}</span>
+      </button>`).join('');
+  }
+
+  // ---- RENDER GERAL ----
+  function renderApp(){
+    const telaDeAuth = currentPage.startsWith('auth-') || currentPage === 'biometria-bloqueio';
+    const topbarEl = document.querySelector('.topbar');
+    const empresaTagEl = document.getElementById('empresaTag');
+
+    topbarEl.style.display = telaDeAuth ? 'none' : 'flex';
+    empresaTagEl.style.display = telaDeAuth ? 'none' : 'block';
+
+    if(!telaDeAuth){
+      document.getElementById('rolePill').textContent = currentRole === 'prestador' ? 'Prestador' : 'Responsável';
+      empresaTagEl.innerHTML = `<b>${state.config.empresa}</b> · responsável: ${state.config.responsavel}`;
+    }
+
+    let html = '';
+    switch(currentPage){
+      case 'auth-carregando': html = paginaAuthCarregando(); break;
+      case 'biometria-bloqueio': html = paginaBiometriaBloqueio(); break;
+      case 'auth-login': html = paginaAuthLogin(); break;
+      case 'auth-cadastro': html = paginaAuthCadastro(); break;
+      case 'auth-confirme-email': html = paginaAuthConfirmeEmail(); break;
+      case 'auth-esqueci-senha': html = paginaAuthEsqueciSenha(); break;
+      case 'auth-esqueci-senha-enviado': html = paginaAuthEsqueciSenhaEnviado(); break;
+      case 'auth-nova-senha': html = paginaAuthNovaSenha(); break;
+      case 'auth-escolher-papel': html = paginaAuthEscolherPapel(); break;
+      case 'termos-privacidade': html = paginaTermosPrivacidade(); break;
+      case 'auth-cadastro-responsavel': html = paginaAuthCadastroResponsavel(); break;
+      case 'auth-cadastro-prestador': html = paginaAuthCadastroPrestador(); break;
+      case 'prestador-hoje': html = paginaPrestadorHoje(); break;
+      case 'prestador-historico': html = paginaPrestadorHistorico(); break;
+      case 'responsavel-colaboradores': html = paginaResponsavelColaboradores(); break;
+      case 'responsavel-detalhe': html = paginaResponsavelDetalhe(); break;
+      case 'responsavel-resumo': html = paginaResponsavelResumo(); break;
+      case 'settings': html = paginaSettings(); break;
+      default: html = paginaPrestadorHoje();
+    }
+    document.getElementById('pageContent').innerHTML = html;
+    if(telaDeAuth){ document.getElementById('bottomNav').innerHTML = ''; }
+    else { renderBottomNav(); }
+  }
+
+  initApp();
+
+  // Registra o service worker (funciona offline + instalável como PWA de verdade)
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch((err) => {
+        console.warn('Saldou: falha ao registrar service worker', err);
       });
-    };
-    img.onerror=()=>alert('Não foi possível processar essa foto. Tenta outra imagem (JPG ou PNG).');
-    img.src=ev.target.result;
-  };
-  r.readAsDataURL(f); inputEl.value='';
-});
+    });
+  }
+</script>
 
-// ── Service Worker ────────────────────────────────────────────────────────────
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-}
-
-D.historicoPeriodo = periodoAtualStr();
-render();
-</script></body>
+</body>
 </html>
