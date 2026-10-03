@@ -141,6 +141,33 @@
   .stamp-btn.notused:hover{ background: rgba(166,54,43,0.06); }
   .stamp-btn.selected.used{ background: var(--stamp-green); color:#fff; }
   .stamp-btn.selected.notused{ background: var(--stamp-red); color:#fff; }
+
+  .calendar-card{ background: var(--paper-light); border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow: var(--shadow); margin-bottom:14px; }
+  .calendar-weekdays{ display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:4px; margin-bottom:6px; }
+  .calendar-weekdays div{ text-align:center; font-size:10px; color: var(--ink-soft); font-weight:600; }
+  .calendar-grid{ display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:4px; }
+  .calendar-day{
+    aspect-ratio:1; border-radius:9px; border:1px solid var(--line); background: var(--paper);
+    color: var(--ink-soft); font-family:'IBM Plex Mono', monospace; font-size:12px; font-weight:600;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; position:relative; padding:0;
+  }
+  .calendar-day:active{ transform: scale(0.93); }
+  .calendar-day.usou{ background: var(--stamp-green); border-color: var(--stamp-green); color:#fff; }
+  .calendar-day.naousou{ background: var(--stamp-red); border-color: var(--stamp-red); color:#fff; }
+  .calendar-day.hoje{ box-shadow: 0 0 0 2px var(--mustard) inset; }
+  .calendar-legend{ display:flex; gap:14px; margin-top:12px; padding-top:10px; border-top:1px solid var(--line); flex-wrap:wrap; }
+  .calendar-legend-item{ display:flex; align-items:center; gap:6px; font-size:10.5px; color: var(--ink-soft); }
+  .calendar-legend-dot{ width:9px; height:9px; border-radius:3px; display:inline-block; }
+
+  .aviso-btn{
+    width:100%; margin-bottom:14px; padding:14px; border-radius:12px; border:1.5px solid var(--stamp-red);
+    background: rgba(166,54,43,0.08); color: var(--stamp-red); font-family:'Space Grotesk', sans-serif;
+    font-weight:600; font-size:13px; cursor:pointer;
+  }
+  .aviso-confirmado{
+    width:100%; margin-bottom:14px; padding:14px; border-radius:12px; background: rgba(31,111,76,0.1);
+    color: var(--stamp-green-dark); font-weight:600; font-size:13px; text-align:center; box-sizing:border-box;
+  }
   .today-hint{ text-align:center; font-size:11px; color: var(--ink-soft); margin-top:10px; }
 
   .stamp-mark{
@@ -456,6 +483,7 @@
   let expandedMonths = {};
   let viewingMonth = {};
   let registroData = null;
+  let avisoSaldoEnviadoAgora = false;
   let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
   let meuEmail = null;     // email de autenticação da pessoa logada
   let mostrandoBloqueioBiometria = false;
@@ -881,6 +909,77 @@
     return { saldo, media, deficit:false, dias: Math.floor(saldo/media) };
   }
 
+  // Quanto o colaborador recebeu de depósito num mês ('YYYY-MM') ou ano ('YYYY') —
+  // é isso que importa pra ele, não quanto já usou.
+  function recebidoNoMes(contratadoId, mk){
+    return state.depositos.filter(d => d.contratadoId === contratadoId && d.data.slice(0,7) === mk)
+      .reduce((s,d) => s + d.valor, 0);
+  }
+  function recebidoNoAno(contratadoId, ano){
+    return state.depositos.filter(d => d.contratadoId === contratadoId && d.data.slice(0,4) === ano)
+      .reduce((s,d) => s + d.valor, 0);
+  }
+
+  // ---- CALENDÁRIO CLICÁVEL (toque no dia pra alternar usou/não usou) ----
+  function diasNoMes(mk){
+    const [y,m] = mk.split('-').map(Number);
+    return new Date(y, m, 0).getDate();
+  }
+  function offsetSemanaMes(mk){
+    const [y,m] = mk.split('-').map(Number);
+    return new Date(y, m-1, 1).getDay(); // 0 = domingo
+  }
+  async function toggleDiaCalendario(contratadoId, data){
+    const existente = marcacaoDoDia(contratadoId, data);
+    if(!existente){
+      const c = state.contratados.find(x => x.id === contratadoId);
+      const padrao = c ? c.valorDiaPadrao : VALOR_PADRAO_DIA;
+      await sb.from('marcacoes').insert({
+        empresa_id: meuUsuario.empresa_id, contratado_id: contratadoId, data, usou: true, valor_dia: padrao
+      });
+    } else if(existente.usou){
+      await sb.from('marcacoes').update({ usou: false, valor_dia: 0 }).eq('id', existente.id);
+    } else {
+      await sb.from('marcacoes').delete().eq('id', existente.id);
+    }
+    posthog.capture('dia_marcado', { via: 'calendario' });
+    await carregarDadosDaEmpresa();
+  }
+  function renderCalendarioMes(contratadoId, mk){
+    const totalDias = diasNoMes(mk);
+    const offset = offsetSemanaMes(mk);
+    const hojeStr = todayISO();
+    let celulas = '';
+    for(let i=0; i<offset; i++) celulas += `<div></div>`;
+    for(let dia=1; dia<=totalDias; dia++){
+      const data = `${mk}-${String(dia).padStart(2,'0')}`;
+      const m = marcacaoDoDia(contratadoId, data);
+      const cls = m ? (m.usou ? 'usou' : 'naousou') : '';
+      const hojeCls = data === hojeStr ? 'hoje' : '';
+      celulas += `<button class="calendar-day ${cls} ${hojeCls}" onclick="toggleDiaCalendario('${contratadoId}','${data}')" aria-label="Dia ${dia}">${dia}</button>`;
+    }
+    return `
+      <div class="calendar-card">
+        <div class="calendar-weekdays"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div>
+        <div class="calendar-grid">${celulas}</div>
+        <div class="calendar-legend">
+          <div class="calendar-legend-item"><span class="calendar-legend-dot" style="background:var(--stamp-green);"></span>Usei</div>
+          <div class="calendar-legend-item"><span class="calendar-legend-dot" style="background:var(--stamp-red);"></span>Não usei</div>
+          <div class="calendar-legend-item">toque pra alternar</div>
+        </div>
+      </div>`;
+  }
+
+  // ---- AVISAR RESPONSÁVEL (saldo acabando) ----
+  async function enviarAvisoSaldo(){
+    await sb.from('avisos_saldo').insert({
+      empresa_id: meuUsuario.empresa_id, contratado_id: currentUserId
+    });
+    posthog.capture('aviso_saldo_enviado');
+    avisoSaldoEnviadoAgora = true;
+    renderApp();
+  }
+
   // ---- NAVEGAÇÃO ----
   function irPara(page, params){
     currentPage = page;
@@ -933,10 +1032,6 @@
   async function marcarDia(usou){
     if(!currentUserId) return;
     marcarDiaGenerico(currentUserId, usou, 'dataRegistroInput', 'valorCustomRegistro');
-  }
-
-  async function marcarDiaResponsavel(contratadoId, usou){
-    marcarDiaGenerico(contratadoId, usou, 'dataRegistroResp_' + contratadoId, 'valorCustomResp_' + contratadoId);
   }
 
   function mudarDataRegistro(valor){
@@ -1357,6 +1452,7 @@
     const noMesAtual = mk === mesAtual;
 
     let cardHtml;
+    let avisoHtml = '';
     if(mk >= mesAtual){
       const info = diasInfo(currentUserId);
       const futuro = mk > mesAtual;
@@ -1369,8 +1465,7 @@
               futuro ? 'esse mês ainda não chegou — saldo atual mantido' :
               info.deficit ? 'Saldo negativo — avise o responsável' :
               info.saldo === 0 ? 'Sem saldo — avise o responsável' :
-              info.saldo < info.media ? 'Saldo baixo, acaba logo' :
-              `cobre ${info.dias} dia${info.dias===1?'':'s'} no ritmo atual`
+              `Seu saldo cobre ${info.dias} dia${info.dias===1?'':'s'} de VR · R$${info.media.toFixed(0)}/dia`
             }</div>
           </div>
           <div class="carne-divider"></div>
@@ -1380,6 +1475,13 @@
             <div class="stat"><div class="stat-num">R$${futuro ? 0 : totalUsado(currentUserId).toFixed(0)}</div><div class="stat-label">Total usado</div></div>
           </div>
         </div>`;
+
+      const saldoCritico = noMesAtual && !futuro && (info.deficit || info.dias <= 1);
+      if(saldoCritico){
+        avisoHtml = avisoSaldoEnviadoAgora
+          ? `<div class="aviso-confirmado">✓ Responsável notificado — ele recebeu o aviso no app dele</div>`
+          : `<button class="aviso-btn" onclick="enviarAvisoSaldo()">⚠️ Avisar responsável — saldo acabando</button>`;
+      }
     } else {
       const media = valorDiaMedio(currentUserId);
       const acumulado = acumuladoAteMes(currentUserId, mk);
@@ -1401,10 +1503,10 @@
         </div>`;
     }
 
-    const dataAtual = registroData || (noMesAtual ? todayISO() : mk + '-01');
-    const diaSelecionado = marcacaoDoDia(currentUserId, dataAtual);
-    const ehHoje = dataAtual === todayISO();
-    const labelData = new Date(dataAtual + 'T00:00:00').toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+    const padraoAtual = (state.contratados.find(x=>x.id===currentUserId)||{valorDiaPadrao:VALOR_PADRAO_DIA}).valorDiaPadrao;
+    const anoAtual = mk.slice(0,4);
+    const recebidoMes = recebidoNoMes(currentUserId, mk);
+    const recebidoAno = recebidoNoAno(currentUserId, anoAtual);
 
     return `
       <div class="month-nav">
@@ -1415,19 +1517,21 @@
       ${!noMesAtual ? `<button class="month-back-link" onclick="voltarMesAtual('${scopeKey}')">↺ Voltar para ${monthLabel(mesAtual)}</button>` : ''}
 
       ${cardHtml}
+      ${avisoHtml}
 
-      <div class="today-card">
-        <div class="field-label" style="margin-top:0;">Data do registro</div>
-        <input type="date" id="dataRegistroInput" class="field-input" value="${dataAtual}" onchange="mudarDataRegistro(this.value)" style="margin-bottom:12px;">
-        <div class="field-label">Valor do dia (opcional)</div>
-        <input type="text" id="valorCustomRegistro" class="field-input" inputmode="decimal" placeholder="Padrão R$${(state.contratados.find(x=>x.id===currentUserId)||{valorDiaPadrao:VALOR_PADRAO_DIA}).valorDiaPadrao.toFixed(2).replace('.',',')} — ex: 90,00 em dia de viagem" style="margin-bottom:8px;">
-        <div class="today-hint" style="margin-top:0; margin-bottom:12px;">Em dia de viagem (almoço + janta), preencha o valor total aqui antes de marcar "Usei"</div>
-        <div class="today-date">${labelData}</div>
-        <div class="today-actions">
-          <button class="stamp-btn used ${diaSelecionado && diaSelecionado.usou ? 'selected' : ''}" onclick="marcarDia(true)">✓ ${ehHoje ? 'Usei hoje' : 'Usou nesse dia'}</button>
-          <button class="stamp-btn notused ${diaSelecionado && !diaSelecionado.usou ? 'selected' : ''}" onclick="marcarDia(false)">✕ ${ehHoje ? 'Não usei' : 'Não usou'}</button>
-        </div>
-        <div class="today-hint">Toque de novo no botão marcado pra desfazer</div>
+      ${renderCalendarioMes(currentUserId, mk)}
+
+      <div class="today-card" style="margin-bottom:14px;">
+        <div class="field-label" style="margin-top:0;">Dia de viagem? Ajuste o valor de um dia específico</div>
+        <input type="date" id="dataRegistroInput" class="field-input" value="${noMesAtual ? todayISO() : mk+'-01'}" style="margin-bottom:8px;">
+        <input type="text" id="valorCustomRegistro" class="field-input" inputmode="decimal" placeholder="Padrão R$${padraoAtual.toFixed(2).replace('.',',')} — ex: 90,00 em dia de viagem" style="margin-bottom:8px;">
+        <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px;" onclick="marcarDia(true)">Aplicar valor nesse dia</button>
+      </div>
+
+      <div class="section-title">Seus números</div>
+      <div class="carne-bottom" style="padding:0; margin-bottom:14px;">
+        <div class="stat"><div class="stat-num">R$${recebidoMes.toFixed(0)}</div><div class="stat-label">recebido · este mês</div></div>
+        <div class="stat"><div class="stat-num">R$${recebidoAno.toFixed(0)}</div><div class="stat-label">recebido · este ano</div></div>
       </div>
     `;
   }
@@ -1498,19 +1602,6 @@
       </div>
 
       ${renderPeriodoCard(resumoPeriodoAtual(c.id), true)}
-
-      <div class="today-card" style="margin-bottom:18px; padding:24px;">
-        <div class="today-date" style="font-size:15px; font-weight:600; color:var(--ink); margin-bottom:16px;">📋 Registrar dia de ${c.nome}</div>
-        <div class="field-label" style="margin-top:0;">Data</div>
-        <input type="date" id="dataRegistroResp_${c.id}" class="field-input" value="${todayISO()}" style="margin-bottom:12px;">
-        <div class="field-label">Valor do dia (opcional)</div>
-        <input type="text" id="valorCustomResp_${c.id}" class="field-input" inputmode="decimal" placeholder="Padrão R$${c.valorDiaPadrao.toFixed(2).replace('.',',')} — ex: 90,00 em dia de viagem" style="margin-bottom:8px;">
-        <div class="today-hint" style="margin-top:0; margin-bottom:12px;">Em dia de viagem (almoço + janta), preencha o valor total aqui antes de marcar "Usou"</div>
-        <div class="today-actions">
-          <button class="stamp-btn used" onclick="marcarDiaResponsavel('${c.id}', true)">✓ Usou</button>
-          <button class="stamp-btn notused" onclick="marcarDiaResponsavel('${c.id}', false)">✕ Não usou</button>
-        </div>
-      </div>
 
       <div class="today-card" style="margin-bottom:18px; padding:24px;">
         <div class="today-date" style="font-size:15px; font-weight:600; color:var(--ink); margin-bottom:16px;">💰 Lançar depósito</div>
