@@ -1,7 +1,7 @@
 // Saldou — Service Worker
 // Cache básico do "app shell" pra funcionar offline e ser instalável de verdade como PWA.
 
-const CACHE_NAME = 'saldou-v3';
+const CACHE_NAME = 'saldou-v4';
 const ARQUIVOS_PARA_CACHE = [
   './',
   './index.html',
@@ -42,6 +42,9 @@ self.addEventListener('activate', (event) => {
 // Estratégia: tenta rede primeiro (dado sempre atualizado), cai pro cache se estiver offline
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // Só guarda em cache os arquivos do próprio app. Chamadas ao Supabase (saldos, depósitos)
+  // vão direto pra rede e nunca ficam salvas no aparelho.
+  if (new URL(event.request.url).origin !== self.location.origin) return;
 
   event.respondWith(
     fetch(event.request)
@@ -64,8 +67,9 @@ self.addEventListener('push', (event) => {
       body: dados.body || 'Você ainda não registrou o uso do vale hoje.',
       icon: './icon-192.png',
       badge: './favicon-32.png',
-      tag: 'saldou-lembrete-diario',
-      renotify: true
+      tag: dados.tag || 'saldou-lembrete-diario',
+      renotify: true,
+      data: { url: dados.url || './' }
     })
   );
 });
@@ -78,7 +82,8 @@ self.addEventListener('notificationclick', (event) => {
       for (const janela of janelas) {
         if ('focus' in janela) return janela.focus();
       }
-      if (self.clients.openWindow) return self.clients.openWindow('./');
+      const alvo = (event.notification.data && event.notification.data.url) || './';
+      if (self.clients.openWindow) return self.clients.openWindow(alvo);
     })
   );
 });

@@ -171,26 +171,124 @@
   .aviso-banner-sub{ font-size:11px; color: var(--ink-soft); margin-top:2px; }
   .aviso-banner-x{ border:none; background:transparent; color: var(--ink-soft); font-size:14px; cursor:pointer; padding:2px 4px; }
 
-  .resp-hero{ background: var(--ink); border-radius:20px; padding:24px 22px; margin-bottom:20px; box-shadow: var(--shadow); }
-  .resp-hero-label{ font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#C9C4AD; }
-  .resp-hero-value{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:36px; color: var(--paper-light); margin-top:4px; }
-  .resp-hero-note{ font-size:11px; color:#9CA390; margin-top:6px; }
-  .resp-hero-row{ display:flex; gap:18px; margin-top:14px; padding-top:14px; border-top:1px solid #3A4036; }
-  .resp-hero-row > div + div{ border-left:1px solid #3A4036; padding-left:18px; }
-  .resp-hero-num{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:17px; color: var(--paper-light); }
-  .resp-hero-sub{ font-size:10.5px; color:#9CA390; }
+  .page-sub{ font-size:11.5px; color: var(--ink-soft); margin-top:2px; }
+  .page-sub.ok{ color: var(--stamp-green-dark); }
+  .page-sub.warn{ color: var(--stamp-red); font-weight:600; }
 
-  .resp-card{ display:block; width:100%; text-align:left; background: var(--paper-light); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:10px; cursor:pointer; font-family:inherit; color: var(--ink); }
-  .resp-card-top{ display:flex; align-items:center; justify-content:space-between; }
-  .resp-card-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14.5px; }
-  .resp-saldo-pill{ display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding:10px 12px; border-radius:10px; background: rgba(31,111,76,0.1); color: var(--stamp-green-dark); font-size:11.5px; font-weight:600; }
+  .resp-hero{ position:relative; overflow:hidden; background: linear-gradient(145deg,#2B322A 0%,#1B1F1A 100%); border-radius:22px; padding:24px 22px 20px; margin-bottom:20px; box-shadow: 0 14px 30px -16px rgba(33,38,31,0.7); }
+  .resp-hero::before{ content:""; position:absolute; top:0; left:22px; right:22px; height:2px; background: linear-gradient(90deg, transparent, var(--mustard), transparent); }
+  .resp-hero::after{ content:""; position:absolute; right:-50px; top:-50px; width:180px; height:180px; border-radius:50%; background: radial-gradient(circle, rgba(198,138,44,0.20), transparent 70%); pointer-events:none; }
+  .resp-hero > *{ position:relative; z-index:1; }
+  .resp-hero-label{ font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:#C9C4AD; }
+  .resp-hero-value{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:38px; letter-spacing:-0.02em; color: var(--paper-light); margin-top:6px; line-height:1.1; }
+  .resp-hero-value.deficit{ color:#F0A79B; }
+  .resp-hero-note{ font-size:11px; color:#9CA390; margin-top:6px; }
+  .resp-hero-pill{ display:inline-block; margin-top:12px; padding:6px 12px; border-radius:999px; background: rgba(31,111,76,0.28); color:#A8E6C6; font-size:11.5px; font-weight:600; }
+  .resp-hero-pill.baixo{ background: rgba(224,138,125,0.2); color:#F4B1A6; }
+  .resp-hero-row{ display:flex; gap:0; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.1); }
+  .resp-hero-row > div{ flex:1; }
+  .resp-hero-row > div + div{ border-left:1px solid rgba(255,255,255,0.1); padding-left:14px; }
+  .resp-hero-num{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:15.5px; color: var(--paper-light); }
+  .resp-hero-num.warn{ color:#F4B1A6; }
+  .resp-hero-sub{ font-size:10px; color:#9CA390; margin-top:1px; }
+
+  .resp-chart{ display:flex; align-items:flex-end; gap:7px; margin-top:18px; }
+  .resp-chart-col{ flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .resp-chart-area{ height:42px; width:100%; display:flex; align-items:flex-end; }
+  .resp-chart-bar{ width:100%; border-radius:5px 5px 2px 2px; background: rgba(255,255,255,0.16); min-height:3px; }
+  .resp-chart-bar.atual{ background: var(--mustard); }
+  .resp-chart-label{ font-size:9px; color:#9CA390; text-transform:capitalize; }
+
+  .resp-avatar{ width:42px; height:42px; border-radius:50%; background: var(--ink); color: var(--paper-light); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:14px; flex-shrink:0; box-shadow: 0 0 0 3px rgba(31,111,76,0.25); }
+  .resp-avatar.baixo{ box-shadow: 0 0 0 3px rgba(166,54,43,0.28); }
+  .resp-avatar.sm{ width:36px; height:36px; font-size:13px; }
+
+  .resp-card{ display:block; width:100%; text-align:left; background: var(--paper-light); border:1px solid var(--line); border-radius:20px; padding:16px; margin-bottom:12px; cursor:pointer; font-family:inherit; color: var(--ink); box-shadow: var(--shadow); transition: transform .12s; }
+  .resp-card:active{ transform: scale(0.985); }
+  .resp-card.is-baixo{ border-color: rgba(166,54,43,0.45); background: linear-gradient(180deg, rgba(166,54,43,0.05), var(--paper-light) 55%); }
+  .resp-card-top{ display:flex; align-items:center; gap:12px; }
+  .resp-card-id{ flex:1; min-width:0; }
+  .resp-card-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .resp-card-meta{ font-size:11px; color: var(--ink-soft); margin-top:2px; }
+  .resp-card-saldo{ text-align:right; }
+  .resp-card-saldo-num{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:17px; }
+  .resp-card-saldo-num.deficit{ color: var(--stamp-red); }
+  .resp-card-saldo-label{ font-size:10px; color: var(--ink-soft); }
+  .resp-saldo-pill{ display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding:10px 12px; border-radius:11px; background: rgba(31,111,76,0.1); color: var(--stamp-green-dark); font-size:11.5px; font-weight:600; }
   .resp-saldo-pill.baixo{ background: rgba(166,54,43,0.1); color: var(--stamp-red); }
   .resp-saldo-pill .repor{ font-size:10px; font-weight:700; }
-  .resp-gastos{ display:flex; gap:10px; margin-top:10px; }
-  .resp-gasto{ flex:1; background: var(--paper); border-radius:10px; padding:10px 12px; }
+  .resp-bar{ height:5px; background: var(--paper-dark); border-radius:3px; margin-top:10px; overflow:hidden; }
+  .resp-bar-fill{ height:100%; background: var(--stamp-green); border-radius:3px; }
+  .resp-bar-fill.baixo{ background: var(--stamp-red); }
+  .resp-gastos{ display:flex; gap:10px; margin-top:12px; }
+  .resp-gasto{ flex:1; background: var(--paper); border-radius:12px; padding:10px 12px; }
   .resp-gasto-num{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px; color: var(--mustard); }
   .resp-gasto-label{ font-size:10px; color: var(--ink-soft); margin-top:1px; }
 
+  .panel{ background: var(--paper-light); border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow: var(--shadow); margin-bottom:12px; }
+  .panel > .field-label:first-child{ margin-top:0; }
+  .panel-title{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:15px; margin-bottom:14px; }
+
+  .set-profile{ position:relative; overflow:hidden; display:flex; align-items:center; gap:14px; background: linear-gradient(145deg,#2B322A 0%,#1B1F1A 100%); border-radius:22px; padding:20px 18px; margin-bottom:6px; box-shadow: 0 14px 30px -16px rgba(33,38,31,0.7); color: var(--paper-light); }
+  .set-profile::before{ content:""; position:absolute; top:0; left:20px; right:20px; height:2px; background: linear-gradient(90deg, transparent, var(--mustard), transparent); }
+  .set-avatar{ width:54px; height:54px; border-radius:50%; background: var(--mustard); color: var(--ink); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:19px; flex-shrink:0; }
+  .set-profile-name{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:16.5px; }
+  .set-profile-mail{ font-size:11.5px; color:#C9C4AD; margin-top:2px; word-break:break-all; }
+  .set-profile-chip{ display:inline-block; margin-top:8px; font-size:10.5px; padding:3px 10px; border-radius:999px; background: rgba(198,138,44,0.22); color:#E8C57F; font-weight:600; }
+  .set-section{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.12em; color: var(--ink-soft); margin:24px 4px 9px; font-weight:600; }
+  .set-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .set-row-title{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14px; }
+  .set-row-sub{ font-size:11px; color: var(--ink-soft); margin-top:3px; line-height:1.45; }
+  .set-btn{ border:none; border-radius:10px; padding:10px 14px; font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:12.5px; cursor:pointer; white-space:nowrap; background: var(--stamp-green); color:#fff; }
+  .set-btn.off{ background: var(--paper-dark); color: var(--ink); }
+  .set-btn.ghost{ background:transparent; border:1px solid var(--line); color: var(--ink-soft); }
+  .set-btn.full{ width:100%; padding:13px; font-size:13.5px; }
+  .code-box{ display:flex; gap:8px; align-items:stretch; }
+  .code-text{ flex:1; background: var(--paper); border:1px dashed var(--line); border-radius:10px; padding:10px 12px; font-size:11.5px; line-height:1.45; word-break:break-all; user-select:all; }
+  .set-collab{ display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--paper-dark); }
+  .set-collab:last-child{ border-bottom:none; padding-bottom:0; }
+  .set-collab:first-child{ padding-top:0; }
+  .set-collab-info{ flex:1; min-width:0; }
+  .set-collab-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14px; }
+  .set-collab-val{ font-size:11px; color: var(--ink-soft); margin-top:2px; }
+  .danger-zone{ margin-top:26px; display:flex; flex-direction:column; gap:6px; align-items:stretch; }
+  .set-link-danger{ background:transparent; border:none; color: var(--stamp-red); font-size:12px; text-decoration:underline; padding:12px; cursor:pointer; }
+
+  .sheet-overlay{ position:fixed; inset:0; background: rgba(33,38,31,0.5); z-index:400; display:flex; align-items:flex-end; justify-content:center; animation: sheetFade .15s ease-out; }
+  .sheet{ width:100%; max-width:440px; background: var(--paper-light); border-radius:24px 24px 0 0; padding:10px 20px calc(24px + env(safe-area-inset-bottom)); box-shadow: 0 -14px 40px -12px rgba(0,0,0,0.4); animation: sheetUp .22s ease-out; }
+  .sheet-handle{ width:42px; height:4px; border-radius:2px; background: var(--line); margin:0 auto 16px; }
+  .sheet-title{ font-family:'Space Grotesk', sans-serif; font-size:18px; font-weight:700; text-transform:capitalize; }
+  .sheet-status{ font-size:12px; color: var(--ink-soft); margin-top:3px; }
+  .sheet-choices{ display:flex; gap:12px; margin-top:18px; }
+  .sheet-choice{ flex:1; padding:20px 8px; border-radius:16px; border:2px solid; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:16px; cursor:pointer; background: var(--paper-light); }
+  .sheet-choice:active{ transform: scale(0.97); }
+  .sheet-choice.usei{ border-color: var(--stamp-green); color: var(--stamp-green-dark); }
+  .sheet-choice.usei.atual{ background: var(--stamp-green); color:#fff; }
+  .sheet-choice.nao{ border-color: var(--stamp-red); color: var(--stamp-red); }
+  .sheet-choice.nao.atual{ background: var(--stamp-red); color:#fff; }
+  .sheet-hint{ font-size:11px; color: var(--ink-soft); margin-top:6px; line-height:1.45; }
+  .sheet-clear{ display:block; margin:12px auto 0; background:transparent; border:none; color: var(--ink-soft); text-decoration:underline; font-size:12px; padding:8px; cursor:pointer; }
+  @keyframes sheetUp{ from{ transform: translateY(100%);} to{ transform: translateY(0);} }
+  @keyframes sheetFade{ from{ opacity:0;} to{ opacity:1;} }
+
+  .auth-brand{ text-align:center; margin:18px 0 22px; }
+  .auth-logo{ display:block; width:72px; height:72px; margin:0 auto 14px; border-radius:18px; box-shadow: 0 14px 30px -14px rgba(33,38,31,0.55); }
+  .auth-name{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:26px; letter-spacing:-0.02em; }
+  .auth-name span{ color: var(--stamp-green); }
+  .auth-tag{ font-size:12.5px; color: var(--ink-soft); margin:8px auto 0; max-width:290px; line-height:1.5; }
+  .auth-card{ padding:20px; }
+  .auth-divider{ display:flex; align-items:center; gap:10px; margin:22px 0 14px; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color: var(--ink-soft); }
+  .auth-divider::before, .auth-divider::after{ content:""; flex:1; border-top:1px dashed var(--line); }
+  .auth-cta{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; background: var(--paper-light); border:1.5px solid var(--line); border-radius:16px; padding:15px 16px; margin-bottom:10px; cursor:pointer; color: var(--ink); font-family:inherit; }
+  .auth-cta.primary{ background: linear-gradient(145deg,#2B322A,#1B1F1A); border-color: transparent; color: var(--paper-light); box-shadow: 0 12px 26px -16px rgba(33,38,31,0.7); }
+  .auth-cta-ico{ width:40px; height:40px; border-radius:11px; background: var(--paper-dark); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+  .auth-cta.primary .auth-cta-ico{ background: var(--mustard); }
+  .auth-cta b{ display:block; font-family:'Space Grotesk', sans-serif; font-size:14.5px; font-weight:600; }
+  .auth-cta small{ display:block; font-size:11px; margin-top:2px; color: var(--ink-soft); }
+  .auth-cta.primary small{ color:#C9C4AD; }
+  .auth-benefits{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:18px; }
+  .auth-chip{ font-size:10.5px; padding:6px 11px; border-radius:999px; background: var(--paper-dark); color: var(--ink-soft); }
+  .auth-invite{ display:flex; gap:10px; align-items:flex-start; background: rgba(31,111,76,0.1); border:1px solid rgba(31,111,76,0.3); color: var(--stamp-green-dark); border-radius:14px; padding:12px 14px; font-size:12px; line-height:1.5; margin-bottom:14px; }
   .aviso-confirmado{
     width:100%; margin-bottom:14px; padding:14px; border-radius:12px; background: rgba(31,111,76,0.1);
     color: var(--stamp-green-dark); font-weight:600; font-size:13px; text-align:center; box-sizing:border-box;
@@ -512,6 +610,7 @@
   let registroData = null;
   let avisoSaldoEnviadoAgora = false;
   let avisosSaldo = [];
+  let diaSheet = null;
   let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
   let meuEmail = null;     // email de autenticação da pessoa logada
   let mostrandoBloqueioBiometria = false;
@@ -520,7 +619,7 @@
   let senhaRedefinidaComSucesso = false;
 
   let state = {
-    config: { empresa: '', responsavel: '' },
+    config: { empresa: '', responsavel: '', codigo: '' },
     contratados: [],
     depositos: [],
     marcacoes: []
@@ -536,6 +635,37 @@
     }
   });
 
+  // ---- CONVITE POR LINK (?c=CODIGO&n=Nome&v=40.00) ----
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  function escAttr(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function lerConviteDaUrl(){
+    try {
+      const q = new URLSearchParams(window.location.search);
+      const c = (q.get('c') || '').trim().slice(0, 64);
+      if(c){
+        const d = { c: c, n: (q.get('n') || '').trim().slice(0, 80), v: (q.get('v') || '').trim().slice(0, 10) };
+        localStorage.setItem('saldouvr_convite', JSON.stringify(d));
+        localStorage.setItem('saldouvr_intent', 'prestador');
+        window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+        return d;
+      }
+      return JSON.parse(localStorage.getItem('saldouvr_convite') || 'null');
+    } catch(e){ return null; }
+  }
+  let conviteDados = lerConviteDaUrl();
+  function lerIntencao(){ try { return localStorage.getItem('saldouvr_intent'); } catch(e){ return null; } }
+  function definirIntencao(papel){ try { localStorage.setItem('saldouvr_intent', papel); } catch(e){} }
+  function limparConvite(){
+    conviteDados = null;
+    try { localStorage.removeItem('saldouvr_convite'); localStorage.removeItem('saldouvr_intent'); } catch(e){}
+  }
+  function iniciarCadastro(papel){
+    definirIntencao(papel);
+    authErro = '';
+    currentPage = 'auth-cadastro';
+    renderApp();
+  }
+
   // ---- AUTENTICAÇÃO ----
   async function initApp(){
     if(modoRecuperacaoSenha){
@@ -548,7 +678,7 @@
     const { data: { session } } = await sb.auth.getSession();
     if(modoRecuperacaoSenha) return; // a tela de nova senha já foi mostrada pelo listener acima
     if(!session){
-      currentPage = 'auth-login';
+      currentPage = conviteDados ? 'auth-cadastro' : 'auth-login';
       renderApp();
       return;
     }
@@ -571,7 +701,10 @@
     const { data: perfil, error } = await sb.from('usuarios').select('*').eq('id', user.id).maybeSingle();
     if(error || !perfil){
       // usuário autenticado mas ainda sem perfil (empresa/contratado) — manda pro cadastro
-      currentPage = 'auth-escolher-papel';
+      const intencao = lerIntencao();
+      currentPage = intencao === 'responsavel' ? 'auth-cadastro-responsavel'
+                  : intencao === 'prestador' ? 'auth-cadastro-prestador'
+                  : 'auth-escolher-papel';
       renderApp();
       return;
     }
@@ -593,6 +726,7 @@
     const responsavelRow = (usuarios || []).find(u => u.papel === 'responsavel');
 
     state.config.empresa = empresa ? empresa.nome : '';
+    state.config.codigo = (empresa && empresa.codigo) ? empresa.codigo : '';
     state.config.responsavel = responsavelRow ? responsavelRow.nome : '';
     state.contratados = (usuarios || []).filter(u => u.papel === 'prestador').map(u => ({
       id: u.id, nome: u.nome, valorDiaPadrao: Number(u.valor_dia_padrao)
@@ -675,16 +809,29 @@
     authCarregando = false;
     if(e2){ authErro = traduzirErroAuth(e2.message); renderApp(); return; }
     posthog.capture('empresa_criada', { nome_empresa: nomeEmpresa });
+    limparConvite();
     await carregarAposLogin();
   }
 
   async function entrarComoContratado(){
-    const empresaId = document.getElementById('empresaIdInput').value.trim();
+    let empresaId = document.getElementById('empresaIdInput').value.trim();
     const meuNome = document.getElementById('novoPrestadorNome').value.trim();
     const valorDia = parseFloat((document.getElementById('novoPrestadorValor').value || '35').replace(',', '.')) || 35;
     if(!empresaId || !meuNome){ authErro = 'Preenche o código da empresa e seu nome.'; renderApp(); return; }
     if(!document.getElementById('termosPrestador').checked){ authErro = 'Precisa aceitar os Termos de Uso e a Política de Privacidade pra continuar.'; renderApp(); return; }
     authCarregando = true; authErro = ''; renderApp();
+
+    // aceita o código curto (INFRA-7K2P4M) ou o código antigo (UUID dos convites já enviados)
+    if(!UUID_RE.test(empresaId)){
+      const { data: achada, error: eRpc } = await sb.rpc('empresa_por_codigo', { p_codigo: empresaId.toUpperCase() });
+      if(eRpc || !achada || !achada.length){
+        authCarregando = false;
+        authErro = 'Código não encontrado. Confira com quem te convidou e tente de novo.';
+        renderApp();
+        return;
+      }
+      empresaId = achada[0].id;
+    }
 
     const { data: { user } } = await sb.auth.getUser();
     const { error } = await sb.from('usuarios').insert({
@@ -693,6 +840,7 @@
     authCarregando = false;
     if(error){ authErro = 'Código de empresa inválido ou erro: ' + traduzirErroAuth(error.message); renderApp(); return; }
     posthog.capture('prestador_entrou_empresa', { empresa_id: empresaId });
+    limparConvite();
     await carregarAposLogin();
   }
 
@@ -845,7 +993,11 @@
         auth: subJson.keys.auth
       }, { onConflict: 'endpoint' });
       posthog.capture('push_ativado');
-      await customConfirm('Notificações ativadas ✓', 'A partir de amanhã, você recebe um lembrete às 11h nos dias em que ainda não tiver registrado o uso do vale. Pode desativar quando quiser, aqui ou nas configurações do celular.', 'Show', false);
+      if(meuUsuario.papel === 'responsavel'){
+        await customConfirm('Avisos ativados ✓', 'Quando um colaborador pedir atualização de saldo, você recebe a notificação neste celular, mesmo com o app fechado. Pode desativar quando quiser.', 'Show', false);
+      } else {
+        await customConfirm('Notificações ativadas ✓', 'A partir de amanhã, você recebe um lembrete às 11h nos dias em que ainda não tiver registrado o uso do vale. Pode desativar quando quiser, aqui ou nas configurações do celular.', 'Show', false);
+      }
       renderApp();
     } catch(e){
       console.warn('Saldou: falha ao ativar push', e);
@@ -977,6 +1129,16 @@
       .reduce((s,m) => s + m.valorDia, 0);
   }
 
+  function ultimosMeses(n){
+    const out = [];
+    const hoje = new Date(todayISO() + 'T00:00:00');
+    for(let i = n-1; i >= 0; i--){
+      const d = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+      out.push(d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'));
+    }
+    return out;
+  }
+
   // Avisos de "saldo acabando" enviados pelos colaboradores (aparecem pro responsável)
   function avisosDispensados(){
     try { return JSON.parse(localStorage.getItem('saldouvr_avisos_ok') || '[]'); } catch(e){ return []; }
@@ -1025,21 +1187,65 @@
     const [y,m] = mk.split('-').map(Number);
     return new Date(y, m-1, 1).getDay(); // 0 = domingo
   }
-  async function toggleDiaCalendario(contratadoId, data){
+  // Toque no dia abre um painel pra escolher direto: Usei / Não usei (ou limpar)
+  function abrirDiaSheet(data){ diaSheet = data; renderApp(); }
+  function fecharDiaSheet(){ diaSheet = null; renderApp(); }
+  async function salvarDiaSheet(acao){
+    const data = diaSheet;
+    if(!data || !currentUserId) return;
+    const contratadoId = currentUserId;
     const existente = marcacaoDoDia(contratadoId, data);
-    if(!existente){
-      const c = state.contratados.find(x => x.id === contratadoId);
-      const padrao = c ? c.valorDiaPadrao : VALOR_PADRAO_DIA;
-      await sb.from('marcacoes').insert({
-        empresa_id: meuUsuario.empresa_id, contratado_id: contratadoId, data, usou: true, valor_dia: padrao
-      });
-    } else if(existente.usou){
-      await sb.from('marcacoes').update({ usou: false, valor_dia: 0 }).eq('id', existente.id);
+    const el = document.getElementById('valorDiaSheet');
+    const raw = el ? el.value.trim() : '';
+    const custom = raw ? parseFloat(raw.replace(',', '.')) : null;
+    const c = state.contratados.find(x => x.id === contratadoId);
+    const padrao = c ? c.valorDiaPadrao : VALOR_PADRAO_DIA;
+
+    diaSheet = null;
+    renderApp();
+
+    if(acao === 'limpar'){
+      if(existente) await sb.from('marcacoes').delete().eq('id', existente.id);
     } else {
-      await sb.from('marcacoes').delete().eq('id', existente.id);
+      const usou = acao === 'usou';
+      const valorFinal = usou ? ((custom !== null && !isNaN(custom) && custom > 0) ? custom : padrao) : 0;
+      if(existente){
+        await sb.from('marcacoes').update({ usou, valor_dia: valorFinal }).eq('id', existente.id);
+      } else {
+        await sb.from('marcacoes').insert({
+          empresa_id: meuUsuario.empresa_id, contratado_id: contratadoId, data, usou, valor_dia: valorFinal
+        });
+      }
+      posthog.capture('dia_marcado', { via: 'calendario', usou: usou });
+      showStamp(usou);
     }
-    posthog.capture('dia_marcado', { via: 'calendario' });
     await carregarDadosDaEmpresa();
+  }
+  function renderDiaSheet(){
+    if(!diaSheet) return '';
+    const data = diaSheet;
+    const m = marcacaoDoDia(currentUserId, data);
+    const c = state.contratados.find(x => x.id === currentUserId);
+    const padrao = c ? c.valorDiaPadrao : VALOR_PADRAO_DIA;
+    const label = new Date(data + 'T00:00:00').toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+    const status = !m ? 'Sem marcação nesse dia' : (m.usou ? `Marcado: usei · ${formatBRL(m.valorDia)}` : 'Marcado: não usei');
+    const valorPre = (m && m.usou && Math.abs(m.valorDia - padrao) > 0.001) ? m.valorDia.toFixed(2).replace('.', ',') : '';
+    return `
+      <div class="sheet-overlay" onclick="if(event.target===this) fecharDiaSheet()">
+        <div class="sheet" role="dialog" aria-label="Marcar dia">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">${label}</div>
+          <div class="sheet-status">${status}</div>
+          <div class="sheet-choices">
+            <button class="sheet-choice usei ${m && m.usou ? 'atual' : ''}" onclick="salvarDiaSheet('usou')">✓ Usei</button>
+            <button class="sheet-choice nao ${m && !m.usou ? 'atual' : ''}" onclick="salvarDiaSheet('naousou')">✕ Não usei</button>
+          </div>
+          <div class="field-label">Valor do dia (opcional)</div>
+          <input type="text" id="valorDiaSheet" class="field-input" inputmode="decimal" value="${valorPre}" placeholder="Padrão R$${padrao.toFixed(2).replace('.', ',')}">
+          <div class="sheet-hint">Dia de viagem (almoço + janta)? Digite o valor total e toque em "Usei".</div>
+          ${m ? `<button class="sheet-clear" onclick="salvarDiaSheet('limpar')">Limpar marcação deste dia</button>` : ''}
+        </div>
+      </div>`;
   }
   function renderCalendarioMes(contratadoId, mk){
     const totalDias = diasNoMes(mk);
@@ -1052,7 +1258,7 @@
       const m = marcacaoDoDia(contratadoId, data);
       const cls = m ? (m.usou ? 'usou' : 'naousou') : '';
       const hojeCls = data === hojeStr ? 'hoje' : '';
-      celulas += `<button class="calendar-day ${cls} ${hojeCls}" onclick="toggleDiaCalendario('${contratadoId}','${data}')" aria-label="Dia ${dia}">${dia}</button>`;
+      celulas += `<button class="calendar-day ${cls} ${hojeCls}" onclick="abrirDiaSheet('${data}')" aria-label="Dia ${dia}">${dia}</button>`;
     }
     return `
       <div class="calendar-card">
@@ -1061,7 +1267,7 @@
         <div class="calendar-legend">
           <div class="calendar-legend-item"><span class="calendar-legend-dot" style="background:var(--stamp-green);"></span>Usei</div>
           <div class="calendar-legend-item"><span class="calendar-legend-dot" style="background:var(--stamp-red);"></span>Não usei</div>
-          <div class="calendar-legend-item">toque pra alternar</div>
+          <div class="calendar-legend-item">toque no dia pra marcar</div>
         </div>
       </div>`;
   }
@@ -1079,6 +1285,7 @@
   // ---- NAVEGAÇÃO ----
   function irPara(page, params){
     currentPage = page;
+    diaSheet = null;
     if(params && params.colaboradorId !== undefined) selectedColaboradorId = params.colaboradorId;
     renderApp();
     window.scrollTo(0,0);
@@ -1215,16 +1422,22 @@
     const valorInput = document.getElementById('novoContratadoValor');
     const nome = nomeInput.value.trim();
     const valor = parseFloat((valorInput.value || '').replace(',', '.')) || VALOR_PADRAO_DIA;
-    const linkApp = window.location.origin + window.location.pathname;
+    const codigo = state.config.codigo || meuUsuario.empresa_id;
+
+    const params = new URLSearchParams();
+    params.set('c', codigo);
+    if(nome) params.set('n', nome);
+    params.set('v', valor.toFixed(2));
+    const linkApp = window.location.origin + window.location.pathname + '?' + params.toString();
 
     const saudacao = nome ? `Olá, ${nome}!` : 'Olá!';
-    const mensagem = `${saudacao} Aqui é da ${state.config.empresa} — você recebeu um convite pra usar o SaldouVR.\n\n`
-      + `*1.* Acessa: ${linkApp}\n`
-      + `*2.* Clica em "Cadastrar" → "Sou Colaborador"\n\n`
-      + `*Código da empresa* (toca e segura pra copiar):\n`
-      + `\`\`\`${meuUsuario.empresa_id}\`\`\`\n\n`
+    const mensagem = `${saudacao} Aqui é da ${state.config.empresa} — você foi convidado pra usar o SaldouVR, o app que controla seu vale-refeição.\n\n`
+      + `*1.* Toque no link (ele já leva seu código):\n${linkApp}\n`
+      + `*2.* Crie sua conta com email e senha\n\n`
+      + `*Código da empresa* (caso peça):\n`
+      + `\`\`\`${codigo}\`\`\`\n\n`
       + `*Valor padrão do seu dia:* R$ ${valor.toFixed(2).replace('.', ',')}\n\n`
-      + `Assim você já controla seu vale-refeição direto pelo celular.`;
+      + `Depois é só marcar no calendário os dias em que usar.`;
 
     const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
     window.open(urlWhatsApp, '_blank');
@@ -1617,18 +1830,12 @@
 
       ${renderCalendarioMes(currentUserId, mk)}
 
-      <div class="today-card" style="margin-bottom:14px;">
-        <div class="field-label" style="margin-top:0;">Dia de viagem? Ajuste o valor de um dia específico</div>
-        <input type="date" id="dataRegistroInput" class="field-input" value="${noMesAtual ? todayISO() : mk+'-01'}" style="margin-bottom:8px;">
-        <input type="text" id="valorCustomRegistro" class="field-input" inputmode="decimal" placeholder="Padrão R$${padraoAtual.toFixed(2).replace('.',',')} — ex: 90,00 em dia de viagem" style="margin-bottom:8px;">
-        <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px;" onclick="marcarDia(true)">Aplicar valor nesse dia</button>
-      </div>
-
       <div class="section-title">Seus números</div>
       <div class="carne-bottom" style="padding:0; margin-bottom:14px;">
         <div class="stat"><div class="stat-num">R$${recebidoMes.toFixed(0)}</div><div class="stat-label">recebido · este mês</div></div>
         <div class="stat"><div class="stat-num">R$${recebidoAno.toFixed(0)}</div><div class="stat-label">recebido · este ano</div></div>
       </div>
+      ${renderDiaSheet()}
     `;
   }
 
@@ -1651,22 +1858,44 @@
     const totalAno = state.contratados.reduce((s,c) => s + gastoNoAno(c.id, anoAtual), 0);
     const totalMes = state.contratados.reduce((s,c) => s + gastoNoMes(c.id, mkAtual), 0);
 
-    const cards = state.contratados.map(c => {
+    const lista = state.contratados.map(c => {
       const info = diasInfo(c.id);
-      const baixo = info.deficit || info.dias <= 2;
+      return { c, info, baixo: info.deficit || info.dias <= 2 };
+    }).sort((x,y) => (y.baixo - x.baixo) || (x.info.dias - y.info.dias) || x.c.nome.localeCompare(y.c.nome));
+    const qtdRepor = lista.filter(x => x.baixo).length;
+
+    const meses = ultimosMeses(6);
+    const gastosMeses = meses.map(mk => state.contratados.reduce((s,c) => s + gastoNoMes(c.id, mk), 0));
+    const maxMes = Math.max(...gastosMeses, 1);
+    const grafico = meses.map((mk, i) => {
+      const h = Math.max(3, Math.round((gastosMeses[i] / maxMes) * 42));
+      const nome = MESES[parseInt(mk.split('-')[1],10)-1].slice(0,3);
+      return `<div class="resp-chart-col"><div class="resp-chart-area"><div class="resp-chart-bar ${mk === mkAtual ? 'atual' : ''}" style="height:${h}px;"></div></div><div class="resp-chart-label">${nome}</div></div>`;
+    }).join('');
+
+    const cards = lista.map(({c, info, baixo}) => {
       const frase = info.deficit
         ? `Saldo negativo — déficit de ${info.dias} dia${info.dias===1?'':'s'}`
         : `Saldo cobre ${info.dias} dia${info.dias===1?'':'s'} de VR`;
+      const pct = info.deficit ? 4 : Math.max(4, Math.min(100, Math.round(info.dias / 10 * 100)));
       return `
-        <button class="resp-card" onclick="irPara('responsavel-detalhe',{colaboradorId:'${c.id}'})">
+        <button class="resp-card ${baixo ? 'is-baixo' : ''}" onclick="irPara('responsavel-detalhe',{colaboradorId:'${c.id}'})">
           <div class="resp-card-top">
-            <div class="resp-card-name">${c.nome}</div>
-            <span class="collab-chevron">›</span>
+            <div class="resp-avatar ${baixo ? 'baixo' : ''}">${iniciais(c.nome)}</div>
+            <div class="resp-card-id">
+              <div class="resp-card-name">${c.nome}</div>
+              <div class="resp-card-meta">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div>
+            </div>
+            <div class="resp-card-saldo">
+              <div class="resp-card-saldo-num ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
+              <div class="resp-card-saldo-label">saldo</div>
+            </div>
           </div>
           <div class="resp-saldo-pill ${baixo ? 'baixo' : ''}">
             <span>${frase}</span>
             ${baixo ? '<span class="repor">⚠ repor logo</span>' : ''}
           </div>
+          <div class="resp-bar"><div class="resp-bar-fill ${baixo ? 'baixo' : ''}" style="width:${pct}%;"></div></div>
           <div class="resp-gastos">
             <div class="resp-gasto"><div class="resp-gasto-num">${formatBRL(gastoNoMes(c.id, mkAtual))}</div><div class="resp-gasto-label">gasto este mês</div></div>
             <div class="resp-gasto"><div class="resp-gasto-num">${formatBRL(gastoNoAno(c.id, anoAtual))}</div><div class="resp-gasto-label">gasto este ano</div></div>
@@ -1675,15 +1904,22 @@
     }).join('');
 
     return `
-      <div class="page-header"><h2>Colaboradores</h2></div>
+      <div class="page-header">
+        <div>
+          <h2>Colaboradores</h2>
+          <div class="page-sub ${qtdRepor ? 'warn' : 'ok'}">${qtdRepor ? `${qtdRepor} precisa${qtdRepor===1?'':'m'} de reposição` : 'Todos com saldo em dia'}</div>
+        </div>
+      </div>
       ${renderAvisosHtml()}
       <div class="resp-hero">
         <div class="resp-hero-label">Gasto com VR · acumulado ${anoAtual}</div>
         <div class="resp-hero-value">${formatBRL(totalAno)}</div>
         <div class="resp-hero-note">atualiza automaticamente a cada dia usado</div>
+        <div class="resp-chart">${grafico}</div>
         <div class="resp-hero-row">
           <div><div class="resp-hero-num">${formatBRL(totalMes)}</div><div class="resp-hero-sub">gasto este mês</div></div>
           <div><div class="resp-hero-num">${state.contratados.length}</div><div class="resp-hero-sub">colaborador${state.contratados.length===1?'':'es'}</div></div>
+          <div><div class="resp-hero-num ${qtdRepor ? 'warn' : ''}">${qtdRepor}</div><div class="resp-hero-sub">p/ repor</div></div>
         </div>
       </div>
       ${cards}
@@ -1696,31 +1932,33 @@
 
     const scopeKey = 'colab-' + c.id;
     const info = diasInfo(c.id);
+    const mkAtual = todayISO().slice(0,7);
+    const anoAtual = todayISO().slice(0,4);
+    const baixo = info.deficit || info.dias <= 2;
+    const frase = info.deficit
+      ? `Saldo negativo — déficit de ${info.dias} dia${info.dias===1?'':'s'}`
+      : `Saldo cobre ${info.dias} dia${info.dias===1?'':'s'} de VR`;
 
     return `
       <div class="page-header">
         <button class="icon-btn" onclick="irPara('responsavel-colaboradores')">←</button>
+        <div class="resp-avatar sm ${baixo ? 'baixo' : ''}">${iniciais(c.nome)}</div>
         <div><h2>${c.nome}</h2><div class="sub">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div></div>
       </div>
 
-      <div class="carne">
-        <div class="carne-top">
-          <div class="carne-label">Saldo disponível</div>
-          <div class="carne-value ${info.deficit ? 'deficit' : (info.saldo < info.media ? 'low' : '')}">${formatBRL(info.saldo)}</div>
-          <div class="carne-sub">${info.deficit ? 'Saldo negativo' : `Saldo cobre ${info.dias} dia${info.dias===1?'':'s'} de VR · média ${formatBRL(info.media)}/dia`}</div>
-        </div>
-        <div class="carne-divider"></div>
-        <div class="carne-bottom">
-          <div class="stat"><div class="stat-num ${info.deficit?'deficit':''}">${info.dias}</div><div class="stat-label">${info.deficit?'dias em déficit':'dias restantes'}</div></div>
-          <div class="stat"><div class="stat-num">R$${info.media.toFixed(0)}</div><div class="stat-label">valor/dia médio</div></div>
-          <div class="stat"><div class="stat-num">R$${totalUsado(c.id).toFixed(0)}</div><div class="stat-label">Total usado</div></div>
+      <div class="resp-hero">
+        <div class="resp-hero-label">Saldo disponível</div>
+        <div class="resp-hero-value ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
+        <div class="resp-hero-pill ${baixo ? 'baixo' : ''}">${frase}${baixo ? ' · ⚠ repor logo' : ''}</div>
+        <div class="resp-hero-row">
+          <div><div class="resp-hero-num">${formatBRL(gastoNoMes(c.id, mkAtual))}</div><div class="resp-hero-sub">gasto este mês</div></div>
+          <div><div class="resp-hero-num">${formatBRL(gastoNoAno(c.id, anoAtual))}</div><div class="resp-hero-sub">gasto este ano</div></div>
+          <div><div class="resp-hero-num">${formatBRL(totalUsado(c.id))}</div><div class="resp-hero-sub">total usado</div></div>
         </div>
       </div>
 
-      ${renderPeriodoCard(resumoPeriodoAtual(c.id), true)}
-
-      <div class="today-card" style="margin-bottom:18px; padding:24px;">
-        <div class="today-date" style="font-size:15px; font-weight:600; color:var(--ink); margin-bottom:16px;">💰 Lançar depósito</div>
+      <div class="panel">
+        <div class="panel-title">💰 Lançar depósito</div>
         <div class="deposit-form" style="flex-wrap:wrap; gap:12px;">
           <input type="text" id="novoDeposito_${c.id}" placeholder="Valor em R$" inputmode="decimal" style="flex:1; min-width:130px; padding:16px 14px; font-size:18px; font-weight:600; border-radius:10px;">
           <input type="date" id="novoDepositoData_${c.id}" value="${todayISO()}" style="flex:1; min-width:150px; border:1px solid var(--line); border-radius:10px; padding:16px 14px; font-family:'IBM Plex Mono', monospace; font-size:16px; background: var(--paper); color: var(--ink);">
@@ -1764,12 +2002,26 @@
     `;
   }
 
+  async function copiarCodigoEmpresa(){
+    const btn = document.getElementById('btnCopiarCodigo');
+    try {
+      await navigator.clipboard.writeText(state.config.codigo || meuUsuario.empresa_id);
+      if(btn){ btn.textContent = '✓ Copiado'; setTimeout(() => { if(btn) btn.textContent = 'Copiar'; }, 1800); }
+    } catch(e){
+      if(btn){ btn.textContent = 'Toque e segure o código'; }
+    }
+  }
+
   function paginaSettings(){
+    const souResponsavel = meuUsuario && meuUsuario.papel === 'responsavel';
+    const bioAtiva = biometriaEstaAtivaAqui();
+    const nomePerfil = (meuUsuario && meuUsuario.nome) || state.config.responsavel || '';
+
     const listaContratados = state.contratados.map(c => {
       if(editingContratadoId === c.id){
         return `
-          <div class="contratado-card">
-            <div class="contratado-edit-form">
+          <div class="set-collab">
+            <div class="contratado-edit-form" style="flex:1;">
               <div class="row">
                 <input class="nome" id="editNomeContratado_${c.id}" type="text" value="${c.nome}">
                 <input class="valor" id="editValorContratado_${c.id}" type="text" value="${c.valorDiaPadrao.toFixed(2).replace('.',',')}" inputmode="decimal">
@@ -1782,77 +2034,135 @@
           </div>`;
       }
       return `
-        <div class="contratado-card">
-          <div class="contratado-card-view">
-            <div>
-              <div class="contratado-card-name">${c.nome}</div>
-              <div class="contratado-card-val">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div>
-            </div>
-            <div class="contratado-card-actions">
-              <button class="hist-edit" onclick="iniciarEdicaoContratado('${c.id}')" title="Editar">✎</button>
-              <button class="hist-del" onclick="removerContratado('${c.id}')" title="Remover">✕</button>
-            </div>
+        <div class="set-collab">
+          <div class="resp-avatar sm">${iniciais(c.nome)}</div>
+          <div class="set-collab-info">
+            <div class="set-collab-name">${c.nome}</div>
+            <div class="set-collab-val">R$${c.valorDiaPadrao.toFixed(0)}/dia padrão</div>
+          </div>
+          <div class="contratado-card-actions">
+            <button class="hist-edit" onclick="iniciarEdicaoContratado('${c.id}')" title="Editar">✎</button>
+            <button class="hist-del" onclick="removerContratado('${c.id}')" title="Remover">✕</button>
           </div>
         </div>`;
-    }).join('') || '<div class="empty">Nenhum contratado ainda.</div>';
+    }).join('') || '<div class="set-row-sub">Nenhum colaborador ainda. Convide o primeiro acima.</div>';
 
-    const souResponsavel = meuUsuario && meuUsuario.papel === 'responsavel';
+    const blocoBiometria = `
+      <div class="panel">
+        <div class="set-row">
+          <div>
+            <div class="set-row-title">Entrar com biometria</div>
+            <div class="set-row-sub">Digital ou rosto, só neste aparelho</div>
+          </div>
+          <button class="set-btn ${bioAtiva ? 'off' : ''}" onclick="${bioAtiva ? 'desativarBiometria()' : 'ativarBiometria()'}">${bioAtiva ? 'Desativar' : '🔒 Ativar'}</button>
+        </div>
+      </div>`;
 
-    return `
+    const perfil = `
+      <div class="set-profile">
+        <div class="set-avatar">${iniciais(nomePerfil || 'U')}</div>
+        <div style="min-width:0;">
+          <div class="set-profile-name">${nomePerfil}</div>
+          <div class="set-profile-mail">${meuEmail || '—'}</div>
+          <div class="set-profile-chip">${souResponsavel ? 'Responsável' : 'Colaborador'} · ${state.config.empresa}</div>
+        </div>
+      </div>`;
+
+    const header = `
       <div class="page-header">
         <button class="icon-btn" onclick="irPara(paginaInicialDoRole())">←</button>
         <div><h2>${souResponsavel ? 'Configurações' : 'Minha conta'}</h2></div>
-      </div>
+      </div>`;
 
-      <div class="field-label" style="margin-top:0;">Seu email</div>
-      <div class="field-input" style="color:var(--ink-soft);">${meuEmail || '—'}</div>
+    if(souResponsavel){
+      return `
+        ${header}
+        ${perfil}
 
-      <div class="field-label">Entrar com biometria neste aparelho</div>
-      <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px; background:${biometriaEstaAtivaAqui() ? 'var(--stamp-red)' : 'var(--stamp-green)'};" onclick="${biometriaEstaAtivaAqui() ? 'desativarBiometria()' : 'ativarBiometria()'}">${biometriaEstaAtivaAqui() ? 'Desativar biometria' : '🔒 Ativar biometria (digital/rosto)'}</button>
-
-      ${!souResponsavel ? `
-        <div class="field-label">Seu nome</div>
-        <input class="field-input" id="inputMeuNome" value="${meuUsuario ? meuUsuario.nome : ''}" onchange="salvarMeuNome()">
-
-        <div class="field-label">Lembrete diário (11h)</div>
-        <div style="font-size:11.5px; color:var(--ink-soft); margin-bottom:8px;">Recebe um aviso todo dia às 11h se ainda não tiver marcado se usou o vale — mesmo com o app fechado.</div>
-        <button class="deposit-btn" style="width:100%; padding:12px; font-size:13px; background:var(--stamp-green);" onclick="ativarNotificacoesPush()">🔔 Ativar lembrete diário</button>
-        <button class="deposit-btn" style="width:100%; padding:10px; font-size:12px; background:transparent; color:var(--ink-soft); border:1px solid var(--line); margin-top:6px;" onclick="desativarNotificacoesPush()">Desativar lembrete</button>
-      ` : ''}
-
-      <div class="field-label">Nome da empresa</div>
-      <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" ${souResponsavel ? 'onchange="salvarConfig()"' : 'disabled'}>
-
-      <div class="field-label">Nome do responsável</div>
-      <input class="field-input" id="inputResponsavelNome" value="${state.config.responsavel}" ${souResponsavel ? 'onchange="salvarConfig()"' : 'disabled'}>
-
-      ${souResponsavel ? `
-        <div class="field-label">Código da empresa (pra convidar contratados)</div>
-        <div class="field-input" style="word-break:break-all; user-select:all;">${meuUsuario.empresa_id}</div>
-        <div style="font-size:11px; color:var(--ink-soft); margin-top:6px;">Manda esse código pro contratado. Ele usa em "Cadastrar → Sou prestador".</div>
-
-        <div class="section-title">Contratados</div>
-        ${listaContratados}
-
-        <div class="add-contratado-card">
-          <div class="field-label">Convidar colaborador</div>
+        <div class="set-section">Convidar colaboradores</div>
+        <div class="panel">
+          <div class="field-label" style="margin-top:0;">Código da empresa</div>
+          <div class="code-box">
+            <div class="code-text">${state.config.codigo || meuUsuario.empresa_id}</div>
+            <button class="set-btn" id="btnCopiarCodigo" onclick="copiarCodigoEmpresa()">Copiar</button>
+          </div>
+          <div class="set-row-sub" style="margin-top:8px;">O colaborador digita esse código ao criar a conta. O convite do WhatsApp já leva o código num link, então ele nem precisa digitar.</div>
+        </div>
+        <div class="add-contratado-card" style="margin-top:0;">
+          <div class="field-label">Convite pronto pro WhatsApp</div>
           <div class="row">
             <input class="nome" id="novoContratadoNome" placeholder="Nome (opcional)">
             <input class="valor" id="novoContratadoValor" placeholder="R$/dia" inputmode="decimal">
           </div>
           <button onclick="convidarViaWhatsApp()">📲 Convidar via WhatsApp</button>
         </div>
-      ` : ''}
 
-      ${!souResponsavel ? `<button class="deposit-btn" style="width:100%; margin-top:20px; padding:14px; background:var(--mustard);" onclick="sairDaEmpresa()">Sair desta empresa (trocar de empresa)</button>` : ''}
+        <div class="set-section">Colaboradores</div>
+        <div class="panel">${listaContratados}</div>
 
-      <button class="deposit-btn" style="width:100%; margin-top:12px; padding:14px; background:var(--stamp-red);" onclick="sair()">Sair da conta</button>
+        <div class="set-section">Empresa</div>
+        <div class="panel">
+          <div class="field-label">Nome da empresa</div>
+          <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" onchange="salvarConfig()">
+          <div class="field-label">Nome do responsável</div>
+          <input class="field-input" id="inputResponsavelNome" value="${state.config.responsavel}" onchange="salvarConfig()">
+        </div>
 
-      <button class="deposit-btn" style="width:100%; margin-top:8px; padding:14px; background:transparent; color:var(--stamp-red); border:1px solid var(--stamp-red);" onclick="excluirConta()">Excluir conta permanentemente</button>
+        <div class="set-section">Avisos de saldo</div>
+        <div class="panel">
+          <div class="set-row-title">Notificação neste celular</div>
+          <div class="set-row-sub" style="margin-bottom:12px;">Quando um colaborador tocar em "Avisar responsável", você recebe a notificação aqui, mesmo com o app fechado.</div>
+          <button class="set-btn full" onclick="ativarNotificacoesPush()">🔔 Ativar avisos neste celular</button>
+          <button class="set-btn ghost full" style="margin-top:8px;" onclick="desativarNotificacoesPush()">Desativar avisos</button>
+        </div>
+
+        <div class="set-section">Segurança</div>
+        ${blocoBiometria}
+
+        <div class="danger-zone">
+          <button class="set-btn off full" onclick="sair()">Sair da conta</button>
+          <button class="set-link-danger" onclick="excluirConta()">Excluir conta permanentemente</button>
+        </div>
+      `;
+    }
+
+    return `
+      ${header}
+      ${perfil}
+
+      <div class="set-section">Seus dados</div>
+      <div class="panel">
+        <div class="field-label" style="margin-top:0;">Seu nome</div>
+        <input class="field-input" id="inputMeuNome" value="${meuUsuario ? meuUsuario.nome : ''}" onchange="salvarMeuNome()">
+      </div>
+
+      <div class="set-section">Lembrete diário</div>
+      <div class="panel">
+        <div class="set-row-title">Aviso às 11h</div>
+        <div class="set-row-sub" style="margin-bottom:12px;">Recebe um aviso todo dia às 11h se ainda não tiver marcado se usou o vale — mesmo com o app fechado.</div>
+        <button class="set-btn full" onclick="ativarNotificacoesPush()">🔔 Ativar lembrete diário</button>
+        <button class="set-btn ghost full" style="margin-top:8px;" onclick="desativarNotificacoesPush()">Desativar lembrete</button>
+      </div>
+
+      <div class="set-section">Segurança</div>
+      ${blocoBiometria}
+
+      <div class="set-section">Empresa</div>
+      <div class="panel">
+        <div class="field-label" style="margin-top:0;">Nome da empresa</div>
+        <input class="field-input" id="inputEmpresaNome" value="${state.config.empresa}" disabled>
+        <div class="field-label">Nome do responsável</div>
+        <input class="field-input" id="inputResponsavelNome" value="${state.config.responsavel}" disabled>
+      </div>
+
+      <div class="danger-zone">
+        <button class="set-btn ghost full" onclick="sairDaEmpresa()">Sair desta empresa (trocar de empresa)</button>
+        <button class="set-btn off full" onclick="sair()">Sair da conta</button>
+        <button class="set-link-danger" onclick="excluirConta()">Excluir conta permanentemente</button>
+      </div>
     `;
   }
 
-  // ---- PÁGINAS DE AUTENTICAÇÃO ----
   function irParaCadastro(){ authErro=''; senhaRedefinidaComSucesso = false; currentPage = 'auth-cadastro'; renderApp(); }
   function irParaLogin(){ authErro=''; currentPage = 'auth-login'; renderApp(); }
 
@@ -1866,44 +2176,70 @@
 
   function paginaAuthLogin(){
     return `
-      <div class="page-header"><h2>Entrar</h2><div class="sub">Saldou<span style="color:var(--stamp-green)">VR</span></div></div>
-      ${senhaRedefinidaComSucesso ? `<div style="background:var(--paper-light); border:1px solid var(--stamp-green); border-radius:10px; padding:11px 14px; font-size:13px; color:var(--stamp-green-dark); margin-bottom:14px;">✓ Senha alterada! Já pode entrar com a senha nova.</div>` : ''}
-      <div class="today-card">
+      <div class="auth-brand">
+        <img class="auth-logo" src="icon-192.png" alt="SaldouVR" width="72" height="72">
+        <div class="auth-name">Saldou<span>VR</span></div>
+        <div class="auth-tag">Controle o vale-refeição da sua equipe em dias, não em planilha.</div>
+      </div>
+      ${senhaRedefinidaComSucesso ? `<div class="auth-invite">✓ Senha alterada! Já pode entrar com a senha nova.</div>` : ''}
+      <div class="panel auth-card">
         <div class="field-label" style="margin-top:0;">Email</div>
-        <input class="field-input" id="authEmail" type="email" placeholder="seu@email.com">
+        <input class="field-input" id="authEmail" type="email" placeholder="seu@email.com" autocomplete="email">
         <div class="field-label">Senha</div>
         <div class="pwd-wrap">
-          <input class="field-input" id="authSenha" type="password" placeholder="••••••••">
+          <input class="field-input" id="authSenha" type="password" placeholder="••••••••" autocomplete="current-password">
           <button type="button" class="pwd-toggle" onclick="togglePwd('authSenha', this)">👁️</button>
         </div>
-        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px; line-height:1.45;">${authErro}</div>` : ''}
         <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerLogin()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Entrando…' : 'Entrar'}</button>
+        <div style="text-align:center; margin-top:14px; font-size:12.5px;">
+          <a href="#" onclick="irParaEsqueciSenha(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Esqueci minha senha</a>
+        </div>
       </div>
-      <div style="text-align:center; margin-top:12px; font-size:13px;">
-        <a href="#" onclick="irParaEsqueciSenha(); return false;" style="color:var(--ink-soft); text-decoration:underline;">Esqueci minha senha</a>
-      </div>
-      <div style="text-align:center; margin-top:10px; font-size:13px; color:var(--ink-soft);">
-        Não tem conta? <a href="#" onclick="irParaCadastro(); return false;" style="color:var(--stamp-green-dark); font-weight:600; text-decoration:underline;">Cadastrar</a>
+
+      <div class="auth-divider">Primeira vez aqui?</div>
+      <button class="auth-cta primary" onclick="iniciarCadastro('responsavel')">
+        <span class="auth-cta-ico">🏢</span>
+        <span><b>Cadastrar minha empresa</b><small>Controle o VR da equipe e convide seus colaboradores</small></span>
+      </button>
+      <button class="auth-cta" onclick="iniciarCadastro('prestador')">
+        <span class="auth-cta-ico">🔑</span>
+        <span><b>Tenho um código</b><small>Recebi o convite da minha empresa</small></span>
+      </button>
+
+      <div class="auth-benefits">
+        <span class="auth-chip">Saldo em dias de VR</span>
+        <span class="auth-chip">Aviso quando está acabando</span>
+        <span class="auth-chip">Gasto por mês e ano</span>
       </div>
     `;
   }
 
   function paginaAuthCadastro(){
+    const intencao = lerIntencao();
+    const colaborador = intencao === 'prestador' || !!conviteDados;
     return `
       <div class="page-header">
         <button class="icon-btn" onclick="irParaLogin()">←</button>
-        <div><h2>Criar conta</h2></div>
+        <div>
+          <h2>${colaborador ? 'Criar conta de colaborador' : 'Criar conta da empresa'}</h2>
+          <div class="sub">Passo 1 de 2 · email e senha</div>
+        </div>
       </div>
-      <div class="today-card">
+      ${conviteDados ? `<div class="auth-invite"><span>🎟️</span><span>Convite recebido${conviteDados.n ? ' para <b>' + escAttr(conviteDados.n) + '</b>' : ''}. Seu código já está salvo — crie a conta e, no passo seguinte, é só confirmar.</span></div>` : ''}
+      <div class="panel auth-card">
         <div class="field-label" style="margin-top:0;">Email</div>
-        <input class="field-input" id="authEmailCad" type="email" placeholder="seu@email.com">
+        <input class="field-input" id="authEmailCad" type="email" placeholder="seu@email.com" autocomplete="email">
         <div class="field-label">Senha (mínimo 6 caracteres)</div>
         <div class="pwd-wrap">
-          <input class="field-input" id="authSenhaCad" type="password" placeholder="••••••••">
+          <input class="field-input" id="authSenhaCad" type="password" placeholder="••••••••" autocomplete="new-password">
           <button type="button" class="pwd-toggle" onclick="togglePwd('authSenhaCad', this)">👁️</button>
         </div>
-        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px;">${authErro}</div>` : ''}
+        ${authErro ? `<div style="color:var(--stamp-red); font-size:12.5px; margin-top:12px; line-height:1.45;">${authErro}</div>` : ''}
         <button class="deposit-btn" style="width:100%; margin-top:16px; padding:14px; font-size:14px;" onclick="fazerCadastro()" ${authCarregando ? 'disabled' : ''}>${authCarregando ? 'Criando…' : 'Criar conta'}</button>
+      </div>
+      <div style="text-align:center; margin-top:14px; font-size:13px; color:var(--ink-soft);">
+        Já tem conta? <a href="#" onclick="irParaLogin(); return false;" style="color:var(--stamp-green-dark); font-weight:600; text-decoration:underline;">Entrar</a>
       </div>
     `;
   }
@@ -2039,7 +2375,7 @@
     return `
       <div class="page-header">
         <button class="icon-btn" onclick="irPara('auth-escolher-papel')">←</button>
-        <div><h2>Criar empresa</h2></div>
+        <div><h2>Criar empresa</h2><div class="sub">Passo 2 de 2 · você recebe um código curto pra convidar a equipe</div></div>
       </div>
       <div class="today-card">
         <div class="field-label" style="margin-top:0;">Nome da empresa</div>
@@ -2060,15 +2396,15 @@
     return `
       <div class="page-header">
         <button class="icon-btn" onclick="irPara('auth-escolher-papel')">←</button>
-        <div><h2>Entrar numa empresa</h2></div>
+        <div><h2>Entrar numa empresa</h2><div class="sub">Passo 2 de 2 · seu código e seu nome</div></div>
       </div>
       <div class="today-card">
         <div class="field-label" style="margin-top:0;">Código da empresa</div>
-        <input class="field-input" id="empresaIdInput" placeholder="Cole o código que o responsável te mandou">
+        <input class="field-input" id="empresaIdInput" placeholder="Ex: INFRA-7K2P4M" value="${escAttr(conviteDados ? conviteDados.c : '')}" autocapitalize="characters" autocomplete="off">
         <div class="field-label">Seu nome</div>
-        <input class="field-input" id="novoPrestadorNome" placeholder="Seu nome completo">
+        <input class="field-input" id="novoPrestadorNome" placeholder="Seu nome completo" value="${escAttr(conviteDados ? conviteDados.n : '')}">
         <div class="field-label">Valor padrão do dia (R$)</div>
-        <input class="field-input" id="novoPrestadorValor" placeholder="35" inputmode="decimal">
+        <input class="field-input" id="novoPrestadorValor" placeholder="35" inputmode="decimal" value="${escAttr(conviteDados && conviteDados.v ? conviteDados.v.replace('.', ',') : '')}">
         <label class="field-check">
           <input type="checkbox" id="termosPrestador">
           <span>Li e concordo com os <a href="#" onclick="irPara('termos-privacidade'); return false;">Termos de Uso</a> e a <a href="#" onclick="irPara('termos-privacidade'); return false;">Política de Privacidade</a>.</span>
