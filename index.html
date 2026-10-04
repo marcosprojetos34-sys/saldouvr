@@ -164,6 +164,33 @@
     background: rgba(166,54,43,0.08); color: var(--stamp-red); font-family:'Space Grotesk', sans-serif;
     font-weight:600; font-size:13px; cursor:pointer;
   }
+  .aviso-banner{ display:flex; align-items:flex-start; gap:10px; background: var(--paper-light); border:1.5px solid var(--stamp-red); border-radius:14px; padding:12px 14px; margin-bottom:12px; }
+  .aviso-banner-icon{ font-size:16px; line-height:1.3; }
+  .aviso-banner-body{ flex:1; cursor:pointer; }
+  .aviso-banner-title{ font-size:13px; font-weight:600; color: var(--ink); }
+  .aviso-banner-sub{ font-size:11px; color: var(--ink-soft); margin-top:2px; }
+  .aviso-banner-x{ border:none; background:transparent; color: var(--ink-soft); font-size:14px; cursor:pointer; padding:2px 4px; }
+
+  .resp-hero{ background: var(--ink); border-radius:20px; padding:24px 22px; margin-bottom:20px; box-shadow: var(--shadow); }
+  .resp-hero-label{ font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#C9C4AD; }
+  .resp-hero-value{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:36px; color: var(--paper-light); margin-top:4px; }
+  .resp-hero-note{ font-size:11px; color:#9CA390; margin-top:6px; }
+  .resp-hero-row{ display:flex; gap:18px; margin-top:14px; padding-top:14px; border-top:1px solid #3A4036; }
+  .resp-hero-row > div + div{ border-left:1px solid #3A4036; padding-left:18px; }
+  .resp-hero-num{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:17px; color: var(--paper-light); }
+  .resp-hero-sub{ font-size:10.5px; color:#9CA390; }
+
+  .resp-card{ display:block; width:100%; text-align:left; background: var(--paper-light); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:10px; cursor:pointer; font-family:inherit; color: var(--ink); }
+  .resp-card-top{ display:flex; align-items:center; justify-content:space-between; }
+  .resp-card-name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:14.5px; }
+  .resp-saldo-pill{ display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding:10px 12px; border-radius:10px; background: rgba(31,111,76,0.1); color: var(--stamp-green-dark); font-size:11.5px; font-weight:600; }
+  .resp-saldo-pill.baixo{ background: rgba(166,54,43,0.1); color: var(--stamp-red); }
+  .resp-saldo-pill .repor{ font-size:10px; font-weight:700; }
+  .resp-gastos{ display:flex; gap:10px; margin-top:10px; }
+  .resp-gasto{ flex:1; background: var(--paper); border-radius:10px; padding:10px 12px; }
+  .resp-gasto-num{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px; color: var(--mustard); }
+  .resp-gasto-label{ font-size:10px; color: var(--ink-soft); margin-top:1px; }
+
   .aviso-confirmado{
     width:100%; margin-bottom:14px; padding:14px; border-radius:12px; background: rgba(31,111,76,0.1);
     color: var(--stamp-green-dark); font-weight:600; font-size:13px; text-align:center; box-sizing:border-box;
@@ -484,6 +511,7 @@
   let viewingMonth = {};
   let registroData = null;
   let avisoSaldoEnviadoAgora = false;
+  let avisosSaldo = [];
   let meuUsuario = null;   // linha da tabela "usuarios" da pessoa logada
   let meuEmail = null;     // email de autenticação da pessoa logada
   let mostrandoBloqueioBiometria = false;
@@ -576,7 +604,26 @@
       id: m.id, contratadoId: m.contratado_id, data: m.data, usou: m.usou, valorDia: Number(m.valor_dia)
     }));
 
+    avisosSaldo = [];
+    if(meuUsuario.papel === 'responsavel'){
+      const desde = new Date(Date.now() - 7*24*3600*1000).toISOString();
+      const { data: avisos } = await sb.from('avisos_saldo').select('*').gte('created_at', desde).order('created_at', { ascending:false });
+      avisosSaldo = avisos || [];
+    }
+
     renderApp();
+  }
+
+  function traduzirErroAuth(msg){
+    const m = String(msg || '').toLowerCase();
+    if(m.includes('already registered')) return 'Esse email já tem cadastro. Volte e toque em Entrar (ou em Esqueci minha senha).';
+    if(m.includes('invalid login')) return 'Email ou senha incorretos. Se esqueceu a senha, toque em Esqueci minha senha.';
+    if(m.includes('email not confirmed')) return 'Confirme seu email antes de entrar (veja sua caixa de entrada).';
+    if(m.includes('at least 6')) return 'A senha precisa ter no mínimo 6 caracteres.';
+    if(m.includes('rate limit') || m.includes('only request this after')) return 'Muitas tentativas. Espere um minuto e tente de novo.';
+    if(m.includes('invalid format') || m.includes('unable to validate email')) return 'Email inválido. Confira se digitou certo.';
+    if(m.includes('failed to fetch') || m.includes('network')) return 'Sem conexão. Verifique sua internet e tente de novo.';
+    return msg;
   }
 
   async function fazerLogin(){
@@ -587,7 +634,7 @@
     authCarregando = true; authErro = ''; renderApp();
     const { error } = await sb.auth.signInWithPassword({ email, password: senha });
     authCarregando = false;
-    if(error){ authErro = error.message; renderApp(); return; }
+    if(error){ authErro = traduzirErroAuth(error.message); renderApp(); return; }
     posthog.identify(email);
     posthog.capture('login_realizado');
     currentPage = 'auth-carregando';
@@ -602,7 +649,7 @@
     authCarregando = true; authErro = ''; renderApp();
     const { error } = await sb.auth.signUp({ email, password: senha });
     authCarregando = false;
-    if(error){ authErro = error.message; renderApp(); return; }
+    if(error){ authErro = traduzirErroAuth(error.message); renderApp(); return; }
     posthog.capture('cadastro_realizado', { email: email });
     authErro = '';
     currentPage = 'auth-confirme-email';
@@ -620,13 +667,13 @@
     const novaEmpresaId = crypto.randomUUID();
 
     const { error: e1 } = await sb.from('empresas').insert({ id: novaEmpresaId, nome: nomeEmpresa });
-    if(e1){ authCarregando = false; authErro = e1.message; renderApp(); return; }
+    if(e1){ authCarregando = false; authErro = traduzirErroAuth(e1.message); renderApp(); return; }
 
     const { error: e2 } = await sb.from('usuarios').insert({
       id: user.id, empresa_id: novaEmpresaId, papel: 'responsavel', nome: meuNome
     });
     authCarregando = false;
-    if(e2){ authErro = e2.message; renderApp(); return; }
+    if(e2){ authErro = traduzirErroAuth(e2.message); renderApp(); return; }
     posthog.capture('empresa_criada', { nome_empresa: nomeEmpresa });
     await carregarAposLogin();
   }
@@ -644,7 +691,7 @@
       id: user.id, empresa_id: empresaId, papel: 'prestador', nome: meuNome, valor_dia_padrao: valorDia
     });
     authCarregando = false;
-    if(error){ authErro = 'Código de empresa inválido ou erro: ' + error.message; renderApp(); return; }
+    if(error){ authErro = 'Código de empresa inválido ou erro: ' + traduzirErroAuth(error.message); renderApp(); return; }
     posthog.capture('prestador_entrou_empresa', { empresa_id: empresaId });
     await carregarAposLogin();
   }
@@ -918,6 +965,55 @@
   function recebidoNoAno(contratadoId, ano){
     return state.depositos.filter(d => d.contratadoId === contratadoId && d.data.slice(0,4) === ano)
       .reduce((s,d) => s + d.valor, 0);
+  }
+
+  // Quanto foi gasto (dias usados) por colaborador num mês ('YYYY-MM') ou ano ('YYYY')
+  function gastoNoMes(contratadoId, mk){
+    return state.marcacoes.filter(m => m.contratadoId === contratadoId && m.usou && m.data.slice(0,7) === mk)
+      .reduce((s,m) => s + m.valorDia, 0);
+  }
+  function gastoNoAno(contratadoId, ano){
+    return state.marcacoes.filter(m => m.contratadoId === contratadoId && m.usou && m.data.slice(0,4) === ano)
+      .reduce((s,m) => s + m.valorDia, 0);
+  }
+
+  // Avisos de "saldo acabando" enviados pelos colaboradores (aparecem pro responsável)
+  function avisosDispensados(){
+    try { return JSON.parse(localStorage.getItem('saldouvr_avisos_ok') || '[]'); } catch(e){ return []; }
+  }
+  function dispensarAviso(id){
+    const l = avisosDispensados();
+    if(!l.includes(id)){ l.push(id); try { localStorage.setItem('saldouvr_avisos_ok', JSON.stringify(l.slice(-100))); } catch(e){} }
+    renderApp();
+  }
+  function avisosPendentes(){
+    const ok = avisosDispensados();
+    const vistos = new Set();
+    return avisosSaldo.filter(a => {
+      if(vistos.has(a.contratado_id)) return false;
+      vistos.add(a.contratado_id);
+      if(ok.includes(a.id)) return false;
+      const c = state.contratados.find(x => x.id === a.contratado_id);
+      if(!c) return false;
+      const dia = String(a.created_at).slice(0,10);
+      const repos = state.depositos.some(d => d.contratadoId === a.contratado_id && d.data >= dia);
+      return !repos;
+    });
+  }
+  function renderAvisosHtml(){
+    return avisosPendentes().map(a => {
+      const c = state.contratados.find(x => x.id === a.contratado_id);
+      const quando = new Date(a.created_at).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      return `
+        <div class="aviso-banner">
+          <div class="aviso-banner-icon">🔔</div>
+          <div class="aviso-banner-body" onclick="irPara('responsavel-detalhe',{colaboradorId:'${c.id}'})">
+            <div class="aviso-banner-title">${c.nome} está com saldo acabando</div>
+            <div class="aviso-banner-sub">Pediu atualização de saldo · ${quando}</div>
+          </div>
+          <button class="aviso-banner-x" onclick="dispensarAviso('${a.id}')" aria-label="Dispensar">✕</button>
+        </div>`;
+    }).join('');
   }
 
   // ---- CALENDÁRIO CLICÁVEL (toque no dia pra alternar usou/não usou) ----
@@ -1550,26 +1646,46 @@
     if(state.contratados.length === 0){
       return `<div class="empty">Nenhum contratado cadastrado. Abra o menu ☰ → Configurações pra adicionar.</div>`;
     }
+    const mkAtual = todayISO().slice(0,7);
+    const anoAtual = todayISO().slice(0,4);
+    const totalAno = state.contratados.reduce((s,c) => s + gastoNoAno(c.id, anoAtual), 0);
+    const totalMes = state.contratados.reduce((s,c) => s + gastoNoMes(c.id, mkAtual), 0);
+
     const cards = state.contratados.map(c => {
       const info = diasInfo(c.id);
-      const alerta = info.deficit || info.saldo === 0 || info.saldo < info.media;
+      const baixo = info.deficit || info.dias <= 2;
+      const frase = info.deficit
+        ? `Saldo negativo — déficit de ${info.dias} dia${info.dias===1?'':'s'}`
+        : `Saldo cobre ${info.dias} dia${info.dias===1?'':'s'} de VR`;
       return `
-        <button class="collab-card ${alerta ? 'alert' : ''}" onclick="irPara('responsavel-detalhe',{colaboradorId:'${c.id}'})">
-          <div class="collab-left">
-            <div class="collab-avatar">${iniciais(c.nome)}</div>
-            <div>
-              <div class="collab-name">${c.nome}</div>
-              <div class="collab-meta ${info.deficit ? 'deficit' : ''}">${info.deficit ? `déficit de ${info.dias} dia${info.dias===1?'':'s'}` : `${info.dias} dia${info.dias===1?'':'s'} restantes`}</div>
-            </div>
-          </div>
-          <div class="collab-right">
-            <div class="collab-saldo ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
+        <button class="resp-card" onclick="irPara('responsavel-detalhe',{colaboradorId:'${c.id}'})">
+          <div class="resp-card-top">
+            <div class="resp-card-name">${c.nome}</div>
             <span class="collab-chevron">›</span>
+          </div>
+          <div class="resp-saldo-pill ${baixo ? 'baixo' : ''}">
+            <span>${frase}</span>
+            ${baixo ? '<span class="repor">⚠ repor logo</span>' : ''}
+          </div>
+          <div class="resp-gastos">
+            <div class="resp-gasto"><div class="resp-gasto-num">${formatBRL(gastoNoMes(c.id, mkAtual))}</div><div class="resp-gasto-label">gasto este mês</div></div>
+            <div class="resp-gasto"><div class="resp-gasto-num">${formatBRL(gastoNoAno(c.id, anoAtual))}</div><div class="resp-gasto-label">gasto este ano</div></div>
           </div>
         </button>`;
     }).join('');
+
     return `
       <div class="page-header"><h2>Colaboradores</h2></div>
+      ${renderAvisosHtml()}
+      <div class="resp-hero">
+        <div class="resp-hero-label">Gasto com VR · acumulado ${anoAtual}</div>
+        <div class="resp-hero-value">${formatBRL(totalAno)}</div>
+        <div class="resp-hero-note">atualiza automaticamente a cada dia usado</div>
+        <div class="resp-hero-row">
+          <div><div class="resp-hero-num">${formatBRL(totalMes)}</div><div class="resp-hero-sub">gasto este mês</div></div>
+          <div><div class="resp-hero-num">${state.contratados.length}</div><div class="resp-hero-sub">colaborador${state.contratados.length===1?'':'es'}</div></div>
+        </div>
+      </div>
       ${cards}
     `;
   }
@@ -1591,7 +1707,7 @@
         <div class="carne-top">
           <div class="carne-label">Saldo disponível</div>
           <div class="carne-value ${info.deficit ? 'deficit' : (info.saldo < info.media ? 'low' : '')}">${formatBRL(info.saldo)}</div>
-          <div class="carne-sub">${info.deficit ? 'Saldo negativo' : `cobre ~${info.dias} dia${info.dias===1?'':'s'} · média ${formatBRL(info.media)}/dia`}</div>
+          <div class="carne-sub">${info.deficit ? 'Saldo negativo' : `Saldo cobre ${info.dias} dia${info.dias===1?'':'s'} de VR · média ${formatBRL(info.media)}/dia`}</div>
         </div>
         <div class="carne-divider"></div>
         <div class="carne-bottom">
@@ -1612,6 +1728,13 @@
         </div>
       </div>
 
+      <div class="section-title">Últimos depósitos</div>
+      ${(() => {
+        const ult = state.depositos.filter(d => d.contratadoId === c.id).slice().sort((a,b) => b.data.localeCompare(a.data)).slice(0,3);
+        if(!ult.length) return '<div class="empty" style="padding:14px;">Nenhum depósito ainda.</div>';
+        return ult.map(d => `<div class="situ-row"><div class="situ-name">${d.data.split('-').reverse().join('/')}</div><div class="situ-saldo">${formatBRL(d.valor)}</div></div>`).join('');
+      })()}
+
       <div class="section-title">Histórico mensal</div>
       ${renderMonthCarousel(c.id, scopeKey, true)}
     `;
@@ -1624,7 +1747,7 @@
         <div class="situ-row">
           <div>
             <div class="situ-name">${c.nome}</div>
-            <div class="situ-tag ${info.deficit ? 'deficit' : ''}">${info.deficit ? `déficit de ${info.dias} dia${info.dias===1?'':'s'}` : `${info.dias} dia${info.dias===1?'':'s'} restantes`}</div>
+            <div class="situ-tag ${info.deficit ? 'deficit' : ''}">${info.deficit ? `déficit de ${info.dias} dia${info.dias===1?'':'s'}` : `Saldo cobre ${info.dias} dia${info.dias===1?'':'s'} de VR`}</div>
           </div>
           <div class="situ-saldo ${info.deficit ? 'deficit' : ''}">${formatBRL(info.saldo)}</div>
         </div>`;
@@ -1837,7 +1960,7 @@
       redirectTo: window.location.origin + window.location.pathname
     });
     authCarregando = false;
-    if(error){ authErro = error.message; renderApp(); return; }
+    if(error){ authErro = traduzirErroAuth(error.message); renderApp(); return; }
     posthog.capture('recuperacao_senha_solicitada');
     currentPage = 'auth-esqueci-senha-enviado';
     renderApp();
@@ -1867,7 +1990,7 @@
     authCarregando = true; authErro = ''; renderApp();
     const { error } = await sb.auth.updateUser({ password: novaSenha });
     authCarregando = false;
-    if(error){ authErro = error.message; renderApp(); return; }
+    if(error){ authErro = traduzirErroAuth(error.message); renderApp(); return; }
     posthog.capture('senha_redefinida');
     await sb.auth.signOut(); // encerra a sessão temporária de recuperação — a pessoa confirma a senha nova fazendo login manual
     modoRecuperacaoSenha = false;
